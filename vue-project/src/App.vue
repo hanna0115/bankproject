@@ -3,6 +3,7 @@
     <!-- 로고에 애니메이션 적용 -->
     <RouterLink :to="{name:'home'}" class="logo">BANKPROJECT</RouterLink>
     <div class="real-nav">
+      <RouterLink :to="{name:'recommend'}">금융 상품 추천</RouterLink>
       <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
       <RouterLink :to="{name:'map'}">지도</RouterLink>
     </div>
@@ -48,13 +49,17 @@ a {
 }
 
 .logo {
-  font-size: 50px;
+  font-size: 30px;
   color: #FF6709;
   font-weight: bold;
 }
 
 .real-nav {
   display: flex;
+  position: relative;
+  top: 6px;
+  right: 6px;
+
   /* gap:50px; */
 
 }
@@ -62,14 +67,16 @@ a {
 .real-nav a {
   padding: 12px;
   color: #B9B9B9;
-  font-size: 22px;
-  font-weight: bold;
+  font-size: 18px;
+  font-weight:bold;
 }
 
 .login-btn {
+  position: relative;
   background-color: rgba(255,103,8,0.6);
   color: white;
   padding: 5px 12px; 
   border-radius: 30px;
+  top: 6px;
 }
 </style>
