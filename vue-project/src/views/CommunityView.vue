@@ -1,13 +1,118 @@
 <template>
-    <div>
-
+    <div class="board-container">
+        <h2 class="board-title">전체 게시글</h2>
+        
+        <div class="post-list">
+            <div v-for="n in 5" :key="n" class="post-item">
+                <div class="post-header">
+                    <span class="post-category">미마마</span>
+                </div>
+                <div class="post-content">
+                    <h3 class="post-title">돈 모으는 꿀팁 알려줄까</h3>
+                </div>
+                <div class="post-footer">
+                    <span class="post-date">작성일 2024.11.01</span>
+                    <span class="post-views">조회 11</span>
+                </div>
+                <button class="favorite-btn">
+                    <span class="heart-icon">♡</span>
+                </button>
+            </div>
+        </div>
+        <button class="write-btn">작성하기</button>
     </div>
 </template>
 
 <script setup>
-
+// Component logic here
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.board-container {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    left: 77px;
+    top: 17px;
+}
 
+.board-title {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+    color: #ff8940;
+}
+
+.post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.post-item {
+    position: relative;
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    padding: 20px;
+    cursor: pointer;
+    top: 20px;
+}
+
+.post-header {
+    margin-bottom: 10px;
+}
+
+.post-category {
+    color: #666;
+    font-size: 14px;
+}
+
+.post-title {
+    font-size: 16px;
+    margin: 0;
+    color: #333;
+}
+
+.post-footer {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #888;
+}
+
+.favorite-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    font-size: 20px;
+}
+
+.write-btn {
+    position: relative;
+    float: right;
+    margin-top: 20px;
+    padding: 8px 20px;
+    background-color: #ff9966;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    top: 15px;
+}
+
+.write-btn:hover {
+    background-color: #ff8855;
+}
+
+.post-item:hover {
+    background-color: #f0f0f0;
+}
 </style>

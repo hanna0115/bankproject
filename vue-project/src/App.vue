@@ -3,9 +3,9 @@
     <!-- 로고에 애니메이션 적용 -->
     <RouterLink :to="{name:'home'}" class="logo">BANKPROJECT</RouterLink>
     <div class="real-nav">
-      <RouterLink :to="{name:'recommend'}">금융 상품 추천</RouterLink>
-      <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
+      <RouterLink :to="{name:'recommend'}">금융상품추천</RouterLink>
       <RouterLink :to="{name:'map'}">지도</RouterLink>
+      <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
     </div>
     <a href="#" class="login-btn">로그인</a>
   </nav>
