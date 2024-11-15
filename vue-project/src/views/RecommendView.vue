@@ -4,43 +4,25 @@
         <p class="recommendation-intro"><span class="user-name">김선명</span>님의 목표 달성에 도움이 되는</p>
         <p class="recommendation-title">금융상품 Best 5!</p>
         <div class="product-list">
-            <div class="product-item product-item-highlight">
+            <div v-for="n in 5" :key="n" class="product-item">
                 <div class="product-card">
                     <div class="product-card-inner">
-                        <div class="product-card-front">앞면 내용</div>
+                        <div class="product-card-front">
+                            <div class="product-content">
+                                <span class="product-number">{{ n }}</span>
+                                <img class="product-icon" :src="n === 2 ? '/path-to-globe-icon.png' : '/path-to-card-icon.png'" alt="Product Icon">
+                                <div class="product-info">
+                                    <p class="product-name">웰컴저축은행</p>
+                                    <p class="product-detail">웰뱅 위킹 적금</p>
+                                </div>
+                                <div class="product-rate">
+                                    <p class="rate-label">최고</p>
+                                    <p class="rate-value">10%</p>
+                                    <p class="rate-condition">기본 1%</p>
+                                </div>
+                            </div>
+                        </div>
                         <div class="product-card-back"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="product-card">
-                    <div class="product-card-inner">
-                        <div class="product-card-front">앞면 내용</div>
-                        <div class="product-card-back">뒷면 내용</div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="product-card">
-                    <div class="product-card-inner">
-                        <div class="product-card-front">앞면 내용</div>
-                        <div class="product-card-back">뒷면 내용</div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="product-card">
-                    <div class="product-card-inner">
-                        <div class="product-card-front">앞면 내용</div>
-                        <div class="product-card-back">뒷면 내용</div>
-                    </div>
-                </div>
-            </div>
-            <div class="product-item">
-                <div class="product-card">
-                    <div class="product-card-inner">
-                        <div class="product-card-front">앞면 내용</div>
-                        <div class="product-card-back">뒷면 내용</div>
                     </div>
                 </div>
             </div>
@@ -49,7 +31,39 @@
 </template>
 
 <script setup>
-// 스크립트 내용이 없습니다.
+import { onMounted } from 'vue';
+
+onMounted(() => {
+    const productItems = document.querySelectorAll('.product-item');
+
+    productItems.forEach((item, index) => {
+        const card = item.querySelector('.product-card-inner');
+        let isAnimating = true;
+
+        // Calculate total animation time for each card
+        const animationDelay = index * 0.6; // 0.6s delay between each card
+        const animationDuration = 3; // 3s for the flip animation
+        const totalAnimationTime = (animationDelay + animationDuration) * 1000;
+
+        // Set animation end timer
+        setTimeout(() => {
+            isAnimating = false;
+        }, totalAnimationTime);
+
+        item.addEventListener('mouseenter', () => {
+            if (!isAnimating) {
+                card.style.animation = 'none';
+                item.classList.add('hover-effect');
+            }
+        });
+
+        item.addEventListener('mouseleave', () => {
+            if (!isAnimating) {
+                item.classList.remove('hover-effect');
+            }
+        });
+    });
+});
 </script>
 
 <style scoped>
@@ -98,17 +112,17 @@
 }
 
 .product-item {
-    width: 600px;
-    height: 200px;
+    width: 650px;
+    height: 100px;
     margin: 10px auto;
     perspective: 1000px;
+    cursor: pointer;
 }
 
 .product-card {
     width: 100%;
     height: 100%;
     position: relative;
-    animation: flipCard 3s 1;
     transform-style: preserve-3d;
 }
 
@@ -117,7 +131,7 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform 10s;
+    transition: transform 0.3s;
     transform-style: preserve-3d;
 }
 
@@ -134,26 +148,100 @@
 }
 
 .product-card-front {
-    background-color: #f1f1f1;
+    background-color: white;
+    transition: background-color 0.3s ease;
 }
 
 .product-card-back {
-    background-color: #e1e1e1;
+    background-color: #fffdfd;
     transform: rotateX(180deg);
+}
+
+.hover-effect .product-card-front {
+    background-color: #FFB07E;
+}
+
+.product-content {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    width: 100%;
+}
+
+.product-number {
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.product-icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 20px;
+}
+
+.product-info {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-detail {
+    font-size: 16px;
+    color: #666;
+}
+
+.product-rate {
+    text-align: right;
+}
+
+.rate-label {
+    font-size: 14px;
+}
+
+.rate-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF6708;
+}
+
+.rate-condition {
+    font-size: 12px;
+    color: #999;
 }
 
 @keyframes flipCard {
     0% { transform: rotateX(0deg); }
-     100%  { transform: rotateX(-360deg); }
+    100% { transform: rotateX(-360deg); }
 }
 
-.product-item:nth-child(1) .product-card { animation-delay: 0s; }
-.product-item:nth-child(2) .product-card { animation-delay: 0.6s; }
-.product-item:nth-child(3) .product-card { animation-delay: 1.2s; }
-.product-item:nth-child(4) .product-card { animation-delay: 1.8s; }
-.product-item:nth-child(5) .product-card { animation-delay: 2.4s; }
+/* Sequential animation for each card */
+.product-item:nth-child(1) .product-card-inner {
+    animation: flipCard 3s 1;
+    animation-delay: 0s;
+}
 
-.product-item-highlight .product-card-front {
-    background-color: #FFB07E;
+.product-item:nth-child(2) .product-card-inner {
+    animation: flipCard 3s 1;
+    animation-delay: 0.6s;
+}
+
+.product-item:nth-child(3) .product-card-inner {
+    animation: flipCard 3s 1;
+    animation-delay: 1.2s;
+}
+
+.product-item:nth-child(4) .product-card-inner {
+    animation: flipCard 3s 1;
+    animation-delay: 1.8s;
+}
+
+.product-item:nth-child(5) .product-card-inner {
+    animation: flipCard 3s 1;
+    animation-delay: 2.4s;
 }
 </style>
