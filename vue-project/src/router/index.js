@@ -4,6 +4,7 @@ import CommunityView from '@/views/CommunityView.vue'
 import MapView from '@/views/MapView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import RecommendView from '@/views/RecommendView.vue'
+import LoginView from '@/views/LoginView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,7 +28,12 @@ const router = createRouter({
       path: '/recommend',
       name: 'recommend',
       component: RecommendView
-    }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView
+    },
   ],
 })
 

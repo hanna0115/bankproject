@@ -177,7 +177,6 @@ onMounted(() => {
 .product-icon {
     width: 40px;
     height: 40px;
-    margin-right: 20px;
 }
 
 .product-info {

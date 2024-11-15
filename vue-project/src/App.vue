@@ -7,7 +7,7 @@
       <RouterLink :to="{name:'map'}">지도</RouterLink>
       <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
     </div>
-    <a href="#" class="login-btn">로그인</a>
+    <RouterLink :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
   </nav>
 
   <RouterView />
