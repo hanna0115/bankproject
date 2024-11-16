@@ -2,12 +2,12 @@
     <div class="login">
         <h2 class="title">Welcome to</h2>
 
-        <form>
-            <div class="id">
+        <form class="login-form">
+            <div>
                 <label for="id">아이디</label>
                 <input type="text" id="id" placeholder="example@email.com">
             </div>
-            <div class="password">
+            <div>
                 <label for="password">비밀번호</label>
                 <input type="password" id="password" placeholder="********">
             </div>
@@ -43,36 +43,36 @@
   font-size: 30px;
 }
 
-form {
+.login-form {
     width: 350px;
     margin-top: 60px;
 }
 
-form div {
+.login-form div {
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: 15px 0;
 }
 
-form label {
+.login-form label {
     margin-bottom: 5px;
     font-weight: 700;
     color: #FFB07E;
 }
 
-form input {
+.login-form input {
     width: 100%;
     padding: 10px 0;
     border: none;
     border-bottom: 1.35px solid #909090;
 }
 
-form input:focus {
+.login-form input:focus {
     outline: none;
 }
 
-form input[type='submit'] {
+.login-form input[type='submit'] {
   background-color: rgba(255,103,8,0.6);
   color: white;
   margin-top: 30px;
@@ -81,5 +81,19 @@ form input[type='submit'] {
   font-size: 16px;
   border: none;
   border-radius: 30px;
+}
+
+.user-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #898989;
+}
+
+.user-nav p {
+    margin: 0;
+    padding: 5px;
 }
 </style>
