@@ -33,18 +33,26 @@
                 <textarea name="post-content" id="post-content" class="post-textarea"></textarea>
             </div>
         </form>
-        <button class="post-btn">작성하기</button>
+        <button @click="router.push('/')"
+        class="post-btn">작성하기</button>
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
 
 const selectedTag = ref('');
 
 const selectTag = (tag) => {
     selectedTag.value = tag;
 };
+
+
+
 </script>
 
 <style scoped>
