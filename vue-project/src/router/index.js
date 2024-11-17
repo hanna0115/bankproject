@@ -5,6 +5,7 @@ import MapView from '@/views/MapView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import RecommendView from '@/views/RecommendView.vue'
 import LoginView from '@/views/LoginView.vue'
+import CreatePost from '@/components/CreatePost.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +35,11 @@ const router = createRouter({
       name: 'login',
       component: LoginView
     },
+    {
+      path: '/createpost',
+      name: 'createpost',
+      component: CreatePost,
+    }
   ],
 })
 

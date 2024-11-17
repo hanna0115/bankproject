@@ -19,12 +19,16 @@
                 </button>
             </div>
         </div>
-        <button class="write-btn">작성하기</button>
+        <button @click="$router.push('/createpost')"
+        class="write-btn">작성하기</button>
     </div>
 </template>
 
 <script setup>
-// Component logic here
+
+import { useRouter } from 'vue-router';
+const router = useRouter();
+
 </script>
 
 <style scoped>
