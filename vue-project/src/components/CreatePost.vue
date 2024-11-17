@@ -33,7 +33,7 @@
                 <textarea name="post-content" id="post-content" class="post-textarea"></textarea>
             </div>
         </form>
-        <button @click="router.push('/')"
+        <button @click="router.push('/community')"
         class="post-btn">작성하기</button>
     </div>
 </template>

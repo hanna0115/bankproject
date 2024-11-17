@@ -15,7 +15,8 @@
         </form>
 
         <div class="user-nav">
-            <p>회원가입</p>
+            <button class="signup-btn" 
+            @click="router.push('/signup')">회원가입</button>
             <span> | </span>
             <p>아이디 찾기</p>
             <span> | </span>
@@ -25,6 +26,10 @@
 </template>
 
 <script setup>
+
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
 
 </script>
 
@@ -93,7 +98,16 @@
 }
 
 .user-nav p {
-    margin: 0;
+    margin: 0px;
     padding: 5px;
+}
+
+.signup-btn {
+    margin: 0px;
+    padding: 5px;
+    border: 0;
+    background-color: transparent;
+    color: #898989;
+    cursor: pointer;
 }
 </style>
