@@ -7,6 +7,8 @@ import RecommendView from '@/views/RecommendView.vue'
 import LoginView from '@/views/LoginView.vue'
 import CreatePost from '@/components/CreatePost.vue'
 import SignUpView from '@/views/SignUpView.vue'
+import PostList from '@/components/PostList.vue'
+import PostDetail from '@/components/PostDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -45,6 +47,16 @@ const router = createRouter({
       path:'/signup',
       name: 'signup',
       component: SignUpView
+    },
+    {
+      path:'/postlist',
+      name:'postlist',
+      component: PostList
+    },
+    {
+      path:'/postdetail',
+      name:'postdetail',
+      component: PostDetail
     }
   ],
 })

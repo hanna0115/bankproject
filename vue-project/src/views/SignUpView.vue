@@ -75,13 +75,15 @@
                 <p class="deb-amount">저축 금액 (만원)</p>
                 <input type="text" class="input-field" placeholder="금액을 입력하세요">
             </div>
-            <button type="submit" class="submit-btn">완료</button>
+            <button type="submit" class="submit-btn"
+            @click="router.push('/')">완료</button>
         </form>
     </div>
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import { useRouter } from 'vue-router';
 
 const goals = [
     '내집마련',
@@ -93,6 +95,8 @@ const goals = [
     '여행자금',
     '위시리스트'
 ]
+
+const router = useRouter()
 
 
 // 생년월일 관련 코드
@@ -351,4 +355,6 @@ p {
     margin-top: 90px;
     margin-bottom: 10px;
 }
+
+
 </style>
