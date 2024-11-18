@@ -37,7 +37,6 @@ const router = useRouter();
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    left: 77px;
     top: 17px;
 }
 

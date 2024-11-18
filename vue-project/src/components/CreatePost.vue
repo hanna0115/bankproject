@@ -87,27 +87,31 @@ const selectTag = (tag) => {
     display: block;
     margin-bottom: 15px;
     text-align: center;
+    font-size: 12px;
+    color: #888;
 }
 
 .tag {
     display: flex;
     gap: 15px;
     justify-content: center;
-    height: 40px;
+    align-items: center;
+    height: 30px;
 }
 
 .tag span {
     padding: 8px 25px;
-    border: 1px solid #FF6709;
+    /* border: 1px solid #FF6709; */
     color: #888;
     border-radius: 20px;
     font-size: 18px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-size: 12px;
 }
 
 .tag span.active {
-    background-color: #FF6709;
+    background-color: #FFB07E;
     color: white;
 }
 
@@ -153,7 +157,7 @@ const selectTag = (tag) => {
 
 
 .post-btn {
-    background-color: #FF6709;
+    background-color: #FF6708;
     color: white;
     border: none;
     padding: 12px 30px;
@@ -167,3 +171,4 @@ const selectTag = (tag) => {
     background-color: #e55a00;
 }
 </style>
+

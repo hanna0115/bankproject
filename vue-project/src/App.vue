@@ -58,7 +58,7 @@ a {
   display: flex;
   position: relative;
   top: 6px;
-  right: 6px;
+  right: 75px;
 
   /* gap:50px; */
 
