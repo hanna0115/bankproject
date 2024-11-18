@@ -9,23 +9,14 @@
             
             <p>생년월일</p>
             <div class="birth-select-group">
-                <select class="select-box" v-model="selectedYear">
-                    <option disabled value="">년도</option>
-                    <option v-for="year in years" :key="year" :value="year">
-                        {{ year }}
-                    </option>
+                <select class="select-box">
+                    <option disabled selected>년도</option>
                 </select>
-                <select class="select-box" v-model="selectedMonth">
-                    <option disabled value="">월</option>
-                    <option v-for="month in months" :key="month" :value="month">
-                        {{ month }}
-                    </option>
+                <select class="select-box">
+                    <option disabled selected>월</option>
                 </select>
-                <select class="select-box" v-model="selectedDay">
-                    <option disabled value="">일</option>
-                    <option v-for="day in availableDays" :key="day" :value="day">
-                        {{ day }}
-                    </option>
+                <select class="select-box">
+                    <option disabled selected>일</option>
                 </select>
             </div>
 
@@ -49,17 +40,17 @@
 
             <p>저축 목표</p>
             <div class="goal-group">
-                <button 
-                    v-for="goal in goals" 
-                    :key="goal"
-                    type="button" 
-                    class="goal-btn"
-                    :class="{ 'active': selectedGoal === goal }"
-                    @click="selectGoal(goal)"
-                >
-                    {{ goal }}
-                </button>
-            </div>
+    <button 
+        v-for="goal in goals" 
+        :key="goal"
+        type="button" 
+        class="goal-btn"
+        :class="{ 'active': selectedGoals.includes(goal) }"
+        @click="toggleGoal(goal)"
+    >
+        {{ goal }}
+    </button>
+  </div>
 
             <p>저축 기간 (개월)</p>
             <div class="savings-slider-wrapper">
@@ -78,8 +69,9 @@
             </div>
 
             <div class="input-group">
-                <p class="deb-amount">저축 금액 (만원)</p>
+            <p class="deb-amount">저축 금액 (만원)</p>
                 <input type="text" class="input-field" placeholder="금액을 입력하세요">
+        
             </div>
             <button type="submit" class="submit-btn">완료</button>
         </form>
@@ -87,7 +79,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 
 const goals = [
     '내집마련',
@@ -100,49 +92,21 @@ const goals = [
     '위시리스트'
 ]
 
-const selectedGoal = ref('')
-const selectGoal = (goal) => {
-    selectedGoal.value = goal
-}
+const selectedGoals = ref([])
 
-// 생년월일 관련 코드
-const currentYear = new Date().getFullYear()
-const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i)
-const months = Array.from({ length: 12 }, (_, i) => i + 1)
+// const selectGoal = (goal) => {
+//     selectedGoal.value = goal
+// }
 
-const selectedYear = ref('')
-const selectedMonth = ref('')
-const selectedDay = ref('')
-
-// 월별 일수 계산
-const getDaysInMonth = (year, month) => {
-    if (!year || !month) return []
-    
-    const daysIn31 = [1, 3, 5, 7, 8, 10, 12]
-    const daysIn30 = [4, 6, 9, 11]
-    
-    if (daysIn31.includes(month)) {
-        return Array.from({ length: 31 }, (_, i) => i + 1)
-    } else if (daysIn30.includes(month)) {
-        return Array.from({ length: 30 }, (_, i) => i + 1)
+const toggleGoal = (goal) => {
+    if (selectedGoals.value.includes(goal)) {
+        // 이미 선택된 목표라면 제거
+        selectedGoals.value = selectedGoals.value.filter(g => g !== goal)
     } else {
-        const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
-        return Array.from({ length: isLeapYear ? 29 : 28 }, (_, i) => i + 1)
+        // 선택되지 않은 목표라면 추가
+        selectedGoals.value.push(goal)
     }
 }
-
-// 사용 가능한 일자 계산
-const availableDays = computed(() => {
-    return getDaysInMonth(selectedYear.value, selectedMonth.value)
-})
-
-// 월이 변경될 때 일자 재설정
-watch([selectedYear, selectedMonth], () => {
-    const days = getDaysInMonth(selectedYear.value, selectedMonth.value)
-    if (selectedDay.value > days.length) {
-        selectedDay.value = ''
-    }
-})
 </script>
 
 <style scoped>
@@ -166,7 +130,7 @@ p {
     color: #808080;
     margin-bottom: 8px;
     margin-left: 3px;
-    font-size: 14px;
+    font-size: 14px ;
 }
 
 .input-group {
@@ -253,6 +217,9 @@ p {
 /* 슬라이더 스타일 */
 .savings-slider-wrapper {
     margin: 40px 0;
+    /* width: 80%;
+    margin-left: auto;
+    margin-right: auto ; */
 }
 
 .savings-amount-slider {
@@ -344,7 +311,9 @@ p {
 }
 
 .deb-amount {
-    margin-top: 90px;
-    margin-bottom: 10px;
+    margin-top: 90px; /* 위쪽 여백 추가 */
+    margin-bottom: 10px; /* 아래쪽 여백 조정 */
 }
+
+
 </style>
