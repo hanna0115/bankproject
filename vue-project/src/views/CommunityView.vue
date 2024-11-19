@@ -22,7 +22,7 @@ import PostDetail from '@/components/PostDetail.vue';
     max-width: 1280px;
     margin: 0 auto;
     padding: 20px;
-    height: 100%;
+    height: 100vh;
     overflow: hidden;
 }
 
@@ -39,6 +39,7 @@ import PostDetail from '@/components/PostDetail.vue';
 
 .post-detail {
     flex: 1; /* 남은 공간 모두 차지 */
+    height: 200px;
     /* overflow-y: auto; */ /* 디테일 스크롤바
     padding-left: 30px; /* 왼쪽 여백 추가 */
 
