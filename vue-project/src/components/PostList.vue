@@ -4,18 +4,16 @@
         
         <div class="post-list">
             <div v-for="n in 5" :key="n" class="post-item">
-                <div class="post-header">
-                    <span class="post-category">미마마</span>
-                </div>
-                <div class="post-content">
-                    <h3 class="post-title">돈 모으는 꿀팁 알려줄까</h3>
+                <div class="post-body">
+                    <p class="post-number">1/</p>
+                    <div class="post-content">
+                        <span class="user-id">미마마</span>
+                        <h3 class="post-title">돈 모으는 꿀팁 알려줄까</h3>
+                    </div>
                 </div>
                 <div class="post-footer">
                     <span class="post-date">작성일 2024.11.01</span> | <span class="post-views">조회 11</span>
                 </div>
-                <button class="favorite-btn">
-                    <span class="heart-icon">♡</span>
-                </button>
             </div>
         </div>
         <button @click="router.push('/createpost')"
@@ -65,39 +63,39 @@ const router = useRouter();
     top: 20px;
 }
 
-.post-header {
-    margin-bottom: 10px;
+.post-body {
+    display: flex;
+    align-items: center;
 }
 
-.post-category {
+.post-number {
+    margin-right: 10px;
+    font-size: 28px;
+    color: #ff8940;
+}
+
+.post-content {
+    font-weight: bold;
+}
+
+.user-id {
     color: #666;
     font-size: 14px;
 }
 
 .post-title {
-    font-size: 16px;
+    font-size: 18px;
     margin: 0;
     color: #333;
 }
 
 .post-footer {
     display: flex;
+    justify-content: flex-end;
     gap: 15px;
     margin-top: 10px;
     font-size: 12px;
     color: #888;
-}
-
-.favorite-btn {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #888;
-    font-size: 20px;
 }
 
 .write-btn {

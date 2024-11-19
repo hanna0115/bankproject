@@ -12,8 +12,10 @@
         <hr>
         <div>
             <p>댓글</p>
-            <input type="text">
-            <span class="write">작성</span>
+            <form>
+                <input type="text">
+                <button class="write">작성</button>
+            </form>
         </div>
         <div class="comment">
             <p>오한나 <span> | </span> 좋아요
