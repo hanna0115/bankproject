@@ -1,6 +1,5 @@
 <template>
   <nav class="nav">
-    <!-- 로고에 애니메이션 적용 -->
     <RouterLink :to="{name:'home'}" class="logo">BANKPROJECT</RouterLink>
     <div class="real-nav">
       <RouterLink :to="{name:'recommend'}">금융상품추천</RouterLink>
@@ -17,10 +16,27 @@ import { gsap } from 'gsap'
 import { RouterLink, RouterView } from 'vue-router'
 
 onMounted(() => {
-  // 페이지가 로드될 때 로고에 애니메이션 적용
-  gsap.fromTo(".logo",
-    { opacity: 0, y: -50 },  // 초기 상태 (투명하고 위쪽에 위치)
-    { opacity: 1, y: 0, duration: 1, ease: "power2.out" } // 최종 상태 (보이고 제자리로 이동)
+  // Homepage container animation
+  gsap.fromTo(".recommendation-container",
+    { opacity: 0, y: -50 },
+    { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+  );
+  
+  // Navbar animation with timing sync
+  const stagger = 0.6;
+  const totalProducts = 5;
+  const productAnimationDuration = 3;
+  const totalDelay = (totalProducts * stagger + productAnimationDuration);
+  
+  gsap.fromTo(".nav",
+    { opacity: 0, y: -50 },
+    { 
+      opacity: 1, 
+      y: 0, 
+      duration: 1,
+      delay: 0.2,
+      ease: "power2.out"
+    }
   );
 });
 </script>
@@ -32,7 +48,6 @@ onMounted(() => {
   align-items: center;
   width: clamp(1232px, calc((100vw - 1752px)*((1376 - 1232) /(2560 - 1752)) + 1232px), 1376px);
   margin: auto;
-  /* border: 1px solid black; */
 }
 
 .logo {
@@ -46,9 +61,6 @@ onMounted(() => {
   position: relative;
   top: 6px;
   right: 75px;
-
-  /* gap:50px; */
-
 }
 
 .real-nav a {
