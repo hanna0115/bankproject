@@ -11,6 +11,7 @@ import PostList from '@/components/PostList.vue'
 import PostDetail from '@/components/PostDetail.vue'
 import RecommendDetail from '@/components/RecommendDetail.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -63,7 +64,7 @@ const router = createRouter({
       path:'/recommend-detail',
       name:'recommenddetail',
       component: RecommendDetail
-    }
+    },
   ],
 })
 
