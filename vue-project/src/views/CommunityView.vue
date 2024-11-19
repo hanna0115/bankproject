@@ -31,17 +31,19 @@ import PostDetail from '@/components/PostDetail.vue';
     flex-direction: column;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 0 20px;
     overflow: hidden;
 }
 
 .container h2 {
+    margin: 100px auto 65px;
     color: #FF6708;
 }
 
 
 .category {
     display: flex;
+    align-self: start;
 }
 
 .category p {

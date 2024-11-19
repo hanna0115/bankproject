@@ -24,13 +24,19 @@
             <p>댓글</p>
             <form>
                 <input type="text" placeholder="댓글을 입력하세요">
-                <button>작성</button>
+                <button>작성하기</button>
             </form>
-        </div>
-        <div class="comment-list">
-            <div>
-                <span>user-name | 댓글 내용</span>
-                <span class="comment-delete">댓글 삭제</span>
+            <div class="comment-ilst">
+                <div class="comment-item">
+                    <div class="comment-info">
+                        <p>user-name</p>
+                        <span>|</span> 
+                        <p class="comment-content">댓글 내용
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aut aliquam facere architecto, officia atque repellat cumque harum nesciunt earum dolor commodi maxime eum asperiores quaerat? Facilis vitae amet ab!
+                        </p>
+                    </div>
+                    <p class="comment-delete">댓글 삭제</p>
+                </div>
             </div>
         </div>
     </div>
@@ -43,10 +49,12 @@
 <style scoped>
 .post-detail-container {
     width: 60%;
+    max-height: 625px;
     margin-left: 30px;
     padding: 20px;
     background-color: #F9FAFB;
     border-radius: 8px;
+    overflow-y: auto;
 }
 
 .post-header {
@@ -80,39 +88,86 @@ hr {
     font-size: 12px;
 }
 
-.content {
-    height: 200px;
-    margin: 30px 0;
-    overflow-y: auto;
+.post-info p:last-child {
+    text-decoration: underline;
 }
 
+.content {
+    margin: 30px 0;;
+}
 
-input[type="text"] {
-    width: 90%;
+.like {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 10px;
+}
+
+.like-btn {
+    margin-right: 5px;
+}
+
+.comments {
+    margin: 10px;
+    font-weight: bold;
+}
+
+.comments > p {
+    margin-left: 10px;
+}
+
+.comments form {
+    position: relative
+}
+
+.comments input[type="text"] {
+    width: 100%;
     padding: 8px;
-    border: 1px solid #eee;
-    border-radius: 4px;
+    padding-right: 15%;
+    border: none;
+    border-radius: 6px;
     margin-top: 10px;
 }
 
-
-.write {
-    position: relative;
-    right: 35px;
+.comments button {
+    position: absolute;
+    top: 16px;
+    right: 6px;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: #fff;
+    background-color: #ff9966;
+    border-radius: 20px;
 }
 
-.comment {
-    cursor: pointer;
-    margin-top: 30px;
+.comments button:hover {
+    background-color: #ff8855;
+}
+
+.comment-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 10px;
+    font-size: 14px;
+}
+
+.comment-info {
+    display: flex;
+
+}
+
+.comment-info span {
+    margin: 0 10px;
+}
+
+
+.comment-content {
+    max-width: 60%;
 }
 
 .comment-delete {
     cursor: pointer;
-    position: relative;
-    left: 499px;
-}
-
-button:hover {
-    background-color: #ff8855;
+    width: 50px;
+    text-decoration: underline;
 }
 </style>

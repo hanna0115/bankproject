@@ -80,15 +80,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    color: #333;
-}
-
 .recommendation-container {
-    margin: 250px auto;
+    margin: 100px auto;
     text-align: center;
 }
 
