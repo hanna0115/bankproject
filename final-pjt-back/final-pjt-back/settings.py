@@ -141,6 +141,21 @@ REST_AUTH_SERIALIZERS = {
 ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 
 
+# Django 환경변수 관리
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+import os
+import environ
+
+env = environ.Env(DEBUG=(bool, True))
+
+environ.Env.read_env(
+    env_file=os.path.join(BASE_DIR, '.env')
+)
+
+EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
+
+# 
 
 ROOT_URLCONF = 'final-pjt-back.urls'
 
