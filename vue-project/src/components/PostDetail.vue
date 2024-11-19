@@ -1,26 +1,37 @@
 <template>
-    <div class="container">
-        <h2>돈 모으는 꿀팁 알려줄까</h2>
-        <span>닉네임</span>
-        <hr>
-        <span>작성일 2024.11.01</span> | <span>조회수 13</span>
-        <div class="content">
-            <span>
-                김선명
-            </span>
+    <div class="post-detail-container">
+        <div class="post-header">
+            <h2>돈 모으는 꿀팁 알려줄까</h2>
+            <p>user-name</p>
         </div>
+
         <hr>
-        <div>
+        <div class="post-body">
+            <div class="post-info">
+                <p>작성일 2024.11.01 | 조회수 13</p>
+                <p>수정하기</p>
+            </div>
+            <div class="content">김선명 (게시물 내용)
+            </div>
+            <div class="like">
+                <div class="like-btn">♡</div>
+                <p>1</p>
+            </div>
+        </div>
+
+        <hr>
+        <div class="comments">
             <p>댓글</p>
             <form>
-                <input type="text">
-                <button class="write">작성</button>
+                <input type="text" placeholder="댓글을 입력하세요">
+                <button>작성</button>
             </form>
         </div>
-        <div class="comment">
-            <p>오한나 <span> | </span> 좋아요
-                <span class="comment-delete">삭제</span>
-            </p>
+        <div class="comment-list">
+            <div>
+                <span>user-name | 댓글 내용</span>
+                <span class="comment-delete">댓글 삭제</span>
+            </div>
         </div>
     </div>
 </template>
@@ -30,37 +41,51 @@
 </script>
 
 <style scoped>
-.container {
-    position: relative;
+.post-detail-container {
+    width: 60%;
+    margin-left: 30px;
     padding: 20px;
-    width: calc(100% - 40px); /* 패딩 고려한 너비 설정 */
-    font-size: 12px;
-    right: 10px;
-    top: 132px;
     background-color: #F9FAFB;
     border-radius: 8px;
 }
 
-
-h2 {
-    color: #333;
-    margin-bottom: 10px;
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin: 10px 0;
 }
 
-.content {
-    width: 90%;
-    min-height: 200px;
-    /* padding: 10px; */
-    border-radius: 4px;
-    resize: none;
-    margin: 30px 0;
+.post-header h2 {
+    color: #333;
+    font-size: 24px;
+}
+
+.post-header p {
+    color: #565656;
+    font-size: 16px;
 }
 
 hr {
-    border: none;
-    border-top: 1px solid #eee;
-    margin: 15px 0;
+    border-top: 1px solid #bcbcbc;
 }
+
+.post-body {
+    margin: 10px 0;
+}
+
+.post-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+}
+
+.content {
+    height: 200px;
+    margin: 30px 0;
+    overflow-y: auto;
+}
+
 
 input[type="text"] {
     width: 90%;

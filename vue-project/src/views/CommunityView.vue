@@ -1,13 +1,19 @@
 <!-- CommunityView.vue -->
 <template>
     <div class="container">
+        <h2>커뮤니티</h2>
+        <div class="category">
+            <p>카테고리</p>
+            <p>전체</p>
+            <p>예적금</p>
+            <p>부동산</p>
+            <p>주식</p>
+            <p>기타</p>
+        </div>
+
         <div class="content-wrapper">
-            <div class="post-list">
-                <PostList/>
-            </div>
-            <div class="post-detail">
-                <PostDetail/>
-            </div>
+            <PostList />
+            <PostDetail />
         </div>
     </div>
 </template>
@@ -19,29 +25,39 @@ import PostDetail from '@/components/PostDetail.vue';
 
 <style scoped>
 .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     max-width: 1280px;
     margin: 0 auto;
     padding: 20px;
-    height: 100vh;
     overflow: hidden;
+}
+
+.container h2 {
+    color: #FF6708;
+}
+
+
+.category {
+    display: flex;
+}
+
+.category p {
+    padding: 10px;
+    font-size: 18px;
+}
+
+.category p:first-child {
+    color: #FF6708;
 }
 
 .content-wrapper {
     display: flex;
+    justify-content: center;
+    width: 100%;
     height: 100%;
-    gap: 30px; /* 간격 추가 */
 }
 
-.post-list {
-    flex: 0 0 500px; /* 고정 너비 500px 설정 */
-    /* overflow-y: auto; */
-}
-
-.post-detail {
-    flex: 1; /* 남은 공간 모두 차지 */
-    height: 200px;
-    /* overflow-y: auto; */ /* 디테일 스크롤바
-    padding-left: 30px; /* 왼쪽 여백 추가 */
-
-}
 </style>

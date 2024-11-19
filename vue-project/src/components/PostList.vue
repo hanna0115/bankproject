@@ -1,8 +1,7 @@
 <template>
     <div class="board-container">
-        <h2 class="board-title">전체 게시글</h2>
-        
         <div class="post-list">
+
             <div v-for="n in 5" :key="n" class="post-item">
                 <div class="post-body">
                     <p class="post-number">1/</p>
@@ -16,8 +15,7 @@
                 </div>
             </div>
         </div>
-        <button @click="router.push('/createpost')"
-        class="write-btn">작성하기</button>
+        <button @click="router.push('/createpost')" class="write-btn">작성하기</button>
     </div>
 </template>
 
@@ -31,10 +29,11 @@ const router = useRouter();
 
 <style scoped>
 .board-container {
-    position: relative;
-    width: 100%; /* max-width 제거하고 width 100%로 설정 */
-    padding: 0px;
-    top: 17px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    width: 40%;
+    /* max-width 제거하고 width 100%로 설정 */
 }
 
 
@@ -47,20 +46,15 @@ const router = useRouter();
 }
 
 .post-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    padding: 0px;
-    width: 100%; /* 고정 너비 제거 */
+    width: 100%;
 }
 
 .post-item {
-    position: relative;
     background-color: #F9FAFB;
     border-radius: 8px;
+    margin-bottom: 10px;
     padding: 20px;
     cursor: pointer;
-    top: 20px;
 }
 
 .post-body {
@@ -99,8 +93,6 @@ const router = useRouter();
 }
 
 .write-btn {
-    position: relative;
-    float: right;
     margin-top: 20px;
     padding: 8px 20px;
     background-color: #ff9966;
@@ -108,7 +100,6 @@ const router = useRouter();
     border: none;
     border-radius: 30px;
     cursor: pointer;
-    top: 15px;
 }
 
 .write-btn:hover {
