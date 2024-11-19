@@ -30,9 +30,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: clamp(1232px, calc((100vw - 1752px)*((1376 - 1232) /(2560 - 1752)) + 1232px), 1376px);
-  margin: auto;
-  /* border: 1px solid black; */
+  padding: 10px 20px;
 }
 
 .logo {
