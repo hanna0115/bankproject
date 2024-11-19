@@ -46,6 +46,9 @@
                     />
                 </KakaoMap>
             </div>
+            <div>
+                
+            </div>
         </div>
     </div>
 </template>
@@ -261,7 +264,7 @@ watch([selectedCity, selectedDistrict, selectedBank], () => {
 
 .content {
     position: relative;
-    left: 490px;
+    left: 580px;
 }
 
 .title {

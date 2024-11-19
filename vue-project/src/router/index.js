@@ -9,6 +9,7 @@ import CreatePost from '@/components/CreatePost.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import PostList from '@/components/PostList.vue'
 import PostDetail from '@/components/PostDetail.vue'
+import RecommendDetail from '@/components/RecommendDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,7 +57,12 @@ const router = createRouter({
     {
       path:'/postdetail',
       name:'postdetail',
-      component: PostDetail
+      component: PostDetail // postlist의 children으로 수정할 것
+    },
+    {
+      path:'/recommend-detail',
+      name:'recommenddetail',
+      component: RecommendDetail
     }
   ],
 })
