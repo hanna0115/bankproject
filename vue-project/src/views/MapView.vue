@@ -255,13 +255,15 @@ watch([selectedCity, selectedDistrict, selectedBank], () => {
 
 <style scoped>
 .container {
-    margin-top: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 100px auto 0px;
     width: 1280px;
 }
 
 .content {
-    position: relative;
-    left: 490px;
+    width: 80%;
 }
 
 .title {
