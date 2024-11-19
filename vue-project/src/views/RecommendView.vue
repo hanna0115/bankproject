@@ -32,37 +32,50 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import { gsap } from 'gsap';
 
 onMounted(() => {
-    const productItems = document.querySelectorAll('.product-item');
+  const productItems = document.querySelectorAll('.product-item');
+  
+  // 상품 목록 애니메이션
+  gsap.fromTo(".recommendation-container",
+    { opacity: 0, y: -50 },
+    { 
+      opacity: 1, 
+      y: 0, 
+      duration: 1,
+      delay: 0.8, // Delay after navbar animation
+      ease: "power2.out",
+      onComplete: () => {
+        // Start product card animations after container appears
+        productItems.forEach((item, index) => {
+          const card = item.querySelector('.product-card-inner');
+          let isAnimating = true;
 
-    productItems.forEach((item, index) => {
-        const card = item.querySelector('.product-card-inner');
-        let isAnimating = true;
+          const animationDelay = index * 0.6;
+          const animationDuration = 3;
+          const totalAnimationTime = (animationDelay + animationDuration) * 1000;
 
-        // Calculate total animation time for each card
-        const animationDelay = index * 0.6; // 0.6s delay between each card
-        const animationDuration = 3; // 3s for the flip animation
-        const totalAnimationTime = (animationDelay + animationDuration) * 1000;
-
-        // Set animation end timer
-        setTimeout(() => {
+          setTimeout(() => {
             isAnimating = false;
-        }, totalAnimationTime);
+          }, totalAnimationTime);
 
-        item.addEventListener('mouseenter', () => {
+          item.addEventListener('mouseenter', () => {
             if (!isAnimating) {
                 card.style.animation = 'none';
                 item.classList.add('hover-effect');
             }
-        });
+          });
 
-        item.addEventListener('mouseleave', () => {
+          item.addEventListener('mouseleave', () => {
             if (!isAnimating) {
                 item.classList.remove('hover-effect');
             }
+          });
         });
-    });
+      }
+    }
+  );
 });
 </script>
 
@@ -218,7 +231,6 @@ onMounted(() => {
     100% { transform: rotateX(-360deg); }
 }
 
-/* Sequential animation for each card */
 .product-item:nth-child(1) .product-card-inner {
     animation: flipCard 3s 1;
     animation-delay: 0s;

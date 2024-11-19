@@ -47,6 +47,11 @@
                 <input type="password" class="input-field" placeholder="비밀번호를 입력하세요">
             </div>
 
+            <p>자산</p>
+            <div class="input-group">
+                <input type="password" class="input-field" placeholder="자산을 입력하세요">
+            </div>
+
             <p>저축 목표</p>
             <div class="goal-group">
                 <button v-for="goal in goals" :key="goal" type="button" class="goal-btn"
@@ -182,7 +187,7 @@ p {
 }
 
 .input-field {
-    width: 94.5%;
+    width: 100%;
     padding: 12px;
     border: 1px solid #E5E5E5;
     border-radius: 8px;

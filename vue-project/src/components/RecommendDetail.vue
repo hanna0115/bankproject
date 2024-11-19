@@ -63,14 +63,12 @@
 }
 
 .bank-name {
-    position: relative;
-    bottom: 25px;
+    margin-top: 5px;
     color: #a7a7a7;
 }
 
 .product-event {
-    position: relative;
-    bottom: 25px;
+    margin-top: 5px;
 }
 
 .product-event > span {
@@ -93,15 +91,16 @@
 }
 
 .product-interest {
+    margin-top: 20px;
     display: flex;
     gap: 20px;
-
     
 }
 
 .product-interest p {
     color: #BCBCBC;
     font-size: 14px;
+    margin-bottom: 10px;
 }
 
 .product-interest span {
@@ -111,7 +110,7 @@
 }
 
 .interest-high {
-    height: 75px;
+    height: 55px;
     border-right: 0.5px solid #f1f1f1;
     padding-right: 20px;
 }
@@ -148,6 +147,7 @@
     color: #8d8d8d;
     border-bottom: 1px solid #dfdcdc;
     padding-bottom: 10px;
+    margin-bottom: 20px;
 }
 
 .product-detail > p {
