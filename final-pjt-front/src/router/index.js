@@ -5,11 +5,9 @@ import MapView from '@/views/MapView.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import RecommendView from '@/views/RecommendView.vue'
 import LoginView from '@/views/LoginView.vue'
-import CreatePost from '@/components/CreatePost.vue'
+import CreatePostView from '@/views/CreatePostView.vue'
 import SignUpView from '@/views/SignUpView.vue'
-import PostList from '@/components/PostList.vue'
-import PostDetail from '@/components/PostDetail.vue'
-import RecommendDetail from '@/components/RecommendDetail.vue'
+
 import ExchangeView from '@/views/ExchangeView.vue'
 
 
@@ -35,6 +33,11 @@ const router = createRouter({
       path: '/recommend',
       name: 'recommend',
       component: RecommendView
+    },
+    {
+      path: '/createPost',
+      name: 'createPost',
+      component: CreatePostView
     },
     {
       path: '/login',
