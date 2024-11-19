@@ -17,15 +17,15 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         # 기본 사용자 정보 저장 (DB 저장은 보류)
         user = super().save_user(request, user, form, False)
         # 검증된 폼 데이터 가져오기
-        data = form.cleaned_data
+        # data = request.cleaned_data
         
         # 추가 필드 데이터 저장
-        user.name = data.get('name')
-        user.birth_date = data.get('birth_date')
-        user.asset = data.get('asset')
-        user.saving_purpose = data.get('saving_purpose')
-        user.saving_amount = data.get('saving_amount')
-        user.saving_period = data.get('saving_period')
+        user.name = request.data.get('name')
+        user.birth_date = request.data.get('birth_date')
+        user.asset = request.data.get('asset')
+        user.saving_purpose = request.data.get('saving_purpose')
+        user.saving_amount = request.data.get('saving_amount')
+        user.saving_period = request.data.get('saving_period')
         
         # commit이 True인 경우에만 DB에 최종 저장
         if commit:

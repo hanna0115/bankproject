@@ -24,7 +24,7 @@ class User(AbstractUser):
     email = models.EmailField(_('email address'), unique=True)
     name = models.CharField(max_length=150)
     birth_date = models.DateField()
-    assets = models.IntegerField()
+    asset = models.IntegerField()
     saving_purpose = models.JSONField()  # 다중 선택을 위해 JSONField 사용
     saving_amount = models.IntegerField()
     saving_period = models.IntegerField()
@@ -41,7 +41,7 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     # 필수로 입력받을 필드 목록
-    REQUIRED_FIELDS = ['name', 'birth_date', 'assets', 'saving_purpose', 'saving_amount', 'saving_period']
+    REQUIRED_FIELDS = ['name', 'birth_date', 'asset', 'saving_purpose', 'saving_amount', 'saving_period']
 
     def __str__(self):
         return self.email
