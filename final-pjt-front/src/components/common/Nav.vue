@@ -5,6 +5,7 @@
       <RouterLink :to="{name:'recommend'}">금융상품추천</RouterLink>
       <RouterLink :to="{name:'map'}">지도</RouterLink>
       <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
+      <RouterLink :to="{name:'exchange'}">환율 계산기</RouterLink>
     </div>
     <RouterLink :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
   </nav>
@@ -46,6 +47,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 900px;
   padding: 10px 20px;
 }
 

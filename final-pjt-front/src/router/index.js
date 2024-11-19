@@ -42,29 +42,9 @@ const router = createRouter({
       component: LoginView
     },
     {
-      path: '/createpost',
-      name: 'createpost',
-      component: CreatePost,
-    },
-    {
       path:'/signup',
       name: 'signup',
       component: SignUpView
-    },
-    {
-      path:'/postlist',
-      name:'postlist',
-      component: PostList
-    },
-    {
-      path:'/postdetail',
-      name:'postdetail',
-      component: PostDetail // postlist의 children으로 수정할 것
-    },
-    {
-      path:'/recommend-detail',
-      name:'recommenddetail',
-      component: RecommendDetail,
     },
     {
       path:'/exchange',
