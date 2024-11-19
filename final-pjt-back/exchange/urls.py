@@ -4,5 +4,5 @@ from . import views
 
 urlpatterns = [
     # 환율 조회
-    path('', views.post_list),
+    path('', views.get_exchange),
 ]
