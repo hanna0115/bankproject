@@ -31,11 +31,9 @@
                     <div class="comment-info">
                         <p>user-name</p>
                         <span>|</span> 
-                        <p class="comment-content">댓글 내용
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem aut aliquam facere architecto, officia atque repellat cumque harum nesciunt earum dolor commodi maxime eum asperiores quaerat? Facilis vitae amet ab!
-                        </p>
+                        <p class="comment-content">댓글 내용</p>
                     </div>
-                    <p class="comment-delete">댓글 삭제</p>
+                    <p class="comment-delete">삭제</p>
                 </div>
             </div>
         </div>
@@ -160,7 +158,6 @@ hr {
     margin: 0 10px;
 }
 
-
 .comment-content {
     max-width: 60%;
 }
@@ -169,5 +166,6 @@ hr {
     cursor: pointer;
     width: 50px;
     text-decoration: underline;
+    word-break: keep-all;
 }
 </style>
