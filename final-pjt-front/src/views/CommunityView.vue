@@ -19,8 +19,16 @@
 </template>
 
 <script setup>
+import { useCommunityStore } from '@/stores/community';
 import PostList from '@/components/PostList.vue';
 import PostDetail from '@/components/PostDetail.vue';
+import { onMounted } from 'vue';
+
+const store = useCommunityStore()
+
+onMounted(() => {
+    store.getPosts()
+})
 </script>
 
 <style scoped>
@@ -49,6 +57,7 @@ import PostDetail from '@/components/PostDetail.vue';
 .category p {
     padding: 10px;
     font-size: 18px;
+    cursor: pointer;
 }
 
 .category p:first-child {
