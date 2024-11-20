@@ -45,6 +45,7 @@
             <p>비밀번호</p>
             <div class="input-group">
                 <input type="password" class="input-field" placeholder="비밀번호를 입력하세요" v-model.trim="password1">
+                <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
             </div>
 
             <p>비밀번호 확인</p>
@@ -55,6 +56,7 @@
             <p>자산</p>
             <div class="input-group">
                 <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model.number="asset">
+                <p class="asset-min">* 만 단위 이상 기입</p>
             </div>
 
             <p>저축 목표</p>
@@ -82,9 +84,10 @@
             </div>
 
             <div class="input-group">
-                <p class="deb-amount">저축 금액 (만원)</p>
+                <p class="deb-amount">저축 금액</p>
                 <input type="text" class="input-field" placeholder="금액을 입력하세요"
                 v-model.number="savingAmount">
+                <p class="asset-min">* 만 단위 이상 기입</p>
             </div>
             <button type="submit" class="submit-btn">완료</button>
         </form>
@@ -231,6 +234,20 @@ p {
     margin-bottom: 30px;
 }
 
+.password-require {
+    font-size: 12px;
+    color: #fc8a44;
+    padding-left: 10px;
+    font-weight: 350;
+}
+
+.asset-min {
+    font-size: 12px;
+    color: #fc8a44;
+    padding-left: 10px;
+    font-weight: 350;
+}
+
 .input-field {
     width: 100%;
     padding: 12px;
@@ -274,6 +291,8 @@ p {
 .email-input-group span {
     color: #666;
 }
+
+
 
 /* 목표 버튼 스타일 */
 .goal-group {

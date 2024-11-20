@@ -7,6 +7,12 @@ export const useUserStore = defineStore("user", () => {
   const url = 'http://127.0.0.1:8000'
 //   const isAuthenticated = ref(false)
   const token = ref(null)
+  const isLoggedIn = computed(() => !!token.value)
+
+  const logOut = () => {
+    token.value = null
+    router.push('/login')
+  }
 
   const signUp = function (payload) {
     const {name, email, birth_date, asset, saving_purpose, saving_amount, saving_period, password1, password2} = payload
@@ -23,6 +29,8 @@ export const useUserStore = defineStore("user", () => {
     //   localStorage.setItem('token', response.data.token)
     //   isAuthenticated.value = true
       console.log('회원가입이 완료되었습니다.')
+      const password = password1
+      logIn({ email, password })
       router.push('/')  // 회원가입 성공 시 홈으로 이동
     })
     .catch((error) => {
@@ -55,5 +63,5 @@ export const useUserStore = defineStore("user", () => {
     })
   }
   
-  return { url, signUp, logIn, token};
+  return { url, signUp, logIn, token, logOut, isLoggedIn}
 }, { persist: true });

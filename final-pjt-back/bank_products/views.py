@@ -258,29 +258,44 @@ def create_user_products(product):
     return join_date, expiration_date, join_period, monthly_amount, interest_rate
 
 
-
-# 사용자 가입 예적금 상품 불러오기 : 가입한 예적금 상품 연동하기 누르면 DB에 추가되도록하고, 조회 값 return
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def products_joined(request, user_pk):
+    # 연동된 예적금 조회
+    if request.method == 'GET':
+        userproducts = UserProduct.objects.filter(user=user_pk)
+        serializer = UserProductSerializer(userproducts, many=True)
+        return Response(serializer.data)
+    
+    # 예적금 연동하기
+    elif request.method == 'POST':
+        before_len = len(UserProduct.objects.filter(user=user_pk))
 
-    # 연동하기 버튼을 누른 user가 가입한 상품 리스트
-    joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()[:5]
+        # 연동하기 버튼을 누른 user가 가입한 상품 리스트
+        joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()[:5]
 
-    # BankProducts 모델에서 pk 기반으로 상품 객체 조회
-    bank_products = BankProducts.objects.filter(pk__in=joined_products)
-    user = get_object_or_404(User, pk=user_pk)
+        if not joined_products:
+            return Response({'detail': '가입된 예적금 상품이 없습니다.'}, status=status.HTTP_200_OK)
+
+        # BankProducts 모델에서 pk 기반으로 상품 객체 조회
+        bank_products = BankProducts.objects.filter(pk__in=joined_products)
+        user = get_object_or_404(User, pk=user_pk)
 
 
-    # user가 가입한 상품을 하나씩 UserProduct DB에 저장
-    for product in bank_products:
-        data = create_user_products(product)
+        # user가 가입한 상품을 하나씩 UserProduct DB에 저장
+        for product in bank_products:
+            data = create_user_products(product)
 
-        _ = UserProduct.objects.get_or_create(user=user, product=product,
-                                          defaults={'join_date':data[0], 'expiration_date':data[1],
-                                                    'join_period':data[2], 'monthly_amount':data[3],
-                                                    'interest_rate':data[4]})
+            _ = UserProduct.objects.get_or_create(user=user, product=product,
+                                            defaults={'join_date':data[0], 'expiration_date':data[1],
+                                                        'join_period':data[2], 'monthly_amount':data[3],
+                                                        'interest_rate':data[4]})
 
-    userproducts = UserProduct.objects.filter(user=user_pk)
-    serializer = UserProductSerializer(userproducts, many=True)
-    return Response(serializer.data)
+        after_len = len(UserProduct.objects.filter(user=user_pk))
+
+        if before_len == after_len:
+            return Response({'detail': '이미 모든 상품이 연동되어 있습니다.'}, status=status.HTTP_200_OK)
+
+        return Response({'detail': f'{user.email.split("@")[0]}님의 예적금이 연동되었습니다.'}, status=status.HTTP_201_CREATED)
+    
+    

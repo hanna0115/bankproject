@@ -7,7 +7,14 @@
       <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
       <RouterLink :to="{name:'exchange'}">환율 계산기</RouterLink>
     </div>
-    <RouterLink :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
+    <button v-if="store.isLoggedIn"
+    @click="store.logOut"
+    class="login-btn">
+    로그아웃
+  </button>
+    <RouterLink
+    v-else
+    :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
   </nav>
 </template>
 
@@ -15,6 +22,9 @@
 import { onMounted } from 'vue'
 import { gsap } from 'gsap'
 import { RouterLink, RouterView } from 'vue-router'
+import { useUserStore } from '@/stores/user';
+
+const store = useUserStore()
 
 onMounted(() => {
   // Homepage container animation
@@ -74,11 +84,16 @@ onMounted(() => {
 }
 
 .login-btn {
-  position: relative;
   background-color: rgba(255, 103, 8, 0.6);
   color: white;
   padding: 5px 12px;
   border-radius: 30px;
-  top: 6px;
+}
+
+button.login-btn {
+  border: none;
+  cursor: pointer;
+  padding: 5px 12px;
+  font-size: 16px;
 }
 </style>
