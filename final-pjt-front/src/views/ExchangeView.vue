@@ -25,12 +25,13 @@
 
         <div class="graph">
             환율 그래프 넣기
+            <ExchangeChart />
         </div>
     </div>
 </template>
 
 <script setup>
-
+import ExchangeChart from '@/components/ExchangeChart.vue';
 </script>
 
 <style scoped>
