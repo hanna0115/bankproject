@@ -1,43 +1,40 @@
 <template>
     <div class="post-detail-container">
-        <div class="post-header">
-            <h2></h2>
-            <p>user-name</p>
+        <div class="post-header" v-if="store.post">
+            <h2>{{ store.post.title }}</h2>
+            <p>{{ store.post.name }}</p>
         </div>
 
         <hr>
-        <PostDetailBody/>
+        <PostDetailBody :post="store.post"/>
         <hr>
-        <PostDetailComment/>
-
+        <PostDetailComment :post="store.post"/>
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
 import { useCommunityStore } from '@/stores/community';
 import PostDetailBody from '@/components/Posts/PostDetailBody.vue';
 import PostDetailComment from '@/components/Posts/PostDetailComment.vue';
 
-const store = useCommunityStore()
-const router = useRouter()
-const route = useRoute()
-const post = ref(null)
+const store = useCommunityStore();
+const route = useRoute();
 
+// postId에 따라 게시글 정보를 가져오는 watch 설정
+watch(() => route.params.postId, (newPostId) => {
+    if (newPostId) {
+        store.getPostDetail(newPostId); // postId가 변경될 때마다 getPostDetail 호출
+        console.log('111', store.post)
+    }
+});
+
+// 컴포넌트가 마운트될 때 초기 게시글 정보 가져오기
 onMounted(() => {
-
-    axios({
-            method: 'get',
-            url: `${store.API_URL}/posts/detail/1/`
-        })
-            .then(res => {
-                post.value = res.data
-                console.log(post.value)
-            })
-            .catch(err => console.log('단일 게시글 조회 실패', err))
-})
+    store.getPostDetail(1);
+    console.log('ㅉㅈ', store.post)
+});
 </script>
 
 <style scoped>

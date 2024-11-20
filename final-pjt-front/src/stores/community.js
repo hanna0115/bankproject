@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { useUserStore } from './user';
@@ -57,20 +57,40 @@ export const useCommunityStore = defineStore("community", () => {
         }
     })
         .then(res => {
-            console.log(res)
             router.push({ name: 'community'})
         })
         .catch(err => console.log('게시글 생성 오류', err))
   }
 
+  const post = ref(null)
+
+  const getPostDetail = function (postId) {
+    axios({
+        method: 'get',
+        url: `${API_URL}/posts/detail/${postId}/`
+    })
+    .then(res => {
+        post.value = res.data; // 이 부분은 store.post로 변경할 수 있습니다.
+    })
+    .catch(err => console.log('단일 게시글 조회 실패', err));
+  };
+
+  
+watch(post.num_seen, (newVal, oldVal) => {
+    post.value.num_seen = res.data.num_seen
+})
+
   return { 
-    posts, 
+    API_URL,
+    posts,
+    post,
     getPosts, 
     selectedCategory, 
     updateCategory, 
     getFilteredPosts,
     getCurrentCategory,
     currentPage,
-    createPost
+    createPost,
+    getPostDetail
   }
 })

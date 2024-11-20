@@ -1,7 +1,7 @@
 <template>
-    <div class="post-body">
+    <div class="post-body" v-if="post">
         <div class="post-info">
-            <p>작성일 2024.11.01 | 조회수 13</p>
+            <p>{{ formatDate(post.created_at) }} | 조회수 {{ post.num_seen }}</p>
             <button @click="router.push({ name: 'updatePost' })">수정하기</button>
         </div>
         <div class="content">김선명 (게시물 내용)</div>
@@ -21,9 +21,18 @@ import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+defineProps({
+    post: Object
+})
+
 const router = useRouter()
 const route = useRoute()
 const store = useCommunityStore()
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+}
 
 const isLiked = ref(false);
 const likeCount = ref(1);
