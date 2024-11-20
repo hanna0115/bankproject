@@ -19,6 +19,7 @@
 
             <div class="exchange-krw">
                 <p>KRW</p>
+                <p>계산된 금액</p>
             </div>
         </div>
 
@@ -59,22 +60,35 @@
 }
 
 .input-box {
-    position: relative;
+    flex-grow: 1;
 }
 
-.input-box label {
+.input-box,
+.exchange-krw {
+    position: relative;
+    padding: 0 5px;
+}
+
+.input-box label,
+.exchange-krw p:first-child {
     position: absolute;
     top: -11px;
     left: 11px;
+    padding: 0 5px;
     font-size: 14px;
     background-color: #fff;
 }
 
 .input-box select,
 .input-box input {
+    width: 100%;
     padding: 8px 10px;
     border: 1px solid #BCBCBC;
     border-radius: 5px;
+}
+
+.input-box select:focus {
+    outline: none;
 }
 
 .exchange-rate-box button {
@@ -82,6 +96,13 @@
     border-radius: 5px;
     color: #fff;
     background-color: #FFB07E;
+}
+
+.exchange-krw p:last-child {
+    margin-top: 15px;
+    padding: 8px 10px;
+    border: 1px solid #BCBCBC;
+    border-radius: 5px;
 }
 
 .graph {
