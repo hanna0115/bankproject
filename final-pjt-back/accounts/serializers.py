@@ -35,18 +35,18 @@ class CustomRegisterSerializer(RegisterSerializer):
             raise serializers.ValidationError("유효한 이메일 형식이 아닙니다.")
         return email
 
-    # 자산 금액 유효성 검사: 10,000원 단위
-    def validate_asset(self, amount):
-        if amount % 10000 != 0:
-            raise serializers.ValidationError("자산 금액은 10,000원 단위여야 합니다.")
-        return amount
+    # # 자산 금액 유효성 검사: 10,000원 단위
+    # def validate_asset(self, amount):
+    #     if amount % 10000 != 0:
+    #         raise serializers.ValidationError("자산 금액은 10,000원 단위여야 합니다.")
+    #     return amount
     
-    # 저축 금액 유효성 검사: 10,000원 단위
-    def validate_saving_amount(self, amount):
-        """저축 금액 유효성 검사"""
-        if amount % 10000 != 0:
-            raise serializers.ValidationError("저축 금액은 10,000원 단위여야 합니다.")
-        return amount
+    # # 저축 금액 유효성 검사: 10,000원 단위
+    # def validate_saving_amount(self, amount):
+    #     """저축 금액 유효성 검사"""
+    #     if amount % 10000 != 0:
+    #         raise serializers.ValidationError("저축 금액은 10,000원 단위여야 합니다.")
+    #     return amount
 
     def get_cleaned_data(self):
         data = super().get_cleaned_data()
@@ -64,8 +64,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 # 사용자 정보 조회/수정을 위한 시리얼라이저
 class CustomUserDetailsSerializer(UserDetailsSerializer):
     class Meta:
-        model = settings.AUTH_USER_MODEL
+        model = get_user_model()
         fields = ('pk', 'email', 'name', 'birth_date', 'asset', 'saving_purpose', 
-
                  'saving_amount', 'saving_period')
         read_only_fields = ('pk','email', 'name', )  #  수정 불가

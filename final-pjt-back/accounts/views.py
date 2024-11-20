@@ -69,7 +69,9 @@ def update_profile(request):
         return Response({
             'message': '프로필이 수정되었습니다.',
             'user': serializer.data
-        })
+        }, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 # views.py
 @api_view(['DELETE'])
