@@ -60,7 +60,6 @@ def update_exchange():
 
 # 환율 정보 매일 12시에 정기적으로 받아오기 코드. 일단 서버 계속 켜져 있지 않으니까,
 # 일단 get 요청시마다 오늘날짜 데이터 없으면 받아오기
-
 # schedule.every().day.at("12:00").do(update_exchange)
 
 # 환율정보 API로 받아오기
