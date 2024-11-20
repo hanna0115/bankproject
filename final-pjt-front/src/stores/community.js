@@ -20,8 +20,6 @@ export const useCommunityStore = defineStore("community", () => {
       url: `${API_URL}/posts/`
     })
       .then(res => {
-        // 잘 받아오는지 확인해야함
-        console.log(res.data)
         posts.value = res.data;
         filteredPosts.value = res.data
       })

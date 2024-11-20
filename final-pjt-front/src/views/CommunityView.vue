@@ -10,18 +10,18 @@
                     :key="category.value"
                     class="category-item">
                     <input type="radio" :id="category.id" :value="category.value"
-                        v-model="store.selectedCategory"
+                        v-model="communityStore.selectedCategory"
                         @change="updateCategory(category.value)"
                         class="hidden-radio">
                     <label :for="category.id" class="category-label">{{ category.label }}</label>
                 </div>
             </div>
-            <button @click="router.push({ name: 'createPost' })" class="write-btn">작성하기</button>
+            <button @click="router.push(userStore.isLoggedIn ? { name: 'createPost' } : { name: 'login' })" class="write-btn">작성하기</button>
         </div>
-
+        
         <div class="content-wrapper">
             <PostList
-            :post-list="store.getFilteredPosts"/>
+            :post-list="communityStore.getFilteredPosts"/>
             <PostDetail />
         </div>
     </div>
@@ -29,12 +29,14 @@
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
+import { useUserStore } from '@/stores/user';
 import PostList from '@/components/Posts/PostList.vue';
 import PostDetail from '@/components/Posts/PostDetail.vue';
 import { onMounted } from 'vue';
 import router from '@/router';
 
-const store = useCommunityStore()
+const communityStore = useCommunityStore()
+const userStore = useUserStore()
 
 const categories = [
     { id: 'all', value: 'all', label: '전체' },
@@ -46,11 +48,11 @@ const categories = [
 
 
 const updateCategory = (category) => {
-    store.updateCategory(category);
+    communityStore.updateCategory(category);
 };
 
 onMounted(() => {
-    store.getPosts()
+    communityStore.getPosts()
 })
 </script>
 
@@ -61,7 +63,7 @@ onMounted(() => {
     align-items: center;
     flex-direction: column;
     max-width: 1280px;
-    margin: 0 auto;
+    margin: 0 auto 100px;
     padding: 0 20px;
     overflow: hidden;
 }
