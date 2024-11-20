@@ -2,14 +2,14 @@
     <div class="login">
         <h2 class="title">Welcome to</h2>
 
-        <form class="login-form">
+        <form class="login-form" @submit.prevent="logIn">
             <div>
                 <label for="id">아이디</label>
-                <input type="text" id="id" placeholder="example@email.com">
+                <input type="text" id="id" placeholder="example@email.com" v-model.trim="email" required>
             </div>
             <div>
                 <label for="password">비밀번호</label>
-                <input type="password" id="password" placeholder="********">
+                <input type="password" id="password" placeholder="********" v-model.trim="password" required>
             </div>
             <input type="submit" value="로그인">
         </form>
@@ -27,9 +27,24 @@
 
 <script setup>
 
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
 const router = useRouter()
+const store = useUserStore()
+
+const email = ref(null)
+const password = ref(null)
+
+const logIn = () => {
+    const payload = {
+        email: email.value,
+        password: password.value
+    }
+    store.logIn(payload)
+}
+
 
 </script>
 
@@ -71,6 +86,7 @@ const router = useRouter()
     padding: 10px 0;
     border: none;
     border-bottom: 1.35px solid #909090;
+    
 }
 
 .login-form input:focus {
@@ -86,6 +102,7 @@ const router = useRouter()
   font-size: 16px;
   border: none;
   border-radius: 30px;
+  cursor: pointer;
 }
 
 .user-nav {
