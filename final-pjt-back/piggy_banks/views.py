@@ -12,6 +12,8 @@ from django.db.models import F
 from .models import PiggyBank
 from .serializers import PiggyListSerializer, PiggySerializer, PiggyDetailSerializer
 
+from bank_products.models import UserProduct
+
 
 
 # Create your views here.
@@ -30,10 +32,13 @@ def piggy_list(request):
         if PiggyBank.objects.filter(user=request.user).exists():
             return Response({'detail': '이미 돼지저금통이 있습니다.'}, status=status.HTTP_400_BAD_REQUEST)
         
+        user_product_pk = int(request.query_params.get('user_product', None))
+        user_product = UserProduct.objects.get(product=user_product_pk)
         # user_product는 vue에서 사용자가 선택하는데 그것이 request.data로 잘 들어갈지?
         serializer = PiggySerializer(data=request.data)
+
         if serializer.is_valid(raise_exception=True):
-            serializer.save(user=request.user)
+            serializer.save(user=request.user, user_product=user_product)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -52,7 +57,7 @@ def piggy_detail(request, piggy_bank_pk):
     if piggy.user == request.user:
         # 돼지저금통 수정
         if request.method == 'PUT':
-            serializer = PiggySerializer(piggy, data=request.data)
+            serializer = PiggySerializer(piggy, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
             return Response(serializer.data)
@@ -69,8 +74,8 @@ def piggy_detail(request, piggy_bank_pk):
 
 @permission_classes([IsAuthenticated])
 @api_view(['POST'])
-def cheerup(request, piggy_bank_pk):
-    piggy = get_object_or_404(PiggyBank, pk=piggy_bank_pk)
+def cheerup(request, cheerup_piggy_bank_pk):
+    piggy = get_object_or_404(PiggyBank, pk=cheerup_piggy_bank_pk)
     piggy.cheerup_count = F('cheerup_count') + 1
     piggy.save(update_fields=['cheerup_count'])
     piggy.refresh_from_db()  # F() 업데이트 후 최신 값 불러오기

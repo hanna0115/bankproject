@@ -62,9 +62,21 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 
 # 사용자 정보 조회/수정을 위한 시리얼라이저
-class CustomUserDetailsSerializer(UserDetailsSerializer):
+class CustomUserDetailsSerializer(serializers.ModelSerializer):
+    # followers 필드를 사용자 이름 리스트로 변환
+    followers = serializers.SerializerMethodField()
+    followings = serializers.SerializerMethodField()
+
     class Meta:
         model = get_user_model()
         fields = ('pk', 'email', 'name', 'birth_date', 'asset', 'saving_purpose', 
-                 'saving_amount', 'saving_period')
-        read_only_fields = ('pk','email', 'name', )  #  수정 불가
+                  'saving_amount', 'saving_period', 'followers', 'followings')
+        read_only_fields = ('pk', 'email', 'name')
+
+    # followers 필드에 대해 사용자 이름을 반환하는 메서드
+    def get_followers(self, obj):
+        return [follower.name for follower in obj.followers.all()]
+
+    # followings 필드에 대해서도 동일하게 적용
+    def get_followings(self, obj):
+        return [following.name for following in obj.followings.all()]

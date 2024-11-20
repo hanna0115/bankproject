@@ -1,8 +1,8 @@
 <template>
-    <div class="post-detail-container">
+    <div class="post-detail-container"  v-if="post">
         <div class="post-header">
-            <h2></h2>
-            <p>user-name</p>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.name }}</p>
         </div>
 
         <hr>
@@ -14,30 +14,36 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { onMounted, onUpdated, ref } from 'vue';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { useCommunityStore } from '@/stores/community';
 import PostDetailBody from '@/components/Posts/PostDetailBody.vue';
 import PostDetailComment from '@/components/Posts/PostDetailComment.vue';
+import { storeToRefs } from 'pinia';
 
 const store = useCommunityStore()
 const router = useRouter()
 const route = useRoute()
-const post = ref(null)
+const post = storeToRefs(store.post)
+const postNum = ref(1)
 
+// 단일 게시글 조회
 onMounted(() => {
-
-    axios({
-            method: 'get',
-            url: `${store.API_URL}/posts/detail/1/`
-        })
-            .then(res => {
-                post.value = res.data
-                console.log(post.value)
-            })
-            .catch(err => console.log('단일 게시글 조회 실패', err))
+    store.getPostDetail(postNum.value)
 })
+
+onUpdated(() => {
+    store.getPostDetail(router.params.postId)
+})
+
+onBeforeRouteUpdate((to, from) => {
+    // console.log(post)
+    post.value = store.post
+    // console.log(post)
+})
+
+
 </script>
 
 <style scoped>

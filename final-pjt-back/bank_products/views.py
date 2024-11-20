@@ -261,6 +261,8 @@ def create_user_products(product):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def products_joined(request, user_pk):
+    # products_joined_data = pd.read_csv('bank_products/data/products_joined.csv')
+
     # 연동된 예적금 조회
     if request.method == 'GET':
         userproducts = UserProduct.objects.filter(user=user_pk)

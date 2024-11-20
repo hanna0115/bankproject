@@ -3,7 +3,8 @@
         <div class="post-list">
             <p v-if="!postList.length" class="no-post">작성된 게시물이 없습니다.</p>
             <div v-for="(post, index) in paginatedPosts" :key="post.id" class="post-item">
-                    <RouterLink :to="{ name: 'postdetail', params: { postId: post.id} }">
+                    <RouterLink :to="{ name: 'postdetail', params: { postId: post.id} }"
+                    @click="clickPost(post.id)">
                     <div class="post-body">
                         <p class="post-number">{{ startIndex + index + 1 }}/</p>
                         <div class="post-content">
@@ -81,6 +82,14 @@ const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 }
+
+
+// 클릭할 때, params의 id를 넘겨주기
+const clickPost = (postId) => {
+    store.getPostDetail(postId)
+}
+
+
 </script>
 
 <style scoped>
