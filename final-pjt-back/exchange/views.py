@@ -11,36 +11,36 @@ import time
 from datetime import datetime
 
 
-def update_exchange():
-    # 금융 상품 저장하기.
-    API_KEY =settings.EXCHANGE_API_KEY
+# def update_exchange():
+#     # 금융 상품 저장하기.
+#     API_KEY =settings.EXCHANGE_API_KEY
 
-    URL = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
-    params = {
-        'authkey' : API_KEY,
-        'data' : 'AP01'
-    }
+#     URL = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
+#     params = {
+#         'authkey' : API_KEY,
+#         'data' : 'AP01'
+#     }
 
-    products = requests.get(URL, params=params).json()
+#     products = requests.get(URL, params=params).json()
 
-    for product in products:
-        if not Exchange.objects.filter(cur_unit=cur_unit).exists():
-            cur_unit = product.get('cur_unit')
-            cur_nm = product.get('cur_nm')
-            deal_bas_r = product.get('deal_bas_r')
+#     for product in products:
+#         if not Exchange.objects.filter(cur_unit=cur_unit).exists():
+#             cur_unit = product.get('cur_unit')
+#             cur_nm = product.get('cur_nm')
+#             deal_bas_r = product.get('deal_bas_r')
 
-            save_data = {
-                'cur_unit':cur_unit,
-                'cur_nm':cur_nm,
-                'deal_bas_r':deal_bas_r,
-                'date':datetime.today()
-            }
+#             save_data = {
+#                 'cur_unit':cur_unit,
+#                 'cur_nm':cur_nm,
+#                 'deal_bas_r':deal_bas_r,
+#                 'date':datetime.today()
+#             }
         
-            serializer = ExchangeSerializer(data=save_data)
-            if serializer.is_valid(raise_exception=True):
-                serializer.save()
+#             serializer = ExchangeSerializer(data=save_data)
+#             if serializer.is_valid(raise_exception=True):
+#                 serializer.save()
 
-schedule.every().day.at("12:00").do(update_exchange)
+# schedule.every().day.at("12:00").do(update_exchange)
 
 # 환율정보 API로 받아오기
 def get_exchange(request):

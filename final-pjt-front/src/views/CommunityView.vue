@@ -2,17 +2,26 @@
 <template>
     <div class="container">
         <h2>커뮤니티</h2>
-        <div class="category">
-            <p>카테고리</p>
-            <p>전체</p>
-            <p>예적금</p>
-            <p>부동산</p>
-            <p>주식</p>
-            <p>기타</p>
+
+        <div class="community-nav">
+            <div class="category">
+                <p>카테고리</p>
+                <div v-for="category in categories"
+                    :key="category.value"
+                    class="category-item">
+                    <input type="radio" :id="category.id" :value="category.value"
+                        v-model="store.selectedCategory"
+                        @change="updateCategory(category.value)"
+                        class="hidden-radio">
+                    <label :for="category.id" class="category-label">{{ category.label }}</label>
+                </div>
+            </div>
+            <button @click="router.push('/createpost')" class="write-btn">작성하기</button>
         </div>
 
         <div class="content-wrapper">
-            <PostList />
+            <PostList
+            :post-list="store.getFilteredPosts"/>
             <PostDetail />
         </div>
     </div>
@@ -25,6 +34,19 @@ import PostDetail from '@/components/PostDetail.vue';
 import { onMounted } from 'vue';
 
 const store = useCommunityStore()
+
+const categories = [
+    { id: 'all', value: 'all', label: '전체' },
+    { id: 'account', value: 'account', label: '예적금' },
+    { id: 'asset', value: 'asset', label: '부동산' },
+    { id: 'stock', value: 'stock', label: '주식' },
+    { id: 'etc', value: 'etc', label: '기타' },
+];
+
+
+const updateCategory = (category) => {
+    store.updateCategory(category);
+};
 
 onMounted(() => {
     store.getPosts()
@@ -48,20 +70,70 @@ onMounted(() => {
     color: #FF6708;
 }
 
+.community-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
 
 .category {
     display: flex;
-    align-self: start;
 }
 
 .category p {
-    padding: 10px;
+    margin-right: 20px;
+}
+
+.category p,
+.category div {
+    padding: 10px 5px;
     font-size: 18px;
+}
+
+.category p,
+.category label {
     cursor: pointer;
+}
+
+.category label {
+    padding: 3px 10px;
+    border-radius: 20px;
+}
+
+.category-label:hover {
+    background-color: #e9ecef;
 }
 
 .category p:first-child {
     color: #FF6708;
+    cursor: default;
+}
+
+.category input {
+    display: none;
+}
+
+.category input:checked + .category-label {
+    background-color: #FF6708;
+    color: white;
+    border-color: #FF6708;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.write-btn {
+    padding: 8px 20px;
+    background-color: #ff9966;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.write-btn:hover {
+    background-color: #ff8855;
 }
 
 .content-wrapper {
@@ -70,5 +142,4 @@ onMounted(() => {
     width: 100%;
     height: 100%;
 }
-
 </style>
