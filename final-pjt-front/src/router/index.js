@@ -26,6 +26,11 @@ const router = createRouter({
       component: CommunityView,
     },
     {
+      path: '/community/:post-id',
+      name: 'postdetail',
+      component: CommunityView,
+    },
+    {
       path: '/map',
       name: 'map',
       component: MapView
