@@ -157,6 +157,10 @@ environ.Env.read_env(
 
 EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
 
+# loaddata 한글 설정
+
+import _locale
+_locale._getdefaultlocale = (lambda *args: ['en_US', 'utf8'])
 
 
 ROOT_URLCONF = 'final-pjt-back.urls'

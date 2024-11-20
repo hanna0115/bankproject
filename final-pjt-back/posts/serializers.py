@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Post, Comment
+from django.contrib.auth import get_user_model
 
 
 
@@ -31,11 +32,16 @@ class PostDetailSerializer(serializers.ModelSerializer):
             model = Comment
             fields = ('id', 'content', 'user')
             read_only = ('user',)
-
-
+    
+    # class UserSerializer(serializers.ModelSerializer):
+    #     class Meta:
+    #         model = get_user_model()
+    #         fields = ('name')
+    
     like_count = serializers.IntegerField(source='like_users.count', read_only=True)
     save_count = serializers.IntegerField(source='save_users.count', read_only=True)
     comment_set = CommentListSerializer(many=True, read_only=True)
+    name = serializers.CharField(source='user.name', read_only=True)
 
     class Meta:
         model = Post
