@@ -55,22 +55,11 @@ const selectTag = (tag) => {
     selectedTag.value = tag;
 };
 
-// 기존 게시글 데이터 불러오기
-const getPost = function () {
-    axios.get(`${store.API_URL}/posts/${route.params.id}/`)
-        .then(res => {
-            title.value = res.data.title
-            content.value = res.data.content
-            selectedTag.value = res.data.category
-        })
-        .catch(err => console.log('게시글 불러오기 오류', err))
-}
-
 // 게시글 수정하기
 const updatePost = function () {
     axios({
         method: 'put',
-        url: `${store.API_URL}/posts/${route.params.id}/`,
+        url: `${store.API_URL}/posts/detail/${route.params.postId}/`,
         data: {
             title: title.value,
             content: content.value,
@@ -84,8 +73,14 @@ const updatePost = function () {
         .catch(err => console.log('게시글 수정 오류', err))
 }
 
+// 기존 게시글 데이터 불러오기
 onMounted(() => {
-    getPost()
+    store.getPostDetail(route.params.postId)
+    const post = store.post
+    console.log(post)
+    title.value = post.title
+    content.value = post.content
+    selectedTag.value = post.category
 })
 </script>
 

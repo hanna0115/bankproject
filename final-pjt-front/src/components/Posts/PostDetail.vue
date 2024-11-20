@@ -23,17 +23,16 @@ const store = useCommunityStore();
 const route = useRoute();
 
 // postId에 따라 게시글 정보를 가져오는 watch 설정
+// postId가 변경될 때마다 getPostDetail 호출
 watch(() => route.params.postId, (newPostId) => {
     if (newPostId) {
-        store.getPostDetail(newPostId); // postId가 변경될 때마다 getPostDetail 호출
-        console.log('111', store.post)
+        store.getPostDetail(newPostId);
     }
 });
 
 // 컴포넌트가 마운트될 때 초기 게시글 정보 가져오기
 onMounted(() => {
     store.getPostDetail(1);
-    console.log('ㅉㅈ', store.post)
 });
 </script>
 

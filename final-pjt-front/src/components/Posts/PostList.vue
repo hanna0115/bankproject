@@ -34,7 +34,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import { useCommunityStore } from '@/stores/community'; // store import 추가
 
 const router = useRouter();
@@ -44,10 +44,9 @@ const props = defineProps({
     postList: Array
 });
 
+// 페이지네이션
 const postsPerPage = 5;
-
 const totalPages = computed(() => Math.ceil(props.postList.length / postsPerPage));
-
 const startIndex = computed(() => (store.currentPage - 1) * postsPerPage);
 
 const paginatedPosts = computed(() => {
@@ -77,6 +76,7 @@ const goToPage = (page) => {
     }
 }
 
+// 작성 시간 형식에 맞게 변경
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;

@@ -7,13 +7,16 @@ import { useUserStore } from './user';
 export const useCommunityStore = defineStore("community", () => {
   const API_URL = 'http://127.0.0.1:8000';
   const userStore = useUserStore()
-  const posts = ref([])
+  const router = useRouter()
 
+
+  // 게시글 목록 조회
+  const posts = ref([])
   const selectedCategory = ref('all')
   const filteredPosts = ref([])
   const currentPage = ref(1)
-  const router = useRouter()
 
+  // 1. 전체 게시글 목록 조회
   const getPosts = function () {
     axios({
       method: 'get',
@@ -42,7 +45,7 @@ export const useCommunityStore = defineStore("community", () => {
   const getCurrentCategory = computed(() => selectedCategory.value);
 
 
-  // 게시글 생성
+  // 2. 게시글 생성
   const createPost = function (title, content, selectedTag) {
     axios({
         method: 'post',
@@ -62,6 +65,8 @@ export const useCommunityStore = defineStore("community", () => {
         .catch(err => console.log('게시글 생성 오류', err))
   }
 
+
+  // 3. 단일 게시글 조회
   const post = ref(null)
 
   const getPostDetail = function (postId) {
@@ -70,15 +75,10 @@ export const useCommunityStore = defineStore("community", () => {
         url: `${API_URL}/posts/detail/${postId}/`
     })
     .then(res => {
-        post.value = res.data; // 이 부분은 store.post로 변경할 수 있습니다.
+        post.value = res.data
     })
-    .catch(err => console.log('단일 게시글 조회 실패', err));
+    .catch(err => console.log('단일 게시글 조회 실패', err))
   };
-
-  
-watch(post.num_seen, (newVal, oldVal) => {
-    post.value.num_seen = res.data.num_seen
-})
 
   return { 
     API_URL,
@@ -91,6 +91,6 @@ watch(post.num_seen, (newVal, oldVal) => {
     getCurrentCategory,
     currentPage,
     createPost,
-    getPostDetail
+    getPostDetail,
   }
 })

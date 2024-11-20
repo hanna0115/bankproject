@@ -1,8 +1,8 @@
 <template>
     <div class="post-body" v-if="post">
         <div class="post-info">
-            <p>{{ formatDate(post.created_at) }} | 조회수 {{ post.num_seen }}</p>
-            <button @click="router.push({ name: 'updatePost' })">수정하기</button>
+            <p>{{ formatDate(post.created_at) }}  |  조회수 {{ post.num_seen }}</p>
+            <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })">수정하기</button>
         </div>
         <div class="content">김선명 (게시물 내용)</div>
         <div class="like">
@@ -17,17 +17,31 @@
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
+import { useUserStore } from '@/stores/user';
 import axios from 'axios';
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+
+const router = useRouter()
+const route = useRoute()
+const communityStore = useCommunityStore()
+const userStore = useUserStore()
 
 defineProps({
     post: Object
 })
 
-const router = useRouter()
-const route = useRoute()
-const store = useCommunityStore()
+// const checkAndUpdatePost = function () {
+//     const currentUserId = userStore.userId; // 현재 로그인한 사용자 ID
+//     const postAuthorId = communityStore.post.authorId; // 게시글 작성자 ID (가정)
+
+//     if (currentUserId !== postAuthorId) {
+//         alert("이 게시글은 당신이 작성한 것이 아닙니다. 로그인 페이지로 이동합니다.");
+//         router.push({ name: 'login' }); // 로그인 페이지로 이동
+//     } else {
+//         updatePost(); // 수정 요청 진행
+//     }
+// };
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -40,7 +54,7 @@ const likeCount = ref(1);
 const getLiked = function () {
     axios({
         method: 'post',
-        url: `${store.API_URL}/like_post/${route.params.id}/`
+        url: `${communityStore.API_URL}/like_post/${route.params.id}/`
     })
         .then(res => {
             // 좋아요 되어 있으면 isLiked true로 바꾸기
