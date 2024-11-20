@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <h2 class="title">게시글 작성하기</h2>
+        <h2 class="title">게시글 수정하기</h2>
         <div class="main">
             <span class="category">* 카테고리를 선택하세요</span>
             <div class="tag">
@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <form class="post" @submit.prevent="createPost">
+        <form class="post" @submit.prevent="updatePost">
             <div class="input-group">
                 <label for="post-title" class="post-title">제목</label>
                 <input type="text" id="post-title" v-model.trim="title">
@@ -32,7 +32,7 @@
                 <label for="post-content" class="post-content">내용</label>
                 <textarea name="post-content" id="post-content" class="post-textarea" v-model.trim="content"></textarea>
             </div>
-            <button class="post-btn">작성하기</button>
+            <button class="post-btn">수정하기</button>
         </form>
     </div>
 </template>
@@ -40,37 +40,53 @@
 <script setup>
 import { useCommunityStore } from '@/stores/community';
 import axios from 'axios';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const router = useRouter()
+const route = useRoute()
 const store = useCommunityStore()
 
 const selectedTag = ref('');
+const title = ref('')
+const content = ref('')
 
 const selectTag = (tag) => {
     selectedTag.value = tag;
 };
 
-const title = ref(null)
-const content = ref(null)
+// 기존 게시글 데이터 불러오기
+const getPost = function () {
+    axios.get(`${store.API_URL}/posts/${route.params.id}/`)
+        .then(res => {
+            title.value = res.data.title
+            content.value = res.data.content
+            selectedTag.value = res.data.category
+        })
+        .catch(err => console.log('게시글 불러오기 오류', err))
+}
 
-const createPost = function () {
+// 게시글 수정하기
+const updatePost = function () {
     axios({
-        method: 'post',
-        url: `${store.API_URL}/posts/`,
+        method: 'put',
+        url: `${store.API_URL}/posts/${route.params.id}/`,
         data: {
             title: title.value,
             content: content.value,
-            category: selectedTag
+            category: selectedTag.value
         }
     })
         .then(res => {
             console.log(res)
             router.push({ name: 'community'})
         })
-        .catch(err => console.log('게시글 생성 오류', err))
+        .catch(err => console.log('게시글 수정 오류', err))
 }
+
+onMounted(() => {
+    getPost()
+})
 </script>
 
 <style scoped>
@@ -87,7 +103,6 @@ const createPost = function () {
 .title {
     margin: 100px auto 30px;
     color: #FF6708;
-    text-align: center;
     text-align: center;
 }
 
@@ -189,4 +204,3 @@ const createPost = function () {
     background-color: #e55a00;
 }
 </style>
-
