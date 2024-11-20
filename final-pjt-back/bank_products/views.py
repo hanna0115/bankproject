@@ -13,10 +13,11 @@ from .serializers import BankProductListSerializer, BankProductSerializer, UserP
 from .models import BankProducts, UserProduct
 
 from django.db.models import Count
-from datetime import timedelta
 from django.utils import timezone
 
 import pandas as pd
+import random
+from datetime import datetime, timedelta
 
 User = get_user_model()
 
@@ -210,39 +211,76 @@ def products_recommend(request):
 
 
 
-# # 사용자 가입 예적금 상품 불러오기 : 가입한 예적금 상품 연동하기 누르면 DB에 추가되도록하고, 조회 값 return
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
-# def products_joined(request, user_pk):
-#     # 가입일 기준으로 오름차순(D-date 가까운 순)
-#     userproducts = UserProduct.objects.filter(user_pk=user_pk).order_by('join_date')
-#     serializer = UserProductSerializer(userproducts, many=True)
-#     return Response(serializer.data)
+# user_pk와 product_pk를 난수로 만들어둔 엑셀 파일 (10000개)
+products_joined_data = pd.read_csv('bank_products/data/products_joined.csv')
+
+# 가입일자 생성을 위한 날짜 (2021년 ~ 현재)
+start_date = datetime(2021, 1, 1)
+end_date = datetime(2024, 11, 25)
+
+def create_user_products(product):
+    # join date
+    random_days = random.randint(0, (end_date - start_date).days)
+    join_date = start_date + timedelta(days=random_days)
+
+    # join_period
+    if product.join_period == 'no_limit':
+        join_period_list = [6, 12, 24, 36]
+    else:
+        join_period_list = list(map(str.strip, product.join_period.split(',')))
+        print(join_period_list)
+
+        # '36+'값 제거
+        join_period_list = [int(elem) for elem in join_period_list if elem.isdigit()]
+        join_period_list = [period for period in join_period_list if period in [6, 12, 24, 36]]
+
+    if not join_period_list:
+        join_period_list = [36]
+
+    join_period = random.choice(join_period_list)
+
+    # expiration_date
+    expiration_date = join_date + timedelta(days=join_period*30)
+
+    # monthly_amount
+    join_amount_min = product.join_amount_min
+    join_amount_max = product.join_amount_max
+    if not join_amount_max:
+        join_amount_max = 200
+    
+    monthly_amount = random.randint(join_amount_min, join_amount_max)
+
+    # interest_rate
+    interest_rate_min = product.interest_rate
+    interest_rate_max = product.prime_interest_rate
+    interest_rate = round(random.uniform(interest_rate_min, interest_rate_max), 2)
+
+    return join_date, expiration_date, join_period, monthly_amount, interest_rate
 
 
-# user_pk와 product_pk를 난수로 만들어둔 엑셀 파일
-products_joined_data = pd.read_csv('bank_products/products_joined.csv')
 
 # 사용자 가입 예적금 상품 불러오기 : 가입한 예적금 상품 연동하기 누르면 DB에 추가되도록하고, 조회 값 return
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def products_joined(request, user_pk):
-    pass
 
-    # 연동하기 버튼을 누른 user가 가입한 상품을 받기
-    joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()
-    print(joined_products)
+    # 연동하기 버튼을 누른 user가 가입한 상품 리스트
+    joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()[:5]
 
+    # BankProducts 모델에서 pk 기반으로 상품 객체 조회
+    bank_products = BankProducts.objects.filter(pk__in=joined_products)
     user = get_object_or_404(User, pk=user_pk)
 
-    # BankProducts 모델에서 PK 기반으로 상품 객체 조회
-    bank_products = BankProducts.objects.filter(pk__in=joined_products)
 
+    # user가 가입한 상품을 하나씩 UserProduct DB에 저장
     for product in bank_products:
-        userproduct = UserProduct.objects.get_or_create(user=user, product=product,
-                                          defaults={'join_date':'2021-01-01', 'expiration_date':'2022-01-01', 'join_period':12, 'monthly_amount':200000, 'interest_rate':2.5})
+        data = create_user_products(product)
+
+        _ = UserProduct.objects.get_or_create(user=user, product=product,
+                                          defaults={'join_date':data[0], 'expiration_date':data[1],
+                                                    'join_period':data[2], 'monthly_amount':data[3],
+                                                    'interest_rate':data[4]})
+
     userproducts = UserProduct.objects.filter(user=user_pk)
-    print(userproducts)
     serializer = UserProductSerializer(userproducts, many=True)
     return Response(serializer.data)
-
