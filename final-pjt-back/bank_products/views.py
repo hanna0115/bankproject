@@ -16,6 +16,10 @@ from django.db.models import Count
 from datetime import timedelta
 from django.utils import timezone
 
+import pandas as pd
+
+User = get_user_model()
+
 # Create your views here.
 # 예금상품 전체 리스트 조회 : 우대 금리 기준 내림차순
 @api_view(['GET'])
@@ -116,13 +120,13 @@ def recommendation(user=None, purpose=None):
         # 로그인한 사용자가 특정 purpose를 선택했는지 확인
         if purpose:
             # 사용자가 선택한 목적 기반으로 필터링
-            filtered_users = get_user_model().objects.filter(
+            filtered_users = User.objects.filter(
                 saving_purpose__contains=purpose,
                 saving_period=saving_period,
             )
         else:
             # 사용자의 정보 기반으로 필터링 (나이, 저축 기간, 저축 목표)
-            filtered_users = get_user_model().objects.filter(
+            filtered_users = User.objects.filter(
                 birth_date__range=(age_range_start, age_range_end),
                 saving_period=saving_period,
                 saving_purpose__overlap=saving_purpose  # 다중 선택된 목적 중 하나라도 겹치는지 확인
@@ -159,7 +163,7 @@ def recommendation(user=None, purpose=None):
     else:
         if purpose:
             # 해당 목적을 가진 사용자들이 가장 많이 가입한 상품을 찾기 위해 필터링
-            filtered_users = get_user_model().objects.filter(
+            filtered_users = User.objects.filter(
                 saving_purpose__contains=purpose
             )
 
@@ -206,11 +210,39 @@ def products_recommend(request):
 
 
 
+# # 사용자 가입 예적금 상품 불러오기 : 가입한 예적금 상품 연동하기 누르면 DB에 추가되도록하고, 조회 값 return
+# @api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+# def products_joined(request, user_pk):
+#     # 가입일 기준으로 오름차순(D-date 가까운 순)
+#     userproducts = UserProduct.objects.filter(user_pk=user_pk).order_by('join_date')
+#     serializer = UserProductSerializer(userproducts, many=True)
+#     return Response(serializer.data)
+
+
+# user_pk와 product_pk를 난수로 만들어둔 엑셀 파일
+products_joined_data = pd.read_csv('bank_products/products_joined.csv')
+
 # 사용자 가입 예적금 상품 불러오기 : 가입한 예적금 상품 연동하기 누르면 DB에 추가되도록하고, 조회 값 return
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def products_joined(request, user_pk):
-    # 가입일 기준으로 오름차순(D-date 가까운 순)
-    userproducts = UserProduct.objects.filter(user_pk=user_pk).order_by('join_date')
+    pass
+
+    # 연동하기 버튼을 누른 user가 가입한 상품을 받기
+    joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()
+    print(joined_products)
+
+    user = get_object_or_404(User, pk=user_pk)
+
+    # BankProducts 모델에서 PK 기반으로 상품 객체 조회
+    bank_products = BankProducts.objects.filter(pk__in=joined_products)
+
+    for product in bank_products:
+        userproduct = UserProduct.objects.get_or_create(user=user, product=product,
+                                          defaults={'join_date':'2021-01-01', 'expiration_date':'2022-01-01', 'join_period':12, 'monthly_amount':200000, 'interest_rate':2.5})
+    userproducts = UserProduct.objects.filter(user=user_pk)
+    print(userproducts)
     serializer = UserProductSerializer(userproducts, many=True)
     return Response(serializer.data)
+

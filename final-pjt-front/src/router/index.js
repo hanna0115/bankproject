@@ -53,6 +53,11 @@ const router = createRouter({
       path:'/exchange',
       name:'exchange',
       component: ExchangeView,
+    },
+    {
+      path:'/profile',
+      name:'profile',
+      component:ProfileView,
     }
   ],
 })

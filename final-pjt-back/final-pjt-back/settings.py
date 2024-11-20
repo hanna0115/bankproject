@@ -184,7 +184,7 @@ WSGI_APPLICATION = 'final-pjt-back.wsgi.application'
 DATABASES = {
 'default' : {
                 'ENGINE' : 'django.db.backends.mysql', # 벡엔드 엔진
-                'NAME' : 'oink', # 'mysql'의 이름을 가진 데이터베이스
+                'NAME' : 'bank_project', # 'mysql'의 이름을 가진 데이터베이스
                 'USER' : 'root', # 계정
                 'PASSWORD' : '961226', #rootpassword로 지정할 숫자(6번에 나와있음)
                 'HOST' : '127.0.0.1',

@@ -47,7 +47,9 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1280px;
   min-width: 900px;
+  margin: 0 auto;
   padding: 10px 20px;
 }
 
