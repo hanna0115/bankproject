@@ -13,13 +13,18 @@
         </div>
         <ProductIItem />
 
+        <br>
+        <div class="chart">
+            차트 한 번 그려 봄
+            <ProfileChart />
+        </div>
     </div>
 </template>
 
 <script setup>
 
 import ProductIItem from '@/components/ProductIItem.vue';
-
+import ProfileChart from '@/components/ProfileChart.vue';
 </script>
 
 <style scoped>
@@ -124,4 +129,9 @@ import ProductIItem from '@/components/ProductIItem.vue';
     flex-direction: column;
     justify-content: flex-end;
 }
+
+.chart {
+    text-align: center;
+}
+
 </style>

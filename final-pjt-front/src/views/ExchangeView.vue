@@ -24,9 +24,18 @@
             </div>
         </div>
 
-        <div class="graph">
-            환율 그래프 넣기
-            <ExchangeChart />
+        <br>
+        환율 그래프 넣기
+        <div class="chart">
+            <ExchangeChart 
+            v-for="info in exchangeInfo"
+            :key="info.cur_unit"
+            :name="info.cur_nm"
+            :currency="info.cur_unit"
+            width="450"
+            style="display: inline-block;"
+            elevation="5"
+            />
         </div>
     </div>
 </template>
@@ -40,7 +49,11 @@ const price = ref('')
 const selectedCurrency = ref('')
 const calculatedAmount = ref('')
 let cachedExchangeInfo = null
-const exchangeInfo = ref([])
+// const exchangeInfo = ref([])
+const exchangeInfo = ref([{
+    cur_unit:'USD',cur_nm:'미국달러',},
+{cur_unit:'JPY',cur_nm:'일본엔',}
+])
 
 // price나 selectedCurrency가 변경될 때마다 계산
 watch([price, selectedCurrency], ([newPrice, newCurrency]) => {
@@ -72,6 +85,7 @@ watch([price, selectedCurrency], ([newPrice, newCurrency]) => {
 const getInfo = function () {
     if (cachedExchangeInfo) {
         exchangeInfo.value = cachedExchangeInfo
+        console.log(exchangeInfo.value)
         return
     }
 
@@ -82,6 +96,7 @@ const getInfo = function () {
         .then((res) => {
             exchangeInfo.value = res.data
             cachedExchangeInfo = res.data
+            print(exchangeInfo.value)
         })
         .catch((err) => {
             console.error("Error fetching data:", err.message)
@@ -90,6 +105,7 @@ const getInfo = function () {
 
 onMounted(() => {
     getInfo()
+    console.log(exchangeInfo.value)
 })
 </script>
 
@@ -178,8 +194,10 @@ onMounted(() => {
     border-radius: 5px;
 }
 
-.graph {
+.chart {
     margin: 20px 0;
-    width: 80%;
+    width: 90%;
+    display: flex;
+    justify-content: center;
 }
 </style>
