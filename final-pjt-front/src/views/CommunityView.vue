@@ -16,7 +16,7 @@
                     <label :for="category.id" class="category-label">{{ category.label }}</label>
                 </div>
             </div>
-            <button @click="router.push('/createpost')" class="write-btn">작성하기</button>
+            <button @click="router.push({ name: 'createpost' })" class="write-btn">작성하기</button>
         </div>
 
         <div class="content-wrapper">
@@ -29,8 +29,8 @@
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
-import PostList from '@/components/PostList.vue';
-import PostDetail from '@/components/PostDetail.vue';
+import PostList from '@/components/Posts/PostList.vue';
+import PostDetail from '@/components/Posts/PostDetail.vue';
 import { onMounted } from 'vue';
 import router from '@/router';
 

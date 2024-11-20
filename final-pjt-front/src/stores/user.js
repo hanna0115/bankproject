@@ -56,4 +56,4 @@ export const useUserStore = defineStore("user", () => {
   }
   
   return { url, signUp, logIn, token};
-});
+}, { persist: true });
