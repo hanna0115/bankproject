@@ -145,15 +145,15 @@ ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 import os
-import environ
+# import environ
 
-env = environ.Env(DEBUG=(bool, True))
+# env = environ.Env(DEBUG=(bool, True))
 
-environ.Env.read_env(
-    env_file=os.path.join(BASE_DIR, '.env')
-)
+# environ.Env.read_env(
+#     env_file=os.path.join(BASE_DIR, '.env')
+# )
 
-EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
+# EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
 
 # 
 

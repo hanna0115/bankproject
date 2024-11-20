@@ -11,6 +11,36 @@ import schedule
 import time
 from datetime import date
 
+# def update_exchange():
+#     # 금융 상품 저장하기.
+#     API_KEY =settings.EXCHANGE_API_KEY
+
+#     URL = 'https://www.koreaexim.go.kr/site/program/financial/exchangeJSON'
+#     params = {
+#         'authkey' : API_KEY,
+#         'data' : 'AP01'
+#     }
+
+#     products = requests.get(URL, params=params).json()
+
+#     for product in products:
+#         if not Exchange.objects.filter(cur_unit=cur_unit).exists():
+#             cur_unit = product.get('cur_unit')
+#             cur_nm = product.get('cur_nm')
+#             deal_bas_r = product.get('deal_bas_r')
+
+#             save_data = {
+#                 'cur_unit':cur_unit,
+#                 'cur_nm':cur_nm,
+#                 'deal_bas_r':deal_bas_r,
+#                 'date':datetime.today()
+#             }
+        
+#             serializer = ExchangeSerializer(data=save_data)
+#             if serializer.is_valid(raise_exception=True):
+#                 serializer.save()
+
+=======
 def update_exchange():
     # 오늘 날짜의 데이터가 이미 존재하는지 확인
     if Exchange.objects.filter(date=date.today()).exists():

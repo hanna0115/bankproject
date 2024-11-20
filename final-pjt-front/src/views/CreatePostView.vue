@@ -23,27 +23,28 @@
             </div>
         </div>
 
-        <form class="post">
+        <form class="post" @submit.prevent="createPost">
             <div class="input-group">
                 <label for="post-title" class="post-title">제목</label>
-                <input type="text" id="post-title">
+                <input type="text" id="post-title" v-model.trim="title">
             </div>
             <div class="input-group">
                 <label for="post-content" class="post-content">내용</label>
-                <textarea name="post-content" id="post-content" class="post-textarea"></textarea>
+                <textarea name="post-content" id="post-content" class="post-textarea" v-model.trim="content"></textarea>
             </div>
+            <button class="post-btn">작성하기</button>
         </form>
-        <button @click="router.push('/community')"
-        class="post-btn">작성하기</button>
     </div>
 </template>
 
 <script setup>
+import { useCommunityStore } from '@/stores/community';
+import axios from 'axios';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter()
-
+const store = useCommunityStore()
 
 const selectedTag = ref('');
 
@@ -51,8 +52,25 @@ const selectTag = (tag) => {
     selectedTag.value = tag;
 };
 
+const title = ref(null)
+const content = ref(null)
 
-
+const createPost = function () {
+    axios({
+        method: 'post',
+        url: `${store.API_URL}/posts/`,
+        data: {
+            title: title.value,
+            content: content.value,
+            category: selectedTag
+        }
+    })
+        .then(res => {
+            console.log(res)
+            router.push({ name: 'community'})
+        })
+        .catch(err => console.log('게시글 생성 오류', err))
+}
 </script>
 
 <style scoped>
@@ -116,6 +134,8 @@ const selectTag = (tag) => {
 }
 
 .post {
+    display: flex;
+    flex-direction: column;
     width: 100%;
 }
 
@@ -155,16 +175,15 @@ const selectTag = (tag) => {
     resize: none;
 }
 
-
 .post-btn {
     background-color: #FF6708;
     color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 20px;
+    padding: 12px;
+    border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
-    margin-top: 20px;
+    width: 100px;
+    margin: 0 auto;
 }
 
 .post-btn:hover {
