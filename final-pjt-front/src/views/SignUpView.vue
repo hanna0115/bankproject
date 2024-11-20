@@ -1,10 +1,10 @@
 <template>
     <div class="signup-container">
         <h2 class="signup-title">회원가입</h2>
-        <form class="signup-form">
+        <form class="signup-form" @submit.prevent="signUp">
             <div class="input-group">
                 <p>이름</p>
-                <input type="text" class="input-field" placeholder="이름을 입력하세요">
+                <input type="text" class="input-field" placeholder="이름을 입력하세요" v-model.trim="username">
             </div>
 
             <p>생년월일</p>
@@ -31,9 +31,9 @@
 
             <p>아이디</p>
             <div class="email-input-group">
-                <input type="text" class="input-field" placeholder="이메일 주소">
+                <input type="text" class="input-field" placeholder="이메일 주소" v-model.trim="email">
                 <span>@</span>
-                <select class="select-box">
+                <select class="select-box" v-model="emailDomain">
                     <option value="naver.com">naver.com</option>
                     <option value="google.com">google.com</option>
                     <option value="hanmail.net">hanmail.net</option>
@@ -44,12 +44,17 @@
 
             <p>비밀번호</p>
             <div class="input-group">
-                <input type="password" class="input-field" placeholder="비밀번호를 입력하세요">
+                <input type="password" class="input-field" placeholder="비밀번호를 입력하세요" v-model.trim="password1">
+            </div>
+
+            <p>비밀번호 확인</p>
+            <div class="input-group">
+                <input type="password" class="input-field" placeholder="비밀번호를 다시 한번 더 입력해주세요" v-model.trim="password2">
             </div>
 
             <p>자산</p>
             <div class="input-group">
-                <input type="password" class="input-field" placeholder="자산을 입력하세요">
+                <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model.number="asset">
             </div>
 
             <p>저축 목표</p>
@@ -63,25 +68,25 @@
             <p>저축 기간 (개월)</p>
             <div class="savings-slider-wrapper">
                 <div class="savings-amount-slider">
-                    <input type="radio" name="savings-amount" id="amount1" value="1" required>
+                    <input type="radio" name="savings-amount" id="amount1" value="1" v-model="savingPeriod">
                     <label for="amount1" data-amount="0"></label>
-                    <input type="radio" name="savings-amount" id="amount2" value="2" required>
+                    <input type="radio" name="savings-amount" id="amount2" value="2" v-model="savingPeriod">
                     <label for="amount2" data-amount="6"></label>
-                    <input type="radio" name="savings-amount" id="amount3" value="3" required>
+                    <input type="radio" name="savings-amount" id="amount3" value="3" v-model="savingPeriod">
                     <label for="amount3" data-amount="12"></label>
-                    <input type="radio" name="savings-amount" id="amount4" value="4" required>
+                    <input type="radio" name="savings-amount" id="amount4" value="4" v-model="savingPeriod">
                     <label for="amount4" data-amount="24"></label>
-                    <input type="radio" name="savings-amount" id="amount5" value="5" required>
+                    <input type="radio" name="savings-amount" id="amount5" value="5" v-model="savingPeriod">
                     <label for="amount5" data-amount="36"></label>
                 </div>
             </div>
 
             <div class="input-group">
                 <p class="deb-amount">저축 금액 (만원)</p>
-                <input type="text" class="input-field" placeholder="금액을 입력하세요">
+                <input type="text" class="input-field" placeholder="금액을 입력하세요"
+                v-model.number="savingAmount">
             </div>
-            <button type="submit" class="submit-btn"
-            @click="router.push('/')">완료</button>
+            <button type="submit" class="submit-btn">완료</button>
         </form>
     </div>
 </template>
@@ -89,6 +94,48 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+
+const router = useRouter()
+const store = useUserStore()
+
+const signUp = function () {
+    if (password1.value !== password2.value) {
+        alert('비밀번호가 달라요!')
+        return
+    }
+    const payload = {
+        name: username.value,
+        email: fullEmail.value,
+        birth_date: `${selectedYear.value}-${String(selectedMonth.value).padStart(2, '0')}-${String(selectedDay.value).padStart(2, '0')}`,
+        asset: parseInt(asset.value),
+        saving_purpose: selectedGoals.value,
+        saving_amount: parseInt(savingAmount.value),
+        saving_period: parseInt(savingPeriod.value),
+        password1: password1.value,
+        password2: password2.value,
+    }
+    store.signUp(payload)
+}
+
+//폼 데이터
+const username = ref('')
+const email = ref('')
+const emailDomain = ref('naver.com')
+const password1 = ref('')
+const password2 = ref('')
+const asset = ref('')
+const savingAmount = ref('')
+const savingPeriod = ref('12')
+const selectedGoals = ref([])
+
+// 이메일 계산
+
+const fullEmail = computed(() => { 
+    if (email.value && emailDomain.value) {
+        return `${email.value}@${emailDomain.value}`
+    }
+})
 
 const goals = [
     '내집마련',
@@ -101,7 +148,6 @@ const goals = [
     '위시리스트'
 ]
 
-const router = useRouter()
 
 
 // 생년월일 관련 코드
@@ -144,7 +190,6 @@ watch([selectedYear, selectedMonth], () => {
 })
 
 // 선택된 목표들을 배열로 관리
-const selectedGoals = ref([])
 
 // 목표 토글 함수
 const toggleGoal = (goal) => {
