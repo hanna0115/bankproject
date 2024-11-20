@@ -1,19 +1,21 @@
 <template>
     <div class="board-container">
         <div class="post-list">
-            <p v-if="postList" class="no-post">작성된 게시물이 없습니다.</p>
+            <p v-if="!postList.length" class="no-post">작성된 게시물이 없습니다.</p>
             <div v-for="(post, index) in paginatedPosts" :key="post.id" class="post-item">
-                <div class="post-body">
-                    <p class="post-number">{{ startIndex + index + 1 }}/</p>
-                    <div class="post-content">
-                        <span class="user-id">{{ post.userId }}</span>
-                        <h3 class="post-title">{{ post.title }}</h3>
+                    <RouterLink :to="{ name: 'postdetail', params: { postId: post.id} }">
+                    <div class="post-body">
+                        <p class="post-number">{{ startIndex + index + 1 }}/</p>
+                        <div class="post-content">
+                            <span class="user-id">{{ post.userId }}</span>
+                            <h3 class="post-title">{{ post.title }}</h3>
+                        </div>
                     </div>
+                    <div class="post-footer">
+                        <span class="post-date">작성일 {{ formatDate(post.created_at) }}</span> | <span class="post-views">조회 {{ post.num_seen }}</span>
+                    </div>
+                </RouterLink>
                 </div>
-                <div class="post-footer">
-                    <span class="post-date">작성일 {{ formatDate(post.createdAt) }}</span> | <span class="post-views">조회 {{ post.views }}</span>
-                </div>
-            </div>
         </div>
         <div class="pagination">
             <button @click="goToPage(store.currentPage - 1)" :disabled="store.currentPage === 1">이전</button>
@@ -32,7 +34,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { useCommunityStore } from '@/stores/community'; // store import 추가
 
 const router = useRouter();
@@ -135,7 +137,7 @@ const formatDate = (dateString) => {
 .post-footer {
     display: flex;
     justify-content: flex-end;
-    gap: 15px;
+    gap: 10px;
     margin-top: 10px;
     font-size: 12px;
     color: #888;

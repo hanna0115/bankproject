@@ -16,7 +16,7 @@
                     <label :for="category.id" class="category-label">{{ category.label }}</label>
                 </div>
             </div>
-            <button @click="router.push({ name: 'createpost' })" class="write-btn">작성하기</button>
+            <button @click="router.push({ name: 'createPost' })" class="write-btn">작성하기</button>
         </div>
 
         <div class="content-wrapper">

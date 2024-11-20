@@ -14,11 +14,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import PostDetailBody from '@/components/Posts/PostDetailBody.vue';
 import PostDetailComment from '@/components/Posts/PostDetailComment.vue';
+import { useCommunityStore } from '@/stores/community';
 const router = useRouter()
+
+const store = useCommunityStore()
+const route = useRoute()
 
 </script>
 

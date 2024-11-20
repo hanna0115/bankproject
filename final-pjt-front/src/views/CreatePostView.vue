@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <form class="post" @submit.prevent="createPost">
+        <form class="post" @submit.prevent="store.createPost(title, content, selectedTag)">
             <div class="input-group">
                 <label for="post-title" class="post-title">제목</label>
                 <input type="text" id="post-title" v-model.trim="title">
@@ -39,11 +39,8 @@
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
-import axios from 'axios';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 
-const router = useRouter()
 const store = useCommunityStore()
 
 const selectedTag = ref('');
@@ -54,23 +51,6 @@ const selectTag = (tag) => {
 
 const title = ref(null)
 const content = ref(null)
-
-const createPost = function () {
-    axios({
-        method: 'post',
-        url: `${store.API_URL}/posts/`,
-        data: {
-            title: title.value,
-            content: content.value,
-            category: selectedTag
-        }
-    })
-        .then(res => {
-            console.log(res)
-            router.push({ name: 'community'})
-        })
-        .catch(err => console.log('게시글 생성 오류', err))
-}
 </script>
 
 <style scoped>
