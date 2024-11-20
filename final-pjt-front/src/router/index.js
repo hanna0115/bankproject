@@ -9,6 +9,7 @@ import CreatePostView from '@/views/CreatePostView.vue'
 import SignUpView from '@/views/SignUpView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import ExchangeView from '@/views/ExchangeView.vue'
+import UpdatePostView from '@/views/UpdatePostView.vue'
 
 
 const router = createRouter({
@@ -38,6 +39,11 @@ const router = createRouter({
       path: '/createPost',
       name: 'createPost',
       component: CreatePostView
+    },
+    {
+      path: '/updatePost',
+      name: 'updatePost',
+      component: UpdatePostView
     },
     {
       path: '/login',
