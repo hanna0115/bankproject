@@ -32,6 +32,7 @@ import { useCommunityStore } from '@/stores/community';
 import PostList from '@/components/PostList.vue';
 import PostDetail from '@/components/PostDetail.vue';
 import { onMounted } from 'vue';
+import router from '@/router';
 
 const store = useCommunityStore()
 

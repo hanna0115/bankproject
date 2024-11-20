@@ -1,6 +1,7 @@
 <template>
     <div class="board-container">
         <div class="post-list">
+            <p v-if="postList" class="no-post">작성된 게시물이 없습니다.</p>
             <div v-for="(post, index) in paginatedPosts" :key="post.id" class="post-item">
                 <div class="post-body">
                     <p class="post-number">{{ startIndex + index + 1 }}/</p>
@@ -88,13 +89,9 @@ const formatDate = (dateString) => {
     /* max-width 제거하고 width 100%로 설정 */
 }
 
-
-.board-title {
-    font-size: 24px;
-    font-weight: bold;
+.no-post {
+    margin: 50px 0;
     text-align: center;
-    margin-bottom: 40px;
-    color: #ff8940;
 }
 
 .post-list {

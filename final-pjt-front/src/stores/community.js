@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import axios from 'axios';
 
 export const useCommunityStore = defineStore("community", () => {
-  const url = 'http://127.0.0.1:8000';
+  const API_URL = 'http://127.0.0.1:8000';
   let id = 0
   const posts = ref([])
 
@@ -14,7 +14,7 @@ export const useCommunityStore = defineStore("community", () => {
   const getPosts = function () {
     axios({
       method: 'get',
-      url: `${url}/posts/`
+      url: `${API_URL}/posts/`
     })
       .then(res => {
         // 잘 받아오는지 확인해야함
@@ -25,6 +25,7 @@ export const useCommunityStore = defineStore("community", () => {
       .catch(err => console.log('게시글을 가져오는 중 오류 발생:', err))
   };
 
+  // 카테고리가 바뀔 때 게시물 필터링
   const updateCategory = (category) => {
     selectedCategory.value = category
     currentPage.value = 1

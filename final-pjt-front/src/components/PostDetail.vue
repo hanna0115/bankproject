@@ -166,6 +166,7 @@ hr {
     cursor: pointer;
     width: 50px;
     text-decoration: underline;
+    text-align: end;
     word-break: keep-all;
 }
 </style>
