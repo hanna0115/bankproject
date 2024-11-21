@@ -25,7 +25,8 @@
         </div>
 
         <br>
-        환율 그래프 넣기
+
+        <p>환율 그래프</p>
         <div class="chart">
             <ExchangeChart 
             v-for="info in exchangeInfo"
@@ -96,7 +97,7 @@ const getInfo = function () {
         .then((res) => {
             exchangeInfo.value = res.data
             cachedExchangeInfo = res.data
-            print(exchangeInfo.value)
+            console.log(exchangeInfo.value)
         })
         .catch((err) => {
             console.error("Error fetching data:", err.message)
