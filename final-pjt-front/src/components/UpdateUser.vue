@@ -2,27 +2,57 @@
     <div class="signup-container" v-if="store.user">
         <h2 class="signup-title">내 정보 수정</h2>
         <form class="signup-form" @submit.prevent="handleSubmit">
+            <!-- 기본 정보 -->
             <div class="input-group">
                 <p>이름: {{ store.user.name }}</p>
                 <p>생년월일: {{ store.user.birth_date }}</p>
                 <p>아이디: {{ store.user.email }}</p>
             </div>
 
-
-            <p>비밀번호</p>
-            <div class="input-group">
-                <input type="password" class="input-field" placeholder="비밀번호를 입력하세요" v-model="formData.password1">
-                <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
+            <!-- 비밀번호 변경 버튼 -->
+            <div class="password-change-section">
+                <button 
+                    type="button" 
+                    class="goal-btn"
+                    :class="{ 'active': showPasswordFields }"
+                    @click="togglePasswordChange"
+                >
+                    {{ showPasswordFields ? '닫기' : '비밀번호 변경' }}
+                </button>
             </div>
 
-            <p>비밀번호 확인</p>
-            <div class="input-group">
-                <input type="password" class="input-field" placeholder="비밀번호를 다시 한번 더 입력해주세요" v-model="formData.password2">
+            <!-- 비밀번호 변경 필드 -->
+            <div v-show="showPasswordFields">
+                <p>비밀번호</p>
+                <div class="input-group">
+                    <input 
+                        type="password" 
+                        class="input-field" 
+                        placeholder="새로운 비밀번호를 입력하세요" 
+                        v-model="formData.password1"
+                    >
+                    <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
+                </div>
+
+                <p>비밀번호 확인</p>
+                <div class="input-group">
+                    <input 
+                        type="password" 
+                        class="input-field" 
+                        placeholder="새로운 비밀번호를 한번 더 입력해주세요" 
+                        v-model="formData.password2"
+                    >
+                </div>
             </div>
 
             <p>자산</p>
             <div class="input-group">
-                <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model="formData.asset">
+                <input 
+                    type="text" 
+                    class="input-field" 
+                    placeholder="자산을 입력하세요" 
+                    v-model="formData.asset"
+                >
                 <p class="asset-min">* 만 단위 이상 기입</p>
             </div>
 
@@ -34,7 +64,8 @@
                     type="button" 
                     class="goal-btn"
                     :class="{ 'active': selectedGoals.includes(goal) }" 
-                    @click="toggleGoal(goal)">
+                    @click="toggleGoal(goal)"
+                >
                     {{ goal }}
                 </button>
             </div>
@@ -55,14 +86,14 @@
                 </div>
             </div>
 
-
             <div class="input-group">
                 <p class="deb-amount">저축 금액</p>
                 <input 
                     type="text" 
                     class="input-field" 
                     v-model="formData.saving_amount"
-                    placeholder="금액을 입력하세요">
+                    placeholder="금액을 입력하세요"
+                >
                 <p class="asset-min">* 만 단위 이상 기입</p>
             </div>
             <button type="submit" class="submit-btn">완료</button>
@@ -76,6 +107,7 @@ import { useUserStore } from '@/stores/user';
 
 const store = useUserStore();
 const selectedGoals = ref([]);
+const showPasswordFields = ref(false);
 
 const formData = ref({
     password1: '',
@@ -86,7 +118,14 @@ const formData = ref({
     saving_period: ''
 });
 
-// toggleGoal 함수 수정
+const togglePasswordChange = () => {
+    showPasswordFields.value = !showPasswordFields.value;
+    if (!showPasswordFields.value) {
+        formData.value.password1 = '';
+        formData.value.password2 = '';
+    }
+};
+
 const toggleGoal = (goal) => {
     const index = selectedGoals.value.indexOf(goal);
     if (index > -1) {
@@ -153,7 +192,7 @@ onMounted(() => {
 .signup-container {
     width: 100%;
     max-width: 500px;
-    margin: 60px auto;
+    margin: 20px auto;
     padding: 20px;
 }
 
@@ -176,11 +215,19 @@ p {
     margin-bottom: 30px;
 }
 
+.input-group > p {
+    margin: 20px 0;
+}
+
 .password-require {
     font-size: 12px;
     color: #fc8a44;
     padding-left: 10px;
     font-weight: 350;
+}
+
+.password-change-section{
+    margin-bottom: 20px;
 }
 
 .asset-min {
@@ -233,8 +280,6 @@ p {
 .email-input-group span {
     color: #666;
 }
-
-
 
 /* 목표 버튼 스타일 */
 .goal-group {
@@ -338,7 +383,7 @@ p {
     transform: translate(-50%, -50%) scale(1.25);
 }
 
-.savings-amount-slider input:checked+label::after {
+.savings-amount-slider input:checked + label::after {
     border-color: #FF6708;
     background: #FF6708;
     transform: translate(-50%, -50%) scale(0.75);
@@ -366,6 +411,4 @@ p {
     margin-top: 90px;
     margin-bottom: 10px;
 }
-
-
 </style>
