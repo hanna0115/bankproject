@@ -1,57 +1,98 @@
 <template>
-    <div class="post-body">
+    <div class="post-body" v-if="post">
         <div class="post-info">
-            <p>작성일 2024.11.01 | 조회수 13</p>
-            <button @click="router.push({ name: 'updatePost' })">수정하기</button>
+            <p>{{ communityStore.formatDate(post.created_at) }}  |  조회수 {{ post.num_seen }}</p>
+            <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })"
+            v-if="userStore.isLoggedIn && userStore.user.pk === post.user">수정하기</button>
         </div>
-        <div class="content">김선명 (게시물 내용)</div>
+        <div class="content">{{ post.content }}</div>
         <div class="like">
             <div :class="['like-btn', { 'liked': isLiked }]"
             @click="toggleLike">
             <i class="pi pi-heart-fill"></i>
         </div>
-            <p>1</p>
+            <p>{{ likeCount }}</p>
         </div>
     </div>
 </template>
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
+import { useUserStore } from '@/stores/user';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
 const route = useRoute()
-const store = useCommunityStore()
+const communityStore = useCommunityStore()
+const userStore = useUserStore()
+
+const props = defineProps({
+    post: Object
+})
+
 
 const isLiked = ref(false);
-const likeCount = ref(1);
+const likeCount = ref(0);
 
-const getLiked = function () {
-    axios({
-        method: 'post',
-        url: `${store.API_URL}/like_post/${route.params.id}/`
-    })
-        .then(res => {
-            // 좋아요 되어 있으면 isLiked true로 바꾸기
-            // 좋아요 개수 가져오기(likeCount)
+const computedLikeCount = computed(() => {
+    return props.post ? likeCount.value : 0;
+});
+
+// 좋아요 상태 가져오기
+const getLikedStatus = async () => {
+    if (!props.post) return;
+
+    try {
+        isLiked.value = props.post.like_users == userStore.user.pk;
+        likeCount.value = props.post.like_count;
+    } catch (err) {
+        console.log('좋아요 상태 가져오기 오류', err);
+    }
+};
+
+// 좋아요 토글
+const toggleLike = async () => {
+    if (!userStore.isLoggedIn) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+
+    if (!props.post) return;
+
+    isLiked.value = !isLiked.value;
+
+    try {
+        axios({
+            method: 'post',
+            url: `${communityStore.API_URL}/posts/like_post/${props.post.id}/`,
+            headers: {
+                Authorization: `Token ${userStore.token}`
+            }
         })
-        .catch(err => console.log('좋아요 시 오류', err))
-}
+        .then(res => {
+            likeCount.value = res.data.like_count;
+        })
 
-const toggleLike = () => {
-  isLiked.value = !isLiked.value;
-  if (isLiked.value) {
-    likeCount.value++;
-  } else {
-    likeCount.value--;
-  }
-}
+    } catch (err) {
+        console.log('좋아요 시 오류', err);
+    }
+};
+
+// post 데이터 변화 감지
+watch(() => props.post, (newPost) => {
+    if (newPost) {
+        likeCount.value = newPost.like_users?.length || 0;
+        getLikedStatus();
+    }
+}, { immediate: true });
 
 onMounted(() => {
-    // getLiked()
-})
+    if (props.post) {
+        getLikedStatus();
+    }
+});
 </script>
 
 <style scoped>

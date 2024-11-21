@@ -13,7 +13,7 @@
                         </div>
                     </div>
                     <div class="post-footer">
-                        <span class="post-date">작성일 {{ formatDate(post.created_at) }}</span> | <span class="post-views">조회 {{ post.num_seen }}</span>
+                        <span class="post-date">작성일 {{ store.formatDate(post.created_at) }}</span> | <span class="post-views">조회 {{ post.num_seen }}</span>
                     </div>
                 </RouterLink>
                 </div>
@@ -35,7 +35,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
+import { RouterLink, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import { useCommunityStore } from '@/stores/community'; // store import 추가
 
 const router = useRouter();
@@ -45,10 +45,9 @@ const props = defineProps({
     postList: Array
 });
 
+// 페이지네이션
 const postsPerPage = 5;
-
 const totalPages = computed(() => Math.ceil(props.postList.length / postsPerPage));
-
 const startIndex = computed(() => (store.currentPage - 1) * postsPerPage);
 
 const paginatedPosts = computed(() => {
@@ -77,18 +76,6 @@ const goToPage = (page) => {
         store.currentPage = page; // store의 currentPage 업데이트
     }
 }
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-}
-
-
-// 클릭할 때, params의 id를 넘겨주기
-const clickPost = (postId) => {
-    store.getPostDetail(postId)
-}
-
 
 </script>
 

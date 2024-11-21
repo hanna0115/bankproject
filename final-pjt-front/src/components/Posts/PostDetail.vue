@@ -1,48 +1,41 @@
 <template>
-    <div class="post-detail-container"  v-if="post">
+    <div class="post-detail-container" v-if="store.post">
         <div class="post-header">
-            <h2>{{ post.title }}</h2>
-            <p>{{ post.name }}</p>
+            <h2>{{ store.post.title }}</h2>
+            <p>{{ store.post.name }}</p>
         </div>
 
         <hr>
-        <PostDetailBody/>
+        <PostDetailBody :post="store.post"/>
         <hr>
-        <PostDetailComment/>
-
+        <PostDetailComment :post="store.post"/>
     </div>
 </template>
 
 <script setup>
-import { onMounted, onUpdated, ref } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
-import axios from 'axios';
+import { onMounted, ref, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useCommunityStore } from '@/stores/community';
 import PostDetailBody from '@/components/Posts/PostDetailBody.vue';
 import PostDetailComment from '@/components/Posts/PostDetailComment.vue';
 import { storeToRefs } from 'pinia';
 
-const store = useCommunityStore()
-const router = useRouter()
-const route = useRoute()
-const post = storeToRefs(store.post)
-const postNum = ref(1)
 
-// 단일 게시글 조회
+const store = useCommunityStore();
+const route = useRoute();
+
+// postId에 따라 게시글 정보를 가져오는 watch 설정
+// postId가 변경될 때마다 getPostDetail 호출
+watch(() => route.params.postId, (newPostId) => {
+    if (newPostId) {
+        store.getPostDetail(newPostId);
+    }
+});
+
+// 컴포넌트가 마운트될 때 초기 게시글 정보 가져오기
 onMounted(() => {
-    store.getPostDetail(postNum.value)
-})
-
-onUpdated(() => {
-    store.getPostDetail(router.params.postId)
-})
-
-onBeforeRouteUpdate((to, from) => {
-    // console.log(post)
-    post.value = store.post
-    // console.log(post)
-})
-
+    store.getPostDetail(1);
+});
 
 </script>
 
