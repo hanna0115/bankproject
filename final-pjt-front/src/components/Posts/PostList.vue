@@ -77,6 +77,11 @@ const goToPage = (page) => {
     }
 }
 
+// 클릭할 때, params의 id를 넘겨주기
+const clickPost = (postId) => {
+    store.getPostDetail(postId)
+}
+
 </script>
 
 <style scoped>

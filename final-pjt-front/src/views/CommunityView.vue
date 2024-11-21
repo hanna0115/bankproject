@@ -1,4 +1,3 @@
-<!-- CommunityView.vue -->
 <template>
     <div class="container">
         <h2>커뮤니티</h2>
