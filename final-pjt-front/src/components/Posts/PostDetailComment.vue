@@ -5,7 +5,7 @@
             <input type="text" placeholder="댓글을 입력하세요" v-model="content">
             <button>작성하기</button>
         </form>
-        <div class="comment-ilst">
+        <div class="comment-ilst" v-if="comments">
             <div class="comment-item" v-for="comment in comments" :key="comment.id">
                 <div class="comment-info">
                     <p>{{ comment.name }}</p>
