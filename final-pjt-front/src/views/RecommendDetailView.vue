@@ -2,8 +2,8 @@
     <div class="container">
         <div class="product-container">
             <div class="product-info"> <!-- 상품 정보-->
-                <h2 class="product-title">{{ product.title }}</h2>
-                <p class="bank-name">{{ product.bankName }}</p>
+                <h2 class="product-title">{{ product.product_name }}</h2>
+                <p class="bank-name">{{ product.company_name }}</p>
                 <div class="product-event" v-if="product.events">
                     <span v-for="event in product.events" :key="event">{{ event }}</span>
                 </div>
@@ -15,9 +15,9 @@
                         <p>기본</p> <span>{{ product.baseInterest }}%</span>
                     </div>
                 </div>
-                <button class="info-btn">공식홈에서 더 알아보기</button>
+                <a :href="{{ product.product_link }}" class="info-btn">공식홈에서 더 알아보기</a>
             </div>
-            
+
             <div class="product-detail"> <!--상품 안내-->
                 <h2>상품 안내</h2>
                 <p>기간: {{ product.period }}</p>
@@ -42,18 +42,16 @@ const route = useRoute();
 const recommendStore = useRecommendStore();
 const product = recommendStore.product
 
-const category = route.params.category;
-const productId = Number(route.params.productId);
-
 
 onMounted(() => {
-    recommendStore.getProduct()
+    const category = route.params.category;
+    const productId = Number(route.params.productId);
     recommendStore.getProductDetail(category, productId);
+    console.log(product)
 });
 </script>
 
 <style scoped>
-
 .container {
     background-color: #FAE7DB;
     width: 100%;
@@ -81,7 +79,7 @@ onMounted(() => {
     margin-top: 5px;
 }
 
-.product-event > span {
+.product-event>span {
     background-color: #E9E9E9;
     border-radius: 15px;
     padding: 0.5px 10px;
@@ -104,7 +102,7 @@ onMounted(() => {
     margin-top: 20px;
     display: flex;
     gap: 20px;
-    
+
 }
 
 .product-interest p {
@@ -132,7 +130,7 @@ onMounted(() => {
     flex-direction: column;
     margin-right: auto;
     margin-left: auto;
-    margin-top: 10px ;
+    margin-top: 10px;
     background-color: white;
     padding: 30px;
     border-radius: 30px;
@@ -153,16 +151,15 @@ onMounted(() => {
     cursor: pointer;
 }
 
-.product-detail > h2 {
+.product-detail>h2 {
     color: #8d8d8d;
     border-bottom: 1px solid #dfdcdc;
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
 
-.product-detail > p {
+.product-detail>p {
     margin: 9px 2px;
     color: #8d8d8d;
 }
-
 </style>

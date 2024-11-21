@@ -28,27 +28,27 @@ export const useRecommendStore = defineStore("recommend", () => {
 
 
   // 2. 상품 상세 정보 가져오기
-  const product = ref({}); // 초기화
+  const product = ref({})
+  const getProductDetail = async (category, productId) => {
+    await getProduct(); // 상품 데이터를 먼저 가져옵니다.
 
-  const getProductDetail = function (category, productId) {
-      console.log(depositProducts)
-      // 카테고리에 따라 적절한 상품 목록에서 해당 상품을 찾습니다.
-      if (category === 'deposit') {
-          const foundProduct = depositProducts.find(p => p.id === productId);
-          if (foundProduct) {
-              product.value = foundProduct; // 상품이 발견되면 설정
-          } else {
-              console.error(`상품 ID ${productId}를 찾을 수 없습니다.`);
-          }
+    // 카테고리에 따라 적절한 상품 목록에서 해당 상품을 찾습니다.
+    if (category === 'deposit') {
+      const foundProduct = depositProducts.value.find(p => p.id === productId);
+      if (foundProduct) {
+        product.value = foundProduct; // 상품이 발견되면 설정
       } else {
-          const foundProduct = savingsProducts.find(p => p.id === productId);
-          if (foundProduct) {
-              product.value = foundProduct; // 상품이 발견되면 설정
-          } else {
-              console.error(`상품 ID ${productId}를 찾을 수 없습니다.`);
-          }
+        console.error(`상품 ID ${productId}를 찾을 수 없습니다.`);
       }
+    } else {
+      const foundProduct = savingsProducts.value.find(p => p.id === productId);
+      if (foundProduct) {
+        product.value = foundProduct; // 상품이 발견되면 설정
+      } else {
+        console.error(`상품 ID ${productId}를 찾을 수 없습니다.`);
+      }
+    }
   };
 
   return { getProduct, depositProducts, savingsProducts, getProductDetail, product };
-});
+}, { persist: true });
