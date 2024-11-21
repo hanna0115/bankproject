@@ -139,14 +139,7 @@
       '우리은행': 'src/assets/images/woori.png',
       'NH농협은행': 'src/assets/images/nh.png',
       '하나은행': 'src/assets/images/hana.png',
-      'IBK기업은행': 'src/assets/images/ibk.png',
       'SC제일은행': 'src/assets/images/sc.png',
-      '씨티은행': 'src/assets/images/citi.png',
-      'KDB산업은행': 'src/assets/images/kdb.png',
-      '카카오뱅크': 'src/assets/images/kakao.png',
-      '토스뱅크': 'src/assets/images/toss.png',
-      'K뱅크': 'src/assets/images/kbank.png',
-      'ATM': 'src/assets/images/bankproject.png'
     };
     return bankLogos[bankName] || '/images/default.png';
   };
@@ -223,9 +216,7 @@
 ];
   
   const banks = [
-    'KB국민은행', '신한은행', '우리은행', 'NH농협은행', '하나은행', 
-    'IBK기업은행', 'SC제일은행', '씨티은행', 'KDB산업은행', 
-    '카카오뱅크', '토스뱅크', 'K뱅크'
+    'KB국민은행', '신한은행', '우리은행', 'NH농협은행', '하나은행', 'SC제일은행'
   ];
   
   const selectedCity = ref({
