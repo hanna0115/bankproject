@@ -3,7 +3,8 @@
         <div class="post-list">
             <p v-if="!postList.length" class="no-post">작성된 게시물이 없습니다.</p>
             <div v-for="(post, index) in paginatedPosts" :key="post.id" class="post-item">
-                    <RouterLink :to="{ name: 'postdetail', params: { postId: post.id} }">
+                    <RouterLink :to="{ name: 'postdetail', params: { postId: post.id} }"
+                    @click="clickPost(post.id)">
                     <div class="post-body">
                         <p class="post-number">{{ startIndex + index + 1 }}/</p>
                         <div class="post-content">

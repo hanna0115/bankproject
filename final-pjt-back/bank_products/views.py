@@ -68,10 +68,24 @@ def filtered_deposits(request):
         deposits = BankProducts.objects.filter(category=0)
         vue_company_code = request.query_params.get('company_code', None)
         vue_join_period = request.query_params.get('join_period', None)
+
+        if vue_join_period and vue_company_code:
+            filtered_deposits = deposits.filter(company_code=vue_company_code, join_period__contains=vue_join_period).order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif vue_join_period:
+            filtered_deposits = deposits.filter(join_period__contains=vue_join_period).order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         # 문자열 contain으로 확인(vue에서 개월 수 문자열로 넘겨줘야 함)
-        filtered_deposits = deposits.filter(company_code=vue_company_code, join_period__contains=vue_join_period).order_by('-prime_interest_rate')
-        serializer = BankProductListSerializer(filtered_deposits, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        elif vue_company_code:
+            filtered_deposits = deposits.filter(company_code=vue_company_code).order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            filtered_deposits = deposits.filter().order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -79,13 +93,27 @@ def filtered_deposits(request):
 @api_view(['GET'])
 def filtered_savings(request):
     if request.method == 'GET':
-        savings = BankProducts.objects.filter(category=1)
+        deposits = BankProducts.objects.filter(category=1)
         vue_company_code = request.query_params.get('company_code', None)
         vue_join_period = request.query_params.get('join_period', None)
+
+        if vue_join_period and vue_company_code:
+            filtered_deposits = deposits.filter(company_code=vue_company_code, join_period__contains=vue_join_period).order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif vue_join_period:
+            filtered_deposits = deposits.filter(join_period__contains=vue_join_period).order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         # 문자열 contain으로 확인(vue에서 개월 수 문자열로 넘겨줘야 함)
-        filtered_savings = savings.filter(company_code=vue_company_code, join_period__contains=vue_join_period).order_by('-prime_interest_rate')
-        serializer = BankProductListSerializer(filtered_savings, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        elif vue_company_code:
+            filtered_deposits = deposits.filter(company_code=vue_company_code).order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            filtered_deposits = deposits.filter().order_by('-prime_interest_rate')
+            serializer = BankProductListSerializer(filtered_deposits, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -218,7 +246,7 @@ products_joined_data = pd.read_csv('bank_products/data/products_joined.csv')
 start_date = datetime(2021, 1, 1)
 end_date = datetime(2024, 11, 25)
 
-def create_user_products(product):
+def create_user_products(asset, product):
     # join date
     random_days = random.randint(0, (end_date - start_date).days)
     join_date = start_date + timedelta(days=random_days)
@@ -232,6 +260,7 @@ def create_user_products(product):
 
         # '36+'값 제거
         join_period_list = [int(elem) for elem in join_period_list if elem.isdigit()]
+        # 1, 3 ,9 값 제거
         join_period_list = [period for period in join_period_list if period in [6, 12, 24, 36]]
 
     if not join_period_list:
@@ -245,9 +274,20 @@ def create_user_products(product):
     # monthly_amount
     join_amount_min = product.join_amount_min
     join_amount_max = product.join_amount_max
-    if not join_amount_max:
+    # 예금이면서
+    if not product.category:
+        # max의 제한이 없는 경우
+        if not join_amount_max:
+            # user의 asset을 최대값으로 설정
+            join_amount_max = asset
+        # max의 제한이 있는 경우
+        else:
+            # user의 asset과 max 값 중 min값을 최대값을 설정
+            join_amount_max = min(join_amount_max, asset)
+    # 적금이면서 max의 제한이 없는 경우
+    elif not join_amount_max:
         join_amount_max = 200
-    
+    join_amount_min, join_amount_max = sorted([join_amount_min, join_amount_max])
     monthly_amount = random.randint(join_amount_min, join_amount_max)
 
     # interest_rate
@@ -261,41 +301,44 @@ def create_user_products(product):
 @api_view(['GET', 'POST'])
 @permission_classes([IsAuthenticated])
 def products_joined(request, user_pk):
-    # 연동된 예적금 조회
-    if request.method == 'GET':
-        userproducts = UserProduct.objects.filter(user=user_pk)
-        serializer = UserProductSerializer(userproducts, many=True)
-        return Response(serializer.data)
-    
-    # 예적금 연동하기
-    elif request.method == 'POST':
-        before_len = len(UserProduct.objects.filter(user=user_pk))
 
-        # 연동하기 버튼을 누른 user가 가입한 상품 리스트
-        joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()[:5]
+    # 자신의 예적금만 연동 및 조회 가능
+    user = get_object_or_404(User, pk=user_pk)
+    if request.user == user:
 
-        if not joined_products:
-            return Response({'detail': '가입된 예적금 상품이 없습니다.'}, status=status.HTTP_200_OK)
+        # 연동된 예적금 조회
+        if request.method == 'GET':
+            userproducts = UserProduct.objects.filter(user=user_pk)
+            serializer = UserProductSerializer(userproducts, many=True)
+            return Response(serializer.data)
+        
+        # 예적금 연동하기
+        if request.method == 'POST':
+            before_len = len(UserProduct.objects.filter(user=user_pk))
 
-        # BankProducts 모델에서 pk 기반으로 상품 객체 조회
-        bank_products = BankProducts.objects.filter(pk__in=joined_products)
-        user = get_object_or_404(User, pk=user_pk)
+            # 연동하기 버튼을 누른 user가 가입한 상품 리스트
+            joined_products = products_joined_data[products_joined_data['user_pk'] == user_pk].product_pk.unique().tolist()[:5]
 
+            if not joined_products:
+                return Response({'detail': '가입된 예적금이 없습니다.'}, status=status.HTTP_200_OK)
 
-        # user가 가입한 상품을 하나씩 UserProduct DB에 저장
-        for product in bank_products:
-            data = create_user_products(product)
+            # BankProducts 모델에서 pk 기반으로 상품 객체 조회
+            bank_products = BankProducts.objects.filter(pk__in=joined_products)            
 
-            _ = UserProduct.objects.get_or_create(user=user, product=product,
-                                            defaults={'join_date':data[0], 'expiration_date':data[1],
-                                                        'join_period':data[2], 'monthly_amount':data[3],
-                                                        'interest_rate':data[4]})
+            # user가 가입한 상품을 하나씩 UserProduct DB에 저장
+            for product in bank_products:
+                data = create_user_products(user.asset, product)
 
-        after_len = len(UserProduct.objects.filter(user=user_pk))
+                _ = UserProduct.objects.get_or_create(user=user, product=product,
+                                                defaults={'join_date':data[0], 'expiration_date':data[1],
+                                                            'join_period':data[2], 'monthly_amount':data[3],
+                                                            'interest_rate':data[4]})
+        
+            after_len = len(UserProduct.objects.filter(user=user_pk))
 
-        if before_len == after_len:
-            return Response({'detail': '이미 모든 상품이 연동되어 있습니다.'}, status=status.HTTP_200_OK)
+            if before_len == after_len:
+                return Response({'detail': '이미 모든 예적금이 연동되어 있습니다.'}, status=status.HTTP_200_OK)
 
-        return Response({'detail': f'{user.email.split("@")[0]}님의 예적금이 연동되었습니다.'}, status=status.HTTP_201_CREATED)
-    
-    
+            return Response({'detail': f'{user.name}님의 예적금이 연동되었습니다.'}, status=status.HTTP_201_CREATED)
+        
+    return Response({'detail': '권한이 없습니다.'}, status=status.HTTP_403_FORBIDDEN)

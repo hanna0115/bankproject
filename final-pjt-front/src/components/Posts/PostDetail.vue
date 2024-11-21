@@ -18,6 +18,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { useCommunityStore } from '@/stores/community';
 import PostDetailBody from '@/components/Posts/PostDetailBody.vue';
 import PostDetailComment from '@/components/Posts/PostDetailComment.vue';
+import { storeToRefs } from 'pinia';
+
 
 const store = useCommunityStore();
 const route = useRoute();
@@ -34,6 +36,7 @@ watch(() => route.params.postId, (newPostId) => {
 onMounted(() => {
     store.getPostDetail(1);
 });
+
 </script>
 
 <style scoped>

@@ -34,6 +34,6 @@ class PiggySerializer(serializers.ModelSerializer):
 	class Meta:
 		model = PiggyBank
 		fields = '__all__'
-		read_only_fiels = ('user', 'user_product')
+		read_only_fields = ('user', 'user_product')
 
 

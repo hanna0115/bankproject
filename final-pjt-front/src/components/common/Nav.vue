@@ -7,23 +7,28 @@
       <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
       <RouterLink :to="{name:'exchange'}">환율 계산기</RouterLink>
     </div>
+   
+    <i class="pi pi-user user-icon" v-if="store.isLoggedIn" @click="router.push('/profile')"></i>
     <button v-if="store.isLoggedIn"
     @click="store.logOut"
     class="login-btn">
     로그아웃
   </button>
-    <RouterLink
-    v-else
-    :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
+  <RouterLink
+  v-else
+  :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
+ 
   </nav>
 </template>
 
 <script setup>
 import { onMounted } from 'vue'
 import { gsap } from 'gsap'
-import { RouterLink, RouterView } from 'vue-router'
+import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user';
+import { useRoute } from 'vue-router';
 
+const router = useRouter()
 const store = useUserStore()
 
 onMounted(() => {
@@ -83,17 +88,42 @@ onMounted(() => {
   font-weight: bold;
 }
 
+.user-icon {
+  cursor: pointer;
+  padding: 10px;
+  margin-right: -235px;
+  color: white;
+  background-color: rgba(255, 103, 8, 0.6);
+  border-radius: 50%;
+  height: 32px;
+  width: 35px;
+  margin-top: 10px;
+}
+
+/* .user-btn {
+  margin-top: 10px;
+} */
+
 .login-btn {
   background-color: rgba(255, 103, 8, 0.6);
   color: white;
   padding: 5px 12px;
   border-radius: 30px;
+  width: 83px;
+  font-size: 13px;
+  width: 83px;
+  height: 29px;
+  text-align: center;
+  margin-top: 10px;
 }
 
 button.login-btn {
   border: none;
   cursor: pointer;
   padding: 5px 12px;
-  font-size: 16px;
+  font-size: 13px;
+  width: 83px;
+  height: 29px;
+  margin-top: 10px;
 }
 </style>

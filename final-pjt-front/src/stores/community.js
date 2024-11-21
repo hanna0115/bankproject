@@ -16,6 +16,7 @@ export const useCommunityStore = defineStore("community", () => {
   const filteredPosts = ref([])
   const currentPage = ref(1)
 
+
   // 1. 전체 게시글 목록 조회
   const getPosts = function () {
     axios({
@@ -29,18 +30,19 @@ export const useCommunityStore = defineStore("community", () => {
       .catch(err => console.log('게시글을 가져오는 중 오류 발생:', err))
   };
 
+  
   // 카테고리가 바뀔 때 게시물 필터링
   const updateCategory = (category) => {
     selectedCategory.value = category
     currentPage.value = 1
     filteredPosts.value = selectedCategory.value === 'all'
-      ? posts.value
-      : posts.value.filter(post => post.category === selectedCategory.value)
+    ? posts.value
+    : posts.value.filter(post => post.category === selectedCategory.value)
   };
 
   // 필터링된 게시글을 반환하는 computed 속성
   const getFilteredPosts = computed(() => filteredPosts.value);
-
+  
   // 현재 선택된 카테고리를 반환하는 computed 속성
   const getCurrentCategory = computed(() => selectedCategory.value);
 
@@ -60,18 +62,31 @@ export const useCommunityStore = defineStore("community", () => {
             title,
             content,
             category: selectedTag
-        },
-        headers: {
-          Authorization: `Token ${userStore.token}`
-        }
+          },
+          headers: {
+            Authorization: `Token ${userStore.token}`
+          }
     })
         .then(res => {
             router.push({ name: 'community'})
-        })
-        .catch(err => console.log('게시글 생성 오류', err))
+          })
+          .catch(err => console.log('게시글 생성 오류', err))
   }
+  
+  // 2. 전체 게시글 조회
+  const getPosts = function () {
+    axios({
+      method: 'get',
+      url: `${API_URL}/posts/`
+    })
+      .then(res => {
+        posts.value = res.data;
+        filteredPosts.value = res.data
+      })
+      .catch(err => console.log('게시글을 가져오는 중 오류 발생:', err))
+  };
 
-
+  
   // 3. 단일 게시글 - 조회
   const post = ref(null)
 
@@ -114,7 +129,6 @@ const updatePost = function (postId, title, content, selectedTag) {
     post,
     getPosts, 
     selectedCategory, 
-    updateCategory, 
     getFilteredPosts,
     getCurrentCategory,
     currentPage,

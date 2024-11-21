@@ -10,6 +10,7 @@ import SignUpView from '@/views/SignUpView.vue'
 import ProfileView from '@/views/ProfileView.vue'
 import ExchangeView from '@/views/ExchangeView.vue'
 import UpdatePostView from '@/views/UpdatePostView.vue'
+import UpdateUser from '@/components/UpdateUser.vue'
 
 
 const router = createRouter({
@@ -69,7 +70,13 @@ const router = createRouter({
       path:'/profile',
       name:'profile',
       component:ProfileView,
+    },
+    {
+      path:'/update-user',
+      name:'update-user',
+      component:UpdateUser
     }
+
   ],
 })
 

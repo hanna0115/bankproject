@@ -51,7 +51,7 @@ def post_detail(request, post_pk):
     if post.user == request.user:
         # 게시글 수정
         if request.method == 'PUT':
-            serializer = PostSerializer(post, data=request.data)
+            serializer = PostSerializer(post, data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
             return Response(serializer.data)
@@ -72,7 +72,7 @@ def like_post(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
 
     # 좋아요 취소
-    if post.like_users.filter(user=request.user).exists():
+    if request.user in post.like_users.all():
         post.like_users.remove(request.user)
     # 좋아요
     else:
@@ -89,7 +89,7 @@ def save_post(request, post_pk):
     post = get_object_or_404(Post, pk=post_pk)
 
     # 저장 취소
-    if post.save_users.filter(user=request.user).exists():
+    if request.user in post.save_users.all():
         post.save_users.remove(request.user)
     # 저장
     else:
