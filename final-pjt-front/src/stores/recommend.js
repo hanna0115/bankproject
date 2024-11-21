@@ -1,19 +1,25 @@
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import axios from "axios";
+import { useUserStore } from "./user";
 
 export const useRecommendStore = defineStore("recommend", () => {
   const API_URL = 'http://127.0.0.1:8000';
+  const userStore = useUserStore()
   const depositProducts = ref([])
   const savingsProducts = ref([])
 
   const getProduct = function () {
+    console.log(userStore.user.saving_purpose)
     axios({
       method: 'get',
-      url: `${API_URL}/bank_products/products_recommend/`
+      url: `${API_URL}/bank_products/products_recommend/`,
+      params: {
+        saving_purpose: userStore.isLoggedIn? userStore.user.saving_purpose : null
+      }
     })
       .then(res => {
-        console.log(res.data)
+        console.log(res)
         depositProducts.value = res.data.deposit_products
         savingsProducts.value = res.data.savings_products
       })
