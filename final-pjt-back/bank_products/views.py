@@ -126,88 +126,88 @@ def filtered_savings(request):
 
 def get_top_products(bank_products):
     """예금(카테고리 0)과 적금(카테고리 1)을 각각 5개씩 반환하는 함수"""
-    deposit_products = bank_products.filter(category=0)[:5]  # 예금 상품 5개
-    savings_products = bank_products.filter(category=1)[:5]  # 적금 상품 5개
+    print('여기냐=========================')
+    deposit_products = bank_products.filter(product__category=0)[:5]  # 예금 상품 5개
+    savings_products = bank_products.filter(product__category=1)[:5]  # 적금 상품 5개
     return {
         'deposit_products': deposit_products,
         'savings_products': savings_products,
     }
 
 def recommendation(user=None, purpose=None):
-    # 1. 로그인 한 상태면 정보 기반으로 추천
     if user:
         birth_date = user.birth_date
-        saving_purpose = user.saving_purpose  # JSONField로 저장된 다중 선택 값
+        saving_purpose = user.saving_purpose
         saving_period = user.saving_period
-        asset = user.asset  # 예금에 사용
-        saving_amount = user.saving_amount  # 적금에 사용
+        asset = user.asset
+        saving_amount = user.saving_amount
 
-        # 나이 범위 계산 (±5년)
         age_range_start = birth_date - timedelta(days=365*5)
         age_range_end = birth_date + timedelta(days=365*5)
 
-        # 로그인한 사용자가 특정 purpose를 선택했는지 확인
+        #!!!! 버튼으로 누른 목적에 맞는 상품 추천 : 이거는 vue에서 넘겨줬을때 어떻게 들어오는지 확인 필요!!!!!!
         if purpose:
-            # 사용자가 선택한 목적 기반으로 필터링
-            filtered_users = User.objects.filter(
-                saving_purpose__contains=purpose,
-                saving_period=saving_period,
-            )
+            filtered_users = BankProducts.objects.none()
+            for pur in map(str.strip, purpose.split(',')):
+                __filtered_users = User.objects.filter(
+                    birth_date__range=(age_range_start, age_range_end),
+                    saving_period=saving_period,
+                    saving_purpose__contains=pur
+                )
+                filtered_users = filtered_users | __filtered_users
+
+        # 회원 가입할 때 입력한 목적에 맞는 상품 추천
         else:
-            # 사용자의 정보 기반으로 필터링 (나이, 저축 기간, 저축 목표)
-            filtered_users = User.objects.filter(
-                birth_date__range=(age_range_start, age_range_end),
-                saving_period=saving_period,
-                saving_purpose__overlap=saving_purpose  # 다중 선택된 목적 중 하나라도 겹치는지 확인
-            )
+            filtered_users = BankProducts.objects.none()
+            for pur in map(str.strip, saving_purpose.split(',')):
+                __filtered_users = User.objects.filter(
+                    birth_date__range=(age_range_start, age_range_end),
+                    saving_period=saving_period,
+                    saving_purpose__contains=pur
+                )
+                filtered_users = filtered_users | __filtered_users
 
-        # 예금용 필터링: 자산을 기준으로 필터링
         deposit_filtered_users = filtered_users.filter(
-            asset__range=(asset - 200, asset + 200)
+            asset__range=(asset - 2000, asset + 2000)
         )
 
-        # 적금용 필터링: 저축 금액을 기준으로 필터링
         savings_filtered_users = filtered_users.filter(
-            saving_amount__range=(saving_amount - 200, saving_amount + 200)
+            saving_amount__range=(saving_amount - 50, saving_amount + 50)
         )
 
-        # 예금 상품 목록 가져오기 및 가입자 수 계산 (자산 기반)
-        deposit_products = BankProducts.objects.filter(
-            bank_product_users__in=deposit_filtered_users,
-            category=0  # 예금 카테고리
-        ).annotate(user_count=Count('bank_product_users')).distinct().order_by('-user_count', '-interest_rate')[:5]
+        deposit_products = UserProduct.objects.filter(
+            user__in=deposit_filtered_users,
+            product__category=0  # BankProducts의 category 필드 참조
+        ).values('product').annotate(user_count=Count('user')
+        ).order_by('-user_count', '-product__interest_rate')[:5]
 
-        # 적금 상품 목록 가져오기 및 가입자 수 계산 (저축 금액 기반)
-        savings_products = BankProducts.objects.filter(
-            bank_product_users__in=savings_filtered_users,
-            category=1  # 적금 카테고리
-        ).annotate(user_count=Count('bank_product_users')).distinct().order_by('-user_count', '-interest_rate')[:5]
+        savings_products = UserProduct.objects.filter(
+            user__in=savings_filtered_users,
+            product__category=1  # BankProducts의 category 필드 참조
+        ).values('product').annotate(user_count=Count('user')
+        ).order_by('-user_count', '-product__interest_rate')[:5]
 
         return {
             'deposit_products': deposit_products,
             'savings_products': savings_products,
         }
 
-    # 2. 로그인 안 한 상태면 목적 기반 추천
     else:
         if purpose:
-            # 해당 목적을 가진 사용자들이 가장 많이 가입한 상품을 찾기 위해 필터링
-            filtered_users = User.objects.filter(
-                saving_purpose__contains=purpose
-            )
+            filtered_users = User.objects.filter(saving_purpose__contains=purpose)
 
-            # 해당 사용자들이 많이 가입한 예적금 상품을 금리 기준으로 정렬
-            bank_products = BankProducts.objects.filter(
-                bank_product_users__in=filtered_users
-            ).annotate(user_count=Count('bank_product_users')).order_by('-user_count', '-interest_rate')
+            bank_products = UserProduct.objects.filter(
+                user__in=filtered_users
+            ).values('product').annotate(user_count=Count('user')
+            ).order_by('-user_count', '-product__interest_rate')
 
             return get_top_products(bank_products)
-        
-        # 모든 사용자가 가장 많이 가입한 상품 기준 필터링 (목표가 없을 때)
+
         else:
-            bank_products = BankProducts.objects.annotate(
-                user_count=Count('bank_product_users')
-            ).order_by('-user_count', '-interest_rate')
+            # 유저 목록에서 가장 많이 가입한 상품들
+            bank_products = UserProduct.objects.values('product').annotate(
+                user_count=Count('user')
+            ).order_by('-user_count', '-product__interest_rate')
 
             return get_top_products(bank_products)
 
@@ -216,28 +216,40 @@ def recommendation(user=None, purpose=None):
 
 @api_view(['GET'])
 def products_recommend(request):
-    # GET 요청에서 saving_purpose 파라미터를 가져옴 (없으면 None)
     purpose = request.query_params.get('saving_purpose', None)
 
-    # 1. 로그인 한 상태일 때
     if request.user.is_authenticated:
-        # 사용자의 정보와 선택된 목적(없으면 None)을 함께 전달하여 추천
         recommended_products = recommendation(user=request.user, purpose=purpose)
-    
-    # 2. 로그인하지 않은 상태일 때
+
+
+
     else:
-        # 비로그인 사용자는 purpose가 없으면 모든 사용자가 가장 많이 가입한 상품을 추천
         recommended_products = recommendation(purpose=purpose)
 
-    # 3. 예금과 적금 상품을 각각 직렬화하여 반환
+    # 함수로 return한 queryset에서 예금, 적금의 pk만 뽑아서 리스트에 저장.
+    recommended_deposits_pk = [user_product['product'] for user_product in recommended_products['deposit_products']]
+    recommended_savings_pk = [user_product['product'] for user_product in recommended_products['savings_products']]
+    
+    # 순서대로 pk와 bankproduct를 비교해서 데이터 생성
+    recommended_deposits_product_list = []
+    for pk in recommended_deposits_pk:
+        recommended_deposits_product = BankProducts.objects.get(pk=pk)
+        recommended_deposits_product_list.append(recommended_deposits_product)
+
+    recommended_savings_product_list = []
+    for pk in recommended_savings_pk:
+        recommended_savings_product = BankProducts.objects.get(pk=pk)
+        recommended_savings_product_list.append(recommended_savings_product)
+
+    # 넘겨줌
     response_data = {
-        'deposit_products': BankProductListSerializer(recommended_products['deposit_products'], many=True).data,
-        'savings_products': BankProductListSerializer(recommended_products['savings_products'], many=True).data,
+        'deposit_products': BankProductSerializer(recommended_deposits_product_list, many=True).data,
+        'savings_products': BankProductSerializer(recommended_savings_product_list, many=True).data
     }
 
     return Response(response_data, status=status.HTTP_200_OK)
 
-
+# ---------------------------------------------------------------------------------------------------
 
 # user_pk와 product_pk를 난수로 만들어둔 엑셀 파일 (10000개)
 products_joined_data = pd.read_csv('bank_products/data/products_joined.csv')
