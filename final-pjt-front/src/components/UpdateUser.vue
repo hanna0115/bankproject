@@ -3,44 +3,11 @@
         <h2 class="signup-title">내 정보 수정</h2>
         <form class="signup-form">
             <div class="input-group">
-                <p>이름</p>
-                <input type="text" class="input-field" placeholder="이름을 입력하세요">
+                <p>이름: {{ store.user.name }}</p>
+                <p>생년월일: {{ store.user.birth_date }}</p>
+                <p>아이디: {{ store.user.email }}</p>
             </div>
 
-            <p>생년월일</p>
-            <div class="birth-select-group">
-                <select class="select-box">
-                    <option disabled value="">년도</option>
-                    <option v-for="year in years" :key="year" :value="year">
-                        {{ year }}
-                    </option>
-                </select>
-                <select class="select-box" v-model="selectedMonth">
-                    <option disabled value="">월</option>
-                    <option v-for="month in months" :key="month" :value="month">
-                        {{ month }}
-                    </option>
-                </select>
-                <select class="select-box" v-model="selectedDay">
-                    <option disabled value="">일</option>
-                    <option v-for="day in availableDays" :key="day" :value="day">
-                        {{ day }}
-                    </option>
-                </select>
-            </div>
-
-            <p>아이디</p>
-            <div class="email-input-group">
-                <input type="text" class="input-field" placeholder="이메일 주소">
-                <span>@</span>
-                <select class="select-box" >
-                    <option value="naver.com">naver.com</option>
-                    <option value="google.com">google.com</option>
-                    <option value="hanmail.net">hanmail.net</option>
-                    <option value="nate.com">nate.com</option>
-                    <option value="kakao.com">kakao.com</option>
-                </select>
-            </div>
 
             <p>비밀번호</p>
             <div class="input-group">
@@ -95,8 +62,11 @@
 
 <script setup>
 
-import { ref, computed, watch } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useUserStore } from '@/stores/user';
 
+
+const store = useUserStore()
 
 const selectedGoals = ref([])
 // 선택된 목표들을 배열로 관리
@@ -123,6 +93,11 @@ const goals = [
     '위시리스트'
 ]
 
+
+onMounted(() => {
+    store.getUserInfo()
+    console.log(store)
+})
 </script>
 
 <style scoped>
