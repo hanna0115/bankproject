@@ -54,9 +54,22 @@ const createComment = function () {
         }
     })
         .then(res => {
-            console.log('댓글 생성 완료')
-            comments.value.push(res.data)
-            content.value = ''
+            console.log('댓글 생성 완료');
+        
+        // 새로 생성된 댓글을 기존 댓글 형식에 맞게 변환
+        const newComment = {
+            id: res.data.id,
+            content: res.data.content,
+            created_at: res.data.created_at,
+            updated_at: res.data.updated_at,
+            user: {
+                name: userStore.user.name, // 현재 로그인한 유저의 이름
+                id: userStore.user.pk // 현재 로그인한 유저의 PK
+            }
+        };
+        
+        comments.value.push(newComment); // 변환된 댓글을 추가
+        content.value = ''; // 입력 필드 초기화
         })
         .catch(err => console.log('댓글 생성 실패', err))
 }
