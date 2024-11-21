@@ -1,6 +1,6 @@
 <template>
-    <div class="post-detail-container">
-        <div class="post-header" v-if="store.post">
+    <div class="post-detail-container" v-if="store.post">
+        <div class="post-header">
             <h2>{{ store.post.title }}</h2>
             <p>{{ store.post.name }}</p>
         </div>

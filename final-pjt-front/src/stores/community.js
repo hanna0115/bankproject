@@ -44,6 +44,12 @@ export const useCommunityStore = defineStore("community", () => {
   // 현재 선택된 카테고리를 반환하는 computed 속성
   const getCurrentCategory = computed(() => selectedCategory.value);
 
+  // 작성일 데이터 형식 변환
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+}
+
 
   // 2. 게시글 생성
   const createPost = function (title, content, selectedTag) {
@@ -70,16 +76,15 @@ export const useCommunityStore = defineStore("community", () => {
   const post = ref(null)
 
   const getPostDetail = function (postId) {
-    axios({
+    return axios({
         method: 'get',
         url: `${API_URL}/posts/detail/${postId}/`
     })
     .then(res => {
         post.value = res.data
+        return res.data
     })
     .catch(err => console.log('단일 게시글 조회 실패', err))
-
-    return post
   };
 
   // 4. 단일 게시글 - 수정
@@ -115,6 +120,7 @@ const updatePost = function (postId, title, content, selectedTag) {
     currentPage,
     createPost,
     getPostDetail,
-    updatePost
+    updatePost,
+    formatDate
   }
 })

@@ -1,31 +1,37 @@
 <template>
     <div class="comments">
         <p>댓글</p>
-        <form>
+        <form @submit.prevent="userStore.isLoggedIn ? createComment : router.push({ name: 'login' })">
             <input type="text" placeholder="댓글을 입력하세요" v-model="content">
-            <button @click="createComment">작성하기</button>
+            <button>작성하기</button>
         </form>
         <div class="comment-ilst">
             <div class="comment-item" v-for="comment in comments">
                 <div class="comment-info">
-                    <p>user-name</p>
+                    <p>{{ comment.name }}</p>
                     <span>|</span> 
-                    <p class="comment-content">댓글 내용</p>
+                    <p class="comment-content">{{ comment.content }}</p>
                 </div>
-                <p @click="deleteComment(comment.id)" class="comment-delete">댓글삭제</p>
+                
+                <p @click="deleteComment(comment.id)" class="comment-delete"
+                v-if="userStore.isLoggedIn && userStore.user.pk === comment.user">댓글삭제</p>
             </div>
+            <p class="no-comment" v-if="!comments.length">작성된 댓글이 없습니다.</p>
         </div>
     </div>
 </template>
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
+import { useUserStore } from '@/stores/user';
 import axios from 'axios';
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
-const store = useCommunityStore()
+const router = useRouter()
+const communityStore = useCommunityStore()
+const userStore = useUserStore()
 
 const content = ref(null)
 const comments = ref([])
@@ -34,10 +40,11 @@ const comments = ref([])
 const fetchComments = function () {
     axios({
         method: 'get',
-        url: `${store.API_URL}/detail/${route.params.id}/`
+        url: `${communityStore.API_URL}/posts/detail/${route.params.postId || 1}/`
     })
         .then(res => {
-            comments.value = res.data
+            comments.value = res.data.comment_set
+            console.log(comments.value)
         })
         .catch(err => console.log('댓글 불러오기 실패', err))
 }
@@ -46,16 +53,20 @@ const fetchComments = function () {
 const createComment = function () {
     axios({
         method: 'post',
-        url: `${store.API_URL}/${route.params.id}/comments/`,
+        url: `${communityStore.API_URL}/posts/${route.params.id || 1}/comments/`,
         data: {
             content: content.value
+        },
+        headers: {
+            Authorization: `Token ${userStore.token}`
         }
     })
         .then(res => {
             comments.value.push({
-            userName: 'user-name', // 사용자 이름은 실제 데이터로 대체해야 함
-            content: res.data.content // 서버에서 반환된 댓글 내용
-        })
+                userName: 'user-name', // 사용자 이름은 실제 데이터로 대체해야 함
+                content: res.data.content // 서버에서 반환된 댓글 내용
+            })
+            content.value = ''
         })
         .catch(err => console.log('댓글 생성 실패', err))
 }
@@ -64,7 +75,10 @@ const createComment = function () {
 const deleteComment = function (commentId) {
     axios({
         method: 'delete',
-        url: `${store.API_URL}delete_comment/${commentId}/`,
+        url: `${communityStore.API_URL}/posts/delete_comment/${commentId}/`,
+        headers: {
+            Authorization: `Token ${userStore.token}`
+        }
     })
         .then(res => {
             comments.value = comments.value.filter(comment => comment.id !== commentId)
@@ -72,9 +86,9 @@ const deleteComment = function (commentId) {
         .catch(err => console.log('댓글 삭제 실패', err))
 }
 
-// onMounted(() => {
-//     fetchComments()
-// })
+onMounted(() => {
+    fetchComments()
+})
 </script>
 
 <style scoped>
@@ -130,9 +144,6 @@ const deleteComment = function (commentId) {
     margin: 0 10px;
 }
 
-.comment-content {
-    max-width: 60%;
-}
 
 .comment-delete {
     cursor: pointer;
@@ -140,5 +151,10 @@ const deleteComment = function (commentId) {
     text-decoration: underline;
     text-align: end;
     word-break: keep-all;
+}
+
+.no-comment {
+    margin-top: 25px;
+    text-align: center;
 }
 </style>

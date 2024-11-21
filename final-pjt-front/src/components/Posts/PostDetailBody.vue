@@ -1,16 +1,17 @@
 <template>
     <div class="post-body" v-if="post">
         <div class="post-info">
-            <p>{{ formatDate(post.created_at) }}  |  조회수 {{ post.num_seen }}</p>
-            <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })">수정하기</button>
+            <p>{{ communityStore.formatDate(post.created_at) }}  |  조회수 {{ post.num_seen }}</p>
+            <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })"
+            v-if="userStore.isLoggedIn && userStore.user.pk === post.user">수정하기</button>
         </div>
-        <div class="content">김선명 (게시물 내용)</div>
+        <div class="content">{{ post.content }}</div>
         <div class="like">
             <div :class="['like-btn', { 'liked': isLiked }]"
             @click="toggleLike">
             <i class="pi pi-heart-fill"></i>
         </div>
-            <p>1</p>
+            <p>{{ likeCount }}</p>
         </div>
     </div>
 </template>
@@ -19,7 +20,7 @@
 import { useCommunityStore } from '@/stores/community';
 import { useUserStore } from '@/stores/user';
 import axios from 'axios';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 const router = useRouter()
@@ -27,54 +28,71 @@ const route = useRoute()
 const communityStore = useCommunityStore()
 const userStore = useUserStore()
 
-defineProps({
+const props = defineProps({
     post: Object
 })
 
-// const checkAndUpdatePost = function () {
-//     const currentUserId = userStore.userId; // 현재 로그인한 사용자 ID
-//     const postAuthorId = communityStore.post.authorId; // 게시글 작성자 ID (가정)
-
-//     if (currentUserId !== postAuthorId) {
-//         alert("이 게시글은 당신이 작성한 것이 아닙니다. 로그인 페이지로 이동합니다.");
-//         router.push({ name: 'login' }); // 로그인 페이지로 이동
-//     } else {
-//         updatePost(); // 수정 요청 진행
-//     }
-// };
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-}
 
 const isLiked = ref(false);
-const likeCount = ref(1);
+const likeCount = ref(0);
 
-const getLiked = function () {
-    axios({
-        method: 'post',
-        url: `${communityStore.API_URL}/like_post/${route.params.id}/`
-    })
-        .then(res => {
-            // 좋아요 되어 있으면 isLiked true로 바꾸기
-            // 좋아요 개수 가져오기(likeCount)
+const computedLikeCount = computed(() => {
+    return props.post ? likeCount.value : 0;
+});
+
+// 좋아요 상태 가져오기
+const getLikedStatus = async () => {
+    if (!props.post) return;
+
+    try {
+        isLiked.value = props.post.like_users == userStore.user.pk;
+        likeCount.value = props.post.like_count;
+    } catch (err) {
+        console.log('좋아요 상태 가져오기 오류', err);
+    }
+};
+
+// 좋아요 토글
+const toggleLike = async () => {
+    if (!userStore.isLoggedIn) {
+        alert('로그인이 필요합니다.');
+        return;
+    }
+
+    if (!props.post) return;
+
+    isLiked.value = !isLiked.value;
+
+    try {
+        axios({
+            method: 'post',
+            url: `${communityStore.API_URL}/posts/like_post/${props.post.id}/`,
+            headers: {
+                Authorization: `Token ${userStore.token}`
+            }
         })
-        .catch(err => console.log('좋아요 시 오류', err))
-}
+        .then(res => {
+            likeCount.value = res.data.like_count;
+        })
 
-const toggleLike = () => {
-  isLiked.value = !isLiked.value;
-  if (isLiked.value) {
-    likeCount.value++;
-  } else {
-    likeCount.value--;
-  }
-}
+    } catch (err) {
+        console.log('좋아요 시 오류', err);
+    }
+};
+
+// post 데이터 변화 감지
+watch(() => props.post, (newPost) => {
+    if (newPost) {
+        likeCount.value = newPost.like_users?.length || 0;
+        getLikedStatus();
+    }
+}, { immediate: true });
 
 onMounted(() => {
-    // getLiked()
-})
+    if (props.post) {
+        getLikedStatus();
+    }
+});
 </script>
 
 <style scoped>

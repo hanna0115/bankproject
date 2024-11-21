@@ -12,7 +12,7 @@
                         </div>
                     </div>
                     <div class="post-footer">
-                        <span class="post-date">작성일 {{ formatDate(post.created_at) }}</span> | <span class="post-views">조회 {{ post.num_seen }}</span>
+                        <span class="post-date">작성일 {{ store.formatDate(post.created_at) }}</span> | <span class="post-views">조회 {{ post.num_seen }}</span>
                     </div>
                 </RouterLink>
                 </div>
@@ -76,11 +76,6 @@ const goToPage = (page) => {
     }
 }
 
-// 작성 시간 형식에 맞게 변경
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-}
 </script>
 
 <style scoped>

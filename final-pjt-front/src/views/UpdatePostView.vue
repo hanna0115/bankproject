@@ -39,7 +39,6 @@
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
-import { storeToRefs } from 'pinia';
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -57,17 +56,16 @@ const selectTag = (tag) => {
 
 
 // 기존 게시글 데이터 불러오기
-onMounted(() => {
-    store.getPostDetail(route.params.postId)
-        .then(() => {
-            const { post } = storeToRefs(store)
-            console.log(post)
-            title.value = post.title
-            content.value = post.content
-            selectedTag.value = post.category
-        })
-        .catch(err => console.log('게시글 불러오기 실패'))
-})
+onMounted(async () => {
+  try {
+    const postData = await store.getPostDetail(route.params.postId);
+    title.value = postData.title;
+    content.value = postData.content;
+    selectedTag.value = postData.category;
+  } catch (err) {
+    console.error('게시글 불러오기 오류', err);
+  }
+});
 </script>
 
 <style scoped>

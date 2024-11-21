@@ -8,12 +8,9 @@ export const useUserStore = defineStore("user", () => {
 //   const isAuthenticated = ref(false)
   const token = ref(null)
   const isLoggedIn = computed(() => !!token.value)
+  const user = ref(null)
 
-  const logOut = () => {
-    token.value = null
-    router.push('/login')
-  }
-
+  // 1. 회원가입
   const signUp = function (payload) {
     const {name, email, birth_date, asset, saving_purpose, saving_amount, saving_period, password1, password2} = payload
 
@@ -38,6 +35,7 @@ export const useUserStore = defineStore("user", () => {
     })
   }
 
+  // 2. 로그인
   const logIn = (payload) => {
     const email = payload.email
     const password = payload.password
@@ -53,6 +51,7 @@ export const useUserStore = defineStore("user", () => {
         console.log(response.data)
         router.push('/')
         token.value = response.data.key
+        fetchUserInfo()
     })
     .catch((error) => {
         if (error.response?.status === 400) {
@@ -62,6 +61,28 @@ export const useUserStore = defineStore("user", () => {
         }
     })
   }
+
+  // 2-1. 사용자 정보 가져오기
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get(`${url}/accounts/user/`, {
+        headers: {
+          Authorization: `Token ${token.value}`
+        }
+      })
+      user.value = response.data
+    } catch (error) {
+      console.error('사용자 정보를 가져오는 데 실패했습니다:', error)
+      throw new Error('사용자 정보를 가져오는 데 실패했습니다.')
+    }
+  }
+
+  // 3. 로그아웃
+  const logOut = () => {
+    token.value = null
+    router.push('/login')
+  }
+
   
-  return { url, signUp, logIn, token, logOut, isLoggedIn}
+  return { url, signUp, logIn, token, logOut, isLoggedIn, user }
 }, { persist: true });
