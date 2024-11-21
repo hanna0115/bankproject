@@ -212,17 +212,21 @@ def recommendation(user=None, purpose=None):
             return get_top_products(bank_products)
 
 
-
+import json
 
 @api_view(['GET'])
 def products_recommend(request):
     purpose = request.query_params.get('saving_purpose', None)
 
+    # JSON 문자열을 파싱하여 리스트로 변환
+    if purpose is not None:
+        try:
+            purpose = json.loads(purpose)  # JSON 문자열을 리스트로 변환
+        except json.JSONDecodeError:
+            purpose = None
+
     if request.user.is_authenticated:
         recommended_products = recommendation(user=request.user, purpose=purpose)
-
-
-
     else:
         recommended_products = recommendation(purpose=purpose)
 
