@@ -3,7 +3,7 @@
         <h2 class="title">마이 페이지</h2>
         <div class="content">
             <div>
-                <p class="user-name"><span class="user-realname">오한나</span class="nim">님</p>
+                <p class="user-name"><span class="user-realname">{{ store.user.name }}</span class="nim">님</p>
                 <button class="modify-btn" @click="router.push('/update-user')">내 정보 수정</button>
             </div>
             <div class="product">
@@ -25,10 +25,16 @@
 
 import ProductIItem from '@/components/ProductIItem.vue';
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import ProfileChart from '@/components/ProfileChart.vue';
+import { onMounted } from 'vue';
 
 const router = useRouter()
+const store = useUserStore()
 
-import ProfileChart from '@/components/ProfileChart.vue';
+onMounted(() => {
+    store.getUserInfo()
+})
 </script>
 
 
