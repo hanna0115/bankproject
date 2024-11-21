@@ -11,12 +11,8 @@
 
             <!-- 비밀번호 변경 버튼 -->
             <div class="password-change-section">
-                <button 
-                    type="button" 
-                    class="goal-btn"
-                    :class="{ 'active': showPasswordFields }"
-                    @click="togglePasswordChange"
-                >
+                <button type="button" class="goal-btn" :class="{ 'active': showPasswordFields }"
+                    @click="togglePasswordChange">
                     {{ showPasswordFields ? '닫기' : '비밀번호 변경' }}
                 </button>
             </div>
@@ -25,47 +21,32 @@
             <div v-show="showPasswordFields">
                 <p>비밀번호</p>
                 <div class="input-group">
-                    <input 
-                        type="password" 
-                        class="input-field" 
-                        placeholder="새로운 비밀번호를 입력하세요" 
-                        v-model="formData.password1"
-                    >
+                    <input type="password" class="input-field" placeholder="새로운 비밀번호를 입력하세요"
+                        v-model="formData.password1">
                     <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
                 </div>
 
                 <p>비밀번호 확인</p>
                 <div class="input-group">
-                    <input 
-                        type="password" 
-                        class="input-field" 
-                        placeholder="새로운 비밀번호를 한번 더 입력해주세요" 
-                        v-model="formData.password2"
-                    >
+                    <input type="password" class="input-field" placeholder="새로운 비밀번호를 한번 더 입력해주세요"
+                        v-model="formData.password2">
                 </div>
             </div>
 
             <p>자산</p>
             <div class="input-group">
-                <input 
-                    type="text" 
-                    class="input-field" 
-                    placeholder="자산을 입력하세요" 
-                    v-model="formData.asset"
-                >
-                <p class="asset-min">* 만 단위 이상 기입</p>
+                <div class="man">
+                    <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model="formData.asset"
+                        style="text-align: end; padding-right: 50px; padding-top: 10px;">
+                    <span class="man-won">만원</span>
+                    <!-- <p class="asset-min">* 만 단위 이상 기입</p> -->
+                </div>
             </div>
 
             <p>저축 목표</p>
             <div class="goal-group">
-                <button 
-                    v-for="goal in goals" 
-                    :key="goal" 
-                    type="button" 
-                    class="goal-btn"
-                    :class="{ 'active': selectedGoals.includes(goal) }" 
-                    @click="toggleGoal(goal)"
-                >
+                <button v-for="goal in goals" :key="goal" type="button" class="goal-btn"
+                    :class="{ 'active': selectedGoals.includes(goal) }" @click="toggleGoal(goal)">
                     {{ goal }}
                 </button>
             </div>
@@ -87,14 +68,13 @@
             </div>
 
             <div class="input-group">
-                <p class="deb-amount">저축 금액</p>
-                <input 
-                    type="text" 
-                    class="input-field" 
-                    v-model="formData.saving_amount"
-                    placeholder="금액을 입력하세요"
-                >
-                <p class="asset-min">* 만 단위 이상 기입</p>
+                <div class="man">
+                    <p class="deb-amount">저축 금액</p>
+                    <input type="text" class="input-field" v-model="formData.saving_amount" placeholder="금액을 입력하세요"
+                        style="text-align: end; padding-right: 50px; padding-top: 10px;">
+                    <span class="man-won2">만원</span>
+                    <!-- <p class="asset-min">* 만 단위 이상 기입</p> -->
+                </div>
             </div>
             <button type="submit" class="submit-btn">완료</button>
         </form>
@@ -104,6 +84,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useUserStore } from '@/stores/user';
+import router from '@/router';
 
 const store = useUserStore();
 const selectedGoals = ref([]);
@@ -130,6 +111,8 @@ const toggleGoal = (goal) => {
     const index = selectedGoals.value.indexOf(goal);
     if (index > -1) {
         selectedGoals.value.splice(index, 1);
+    } else if (selectedGoals.value.length > 2) {
+        alert('목표 설정은 최대 3개까지만 가능합니다.')
     } else {
         selectedGoals.value.push(goal);
     }
@@ -149,14 +132,24 @@ const goals = [
 
 const handleSubmit = () => {
     const updateData = {};
-    
-    if (formData.value.password1) updateData.password1 = formData.value.password1;
-    if (formData.value.password2) updateData.password2 = formData.value.password2;
+
+    // 비밀번호 필드가 보이고 있고, 비밀번호가 입력된 경우에만 검증
+    if (showPasswordFields.value && (formData.value.password1 || formData.value.password2)) {
+        if (formData.value.password1.length < 8 || formData.value.password2.length < 8) {
+            alert('비밀번호는 8자리 이상으로 설정해주세요.');
+            return; // 함수 실행 중단
+        }
+        updateData.password1 = formData.value.password1;
+        updateData.password2 = formData.value.password2;
+    }
+
+    // 나머지 데이터 업데이트
     if (formData.value.asset) updateData.asset = formData.value.asset;
     if (selectedGoals.value.length > 0) updateData.saving_purpose = selectedGoals.value;
     if (formData.value.saving_amount) updateData.saving_amount = formData.value.saving_amount;
     if (formData.value.saving_period) updateData.saving_period = formData.value.saving_period;
 
+    // 유효성 검사를 통과한 경우에만 API 호출
     store.updateUserInfo(updateData)
         .then(() => {
             console.log('정보 업데이트 성공');
@@ -174,7 +167,7 @@ onMounted(() => {
                 formData.value.saving_amount = store.user.saving_amount || '';
                 formData.value.saving_period = store.user.saving_period || '';
                 if (store.user.saving_purpose) {
-                    selectedGoals.value = Array.isArray(store.user.saving_purpose) 
+                    selectedGoals.value = Array.isArray(store.user.saving_purpose)
                         ? [...store.user.saving_purpose]
                         : [store.user.saving_purpose];
                     formData.value.saving_purpose = [...selectedGoals.value];
@@ -215,8 +208,28 @@ p {
     margin-bottom: 30px;
 }
 
-.input-group > p {
+.input-group>p {
     margin: 20px 0;
+}
+
+.man {
+    position: relative;
+}
+
+.man-won {
+    position: absolute;
+    width: 30px;
+    right: 10px;
+    top: 10px;
+    color: #808080;
+}
+
+.man-won2 {
+    position: absolute;
+    width: 30px;
+    right: 10px;
+    top: 40px;
+    color: #808080;
 }
 
 .password-require {
@@ -226,7 +239,7 @@ p {
     font-weight: 350;
 }
 
-.password-change-section{
+.password-change-section {
     margin-bottom: 20px;
 }
 
@@ -383,7 +396,7 @@ p {
     transform: translate(-50%, -50%) scale(1.25);
 }
 
-.savings-amount-slider input:checked + label::after {
+.savings-amount-slider input:checked+label::after {
     border-color: #FF6708;
     background: #FF6708;
     transform: translate(-50%, -50%) scale(0.75);

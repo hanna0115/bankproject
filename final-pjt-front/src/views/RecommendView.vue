@@ -1,6 +1,7 @@
 <template>
     <div class="recommendation-container">
         <span class="recommendation-badge">금융상품 추천</span>
+        <Switch/>
         <p class="recommendation-intro"><span class="user-name">김선명</span>님의 목표 달성에 도움이 되는</p>
         <p class="recommendation-title">금융상품 Best 5!</p>
         <div class="product-list">
@@ -33,6 +34,7 @@
 <script setup>
 import { onMounted } from 'vue';
 import { gsap } from 'gsap';
+
 
 onMounted(() => {
   const productItems = document.querySelectorAll('.product-item');

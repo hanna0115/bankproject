@@ -33,6 +33,7 @@ export const useUserStore = defineStore("user", () => {
     })
     .catch((error) => {
         console.error('회원가입 실패:', error)
+        alert('입력 되지 않은 정보가 있습니다.')
     })
   }
 
@@ -123,6 +124,7 @@ const updateUserInfo = (payload) => {
       })
       .catch(error => {
           console.log('사용자 정보 업데이트 실패:', error);
+          alert('입력 되지 않은 정보가 있습니다.')
           reject(error);
       });
   });
