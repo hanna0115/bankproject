@@ -127,15 +127,16 @@ const updatePost = function (postId, title, content, selectedTag) {
   return { 
     API_URL,
     posts,
-    post,
-    getPosts, 
-    selectedCategory, 
+    selectedCategory,
+    currentPage,
+    getPosts,
+    updateCategory,
     getFilteredPosts,
     getCurrentCategory,
-    currentPage,
+    formatDate,
     createPost,
+    post,
     getPostDetail,
     updatePost,
-    formatDate
   }
 })
