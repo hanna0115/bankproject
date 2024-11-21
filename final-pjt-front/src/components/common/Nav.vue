@@ -7,13 +7,16 @@
       <RouterLink :to="{name:'community'}">커뮤니티</RouterLink>
       <RouterLink :to="{name:'exchange'}">환율 계산기</RouterLink>
     </div>
-   
-    <i class="pi pi-user user-icon" v-if="store.isLoggedIn" @click="router.push({ name: 'profile', params: { userId: store.userPK }})"></i>
-    <button v-if="store.isLoggedIn"
-    @click="store.logOut"
-    class="login-btn">
-    로그아웃
-  </button>
+
+    <div class="is-logged-in" v-if="store.isLoggedIn">
+      <button @click="router.push({ name: 'profile', params: { userId: store.userPK }})">
+        <i class="pi pi-user user-icon"></i>
+      </button>
+      <button @click="store.logOut" class="logout-btn">
+      로그아웃
+      </button>
+    </div>
+
   <RouterLink
   v-else
   :to="{name: 'login'}" class="login-btn">로그인</RouterLink>
@@ -91,20 +94,20 @@ onMounted(() => {
 .user-icon {
   cursor: pointer;
   padding: 10px;
-  margin-right: -235px;
   color: white;
   background-color: rgba(255, 103, 8, 0.6);
   border-radius: 50%;
   height: 32px;
   width: 35px;
-  margin-top: 10px;
+  margin-right: 5px;
 }
 
 /* .user-btn {
   margin-top: 10px;
 } */
 
-.login-btn {
+.login-btn,
+.logout-btn {
   background-color: rgba(255, 103, 8, 0.6);
   color: white;
   padding: 5px 12px;
