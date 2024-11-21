@@ -6,7 +6,7 @@
             <button>적금</button>
         </div>
 
-        <p class="recommendation-intro" v-if="userStore.isLoggedIn"><span>{{ userStore.user.name }}</span>님의 목표 달성에 도움이 되는</p>
+        <p class="recommendation-intro" v-if="userStore.isLoggedIn && userStore.user"><span>{{ userStore.user.name }}</span>님의 목표 달성에 도움이 되는</p>
         <p class="recommendation-intro" v-else><span>가장 많은 사람들</span>이 가입한</p>
         <p class="recommendation-title">금융상품 Best 5!</p>
 
