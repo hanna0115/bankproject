@@ -66,7 +66,7 @@ export const useCommunityStore = defineStore("community", () => {
   }
 
 
-  // 3. 단일 게시글 조회
+  // 3. 단일 게시글 - 조회
   const post = ref(null)
 
   const getPostDetail = function (postId) {
@@ -78,7 +78,30 @@ export const useCommunityStore = defineStore("community", () => {
         post.value = res.data
     })
     .catch(err => console.log('단일 게시글 조회 실패', err))
+
+    return post
   };
+
+  // 4. 단일 게시글 - 수정
+const updatePost = function (postId, title, content, selectedTag) {
+  axios({
+      method: 'put',
+      url: `${API_URL}/posts/detail/${postId}/`,
+      data: {
+          title,
+          content,
+          category: selectedTag
+      },
+      headers: {
+        Authorization: `Token ${userStore.token}`
+      }
+  })
+      .then(res => {
+          console.log(res)
+          router.push({ name: 'community'})
+      })
+      .catch(err => console.log('게시글 수정 오류', err))
+}
 
   return { 
     API_URL,
@@ -92,5 +115,6 @@ export const useCommunityStore = defineStore("community", () => {
     currentPage,
     createPost,
     getPostDetail,
+    updatePost
   }
 })

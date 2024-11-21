@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <form class="post" @submit.prevent="updatePost">
+        <form class="post" @submit.prevent="store.updatePost(route.params.postId, title, content, selectedTag)">
             <div class="input-group">
                 <label for="post-title" class="post-title">제목</label>
                 <input type="text" id="post-title" v-model.trim="title">
@@ -39,7 +39,7 @@
 
 <script setup>
 import { useCommunityStore } from '@/stores/community';
-import axios from 'axios';
+import { storeToRefs } from 'pinia';
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -55,32 +55,18 @@ const selectTag = (tag) => {
     selectedTag.value = tag;
 };
 
-// 게시글 수정하기
-const updatePost = function () {
-    axios({
-        method: 'put',
-        url: `${store.API_URL}/posts/detail/${route.params.postId}/`,
-        data: {
-            title: title.value,
-            content: content.value,
-            category: selectedTag.value
-        }
-    })
-        .then(res => {
-            console.log(res)
-            router.push({ name: 'community'})
-        })
-        .catch(err => console.log('게시글 수정 오류', err))
-}
 
 // 기존 게시글 데이터 불러오기
 onMounted(() => {
     store.getPostDetail(route.params.postId)
-    const post = store.post
-    console.log(post)
-    title.value = post.title
-    content.value = post.content
-    selectedTag.value = post.category
+        .then(() => {
+            const { post } = storeToRefs(store)
+            console.log(post)
+            title.value = post.title
+            content.value = post.content
+            selectedTag.value = post.category
+        })
+        .catch(err => console.log('게시글 불러오기 실패'))
 })
 </script>
 
