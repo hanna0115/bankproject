@@ -55,7 +55,7 @@ onMounted(() => {
 .title {
     margin: 0 auto;
     margin-bottom: 20px;
-    color: #FFA46B;
+    color: #FF6708;
 }
 
 .user-name {
