@@ -259,7 +259,7 @@ def products_recommend(request):
 products_joined_data = pd.read_csv('bank_products/data/products_joined.csv')
 
 # 가입일자 생성을 위한 날짜 (2021년 ~ 현재)
-start_date = datetime(2021, 1, 1)
+start_date = datetime(2024, 7, 1)
 end_date = datetime(2024, 11, 25)
 
 def create_user_products(asset, product):
@@ -303,6 +303,9 @@ def create_user_products(asset, product):
     # 적금이면서 max의 제한이 없는 경우
     elif not join_amount_max:
         join_amount_max = 200
+
+    join_amount_min = max(join_amount_min, 5)
+    join_amount_max = max(join_amount_max, 5)
     join_amount_min, join_amount_max = sorted([join_amount_min, join_amount_max])
     monthly_amount = random.randint(join_amount_min, join_amount_max)
 
