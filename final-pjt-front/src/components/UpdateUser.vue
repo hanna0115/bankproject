@@ -1,68 +1,40 @@
 <template>
-    <div class="signup-container">
+    <div class="signup-container" v-if="store.user">
         <h2 class="signup-title">내 정보 수정</h2>
-        <form class="signup-form">
+        <form class="signup-form" @submit.prevent="handleSubmit">
             <div class="input-group">
-                <p>이름</p>
-                <input type="text" class="input-field" placeholder="이름을 입력하세요">
+                <p>이름: {{ store.user.name }}</p>
+                <p>생년월일: {{ store.user.birth_date }}</p>
+                <p>아이디: {{ store.user.email }}</p>
             </div>
 
-            <p>생년월일</p>
-            <div class="birth-select-group">
-                <select class="select-box">
-                    <option disabled value="">년도</option>
-                    <option v-for="year in years" :key="year" :value="year">
-                        {{ year }}
-                    </option>
-                </select>
-                <select class="select-box" v-model="selectedMonth">
-                    <option disabled value="">월</option>
-                    <option v-for="month in months" :key="month" :value="month">
-                        {{ month }}
-                    </option>
-                </select>
-                <select class="select-box" v-model="selectedDay">
-                    <option disabled value="">일</option>
-                    <option v-for="day in availableDays" :key="day" :value="day">
-                        {{ day }}
-                    </option>
-                </select>
-            </div>
-
-            <p>아이디</p>
-            <div class="email-input-group">
-                <input type="text" class="input-field" placeholder="이메일 주소">
-                <span>@</span>
-                <select class="select-box" >
-                    <option value="naver.com">naver.com</option>
-                    <option value="google.com">google.com</option>
-                    <option value="hanmail.net">hanmail.net</option>
-                    <option value="nate.com">nate.com</option>
-                    <option value="kakao.com">kakao.com</option>
-                </select>
-            </div>
 
             <p>비밀번호</p>
             <div class="input-group">
-                <input type="password" class="input-field" placeholder="비밀번호를 입력하세요" >
+                <input type="password" class="input-field" placeholder="비밀번호를 입력하세요" v-model="formData.password1">
                 <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
             </div>
 
             <p>비밀번호 확인</p>
             <div class="input-group">
-                <input type="password" class="input-field" placeholder="비밀번호를 다시 한번 더 입력해주세요" >
+                <input type="password" class="input-field" placeholder="비밀번호를 다시 한번 더 입력해주세요" v-model="formData.password2">
             </div>
 
             <p>자산</p>
             <div class="input-group">
-                <input type="text" class="input-field" placeholder="자산을 입력하세요" >
+                <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model="formData.asset">
                 <p class="asset-min">* 만 단위 이상 기입</p>
             </div>
 
             <p>저축 목표</p>
             <div class="goal-group">
-                <button v-for="goal in goals" :key="goal" type="button" class="goal-btn"
-                    :class="{ 'active': selectedGoals.includes(goal) }" @click="toggleGoal(goal)">
+                <button 
+                    v-for="goal in goals" 
+                    :key="goal" 
+                    type="button" 
+                    class="goal-btn"
+                    :class="{ 'active': selectedGoals.includes(goal) }" 
+                    @click="toggleGoal(goal)">
                     {{ goal }}
                 </button>
             </div>
@@ -70,22 +42,27 @@
             <p>저축 기간 (개월)</p>
             <div class="savings-slider-wrapper">
                 <div class="savings-amount-slider">
-                    <input type="radio" name="savings-amount" id="amount1" value="1" >
+                    <input type="radio" name="savings-period" id="amount1" value="0" v-model="formData.saving_period">
                     <label for="amount1" data-amount="0"></label>
-                    <input type="radio" name="savings-amount" id="amount2" value="2">
+                    <input type="radio" name="savings-period" id="amount2" value="6" v-model="formData.saving_period">
                     <label for="amount2" data-amount="6"></label>
-                    <input type="radio" name="savings-amount" id="amount3" value="3">
+                    <input type="radio" name="savings-period" id="amount3" value="12" v-model="formData.saving_period">
                     <label for="amount3" data-amount="12"></label>
-                    <input type="radio" name="savings-amount" id="amount4" value="4">
+                    <input type="radio" name="savings-period" id="amount4" value="24" v-model="formData.saving_period">
                     <label for="amount4" data-amount="24"></label>
-                    <input type="radio" name="savings-amount" id="amount5" value="5">
+                    <input type="radio" name="savings-period" id="amount5" value="36" v-model="formData.saving_period">
                     <label for="amount5" data-amount="36"></label>
                 </div>
             </div>
 
+
             <div class="input-group">
                 <p class="deb-amount">저축 금액</p>
-                <input type="text" class="input-field" placeholder="금액을 입력하세요">
+                <input 
+                    type="text" 
+                    class="input-field" 
+                    v-model="formData.saving_amount"
+                    placeholder="금액을 입력하세요">
                 <p class="asset-min">* 만 단위 이상 기입</p>
             </div>
             <button type="submit" class="submit-btn">완료</button>
@@ -94,23 +71,31 @@
 </template>
 
 <script setup>
+import { ref, onMounted } from 'vue';
+import { useUserStore } from '@/stores/user';
 
-import { ref, computed, watch } from 'vue';
+const store = useUserStore();
+const selectedGoals = ref([]);
 
+const formData = ref({
+    password1: '',
+    password2: '',
+    asset: '',
+    saving_purpose: [],
+    saving_amount: '',
+    saving_period: ''
+});
 
-const selectedGoals = ref([])
-// 선택된 목표들을 배열로 관리
-
-// 목표 토글 함수
+// toggleGoal 함수 수정
 const toggleGoal = (goal) => {
-    if (selectedGoals.value.includes(goal)) {
-        // 이미 선택된 목표라면 제거
-        selectedGoals.value = selectedGoals.value.filter(g => g !== goal)
+    const index = selectedGoals.value.indexOf(goal);
+    if (index > -1) {
+        selectedGoals.value.splice(index, 1);
     } else {
-        // 선택되지 않은 목표라면 추가
-        selectedGoals.value.push(goal)
+        selectedGoals.value.push(goal);
     }
-}
+    formData.value.saving_purpose = [...selectedGoals.value];
+};
 
 const goals = [
     '내집마련',
@@ -121,8 +106,46 @@ const goals = [
     '시드머니',
     '여행자금',
     '위시리스트'
-]
+];
 
+const handleSubmit = () => {
+    const updateData = {};
+    
+    if (formData.value.password1) updateData.password1 = formData.value.password1;
+    if (formData.value.password2) updateData.password2 = formData.value.password2;
+    if (formData.value.asset) updateData.asset = formData.value.asset;
+    if (selectedGoals.value.length > 0) updateData.saving_purpose = selectedGoals.value;
+    if (formData.value.saving_amount) updateData.saving_amount = formData.value.saving_amount;
+    if (formData.value.saving_period) updateData.saving_period = formData.value.saving_period;
+
+    store.updateUserInfo(updateData)
+        .then(() => {
+            console.log('정보 업데이트 성공');
+        })
+        .catch(error => {
+            console.error('정보 업데이트 실패:', error);
+        });
+};
+
+onMounted(() => {
+    store.getUserInfo()
+        .then(() => {
+            if (store.user) {
+                formData.value.asset = store.user.asset || '';
+                formData.value.saving_amount = store.user.saving_amount || '';
+                formData.value.saving_period = store.user.saving_period || '';
+                if (store.user.saving_purpose) {
+                    selectedGoals.value = Array.isArray(store.user.saving_purpose) 
+                        ? [...store.user.saving_purpose]
+                        : [store.user.saving_purpose];
+                    formData.value.saving_purpose = [...selectedGoals.value];
+                }
+            }
+        })
+        .catch(error => {
+            console.error('사용자 정보 로드 실패:', error);
+        });
+});
 </script>
 
 <style scoped>

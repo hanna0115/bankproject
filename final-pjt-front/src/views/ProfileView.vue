@@ -1,7 +1,8 @@
 <template>
     <div class="container">
         <h2 class="title">마이 페이지</h2>
-        <div class="content">
+        
+        <div class="content" v-if="store.user">
             <div>
                 <p class="user-name"><span class="user-realname">{{ store.user.name }}</span class="nim">님</p>
                 <button class="modify-btn" @click="router.push('/update-user')">내 정보 수정</button>
