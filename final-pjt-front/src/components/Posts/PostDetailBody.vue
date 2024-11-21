@@ -1,5 +1,5 @@
 <template>
-    <div class="post-body" v-if="post">
+    <div class="post-body" v-if="post && user">
         <div class="post-info">
             <p>{{ communityStore.formatDate(post.created_at) }}  |  조회수 {{ post.num_seen }}</p>
             <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })"

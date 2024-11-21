@@ -37,31 +37,33 @@ export const useUserStore = defineStore("user", () => {
   }
 
   // 2. 로그인
-  const logIn = (payload) => {
-    const email = payload.email
-    const password = payload.password
-    axios({
-        method: 'post',
-        url: `${url}/accounts/login/`,
-        data: {
-            email, password
-        }
-    })
-    .then(response => {
-        console.log('로그인이 완료되었습니다.')
-        console.log(response.data)
-        router.push('/')
-        token.value = response.data.key
-        fetchUserInfo()
-    })
-    .catch((error) => {
+  const logIn = async (payload) => {
+    const email = payload.email;
+    const password = payload.password;
+    try {
+        const response = await axios({
+            method: 'post',
+            url: `${url}/accounts/login/`,
+            data: { email, password }
+        });
+
+        console.log('로그인이 완료되었습니다.');
+        console.log(response.data);
+        token.value = response.data.key;
+
+        // 사용자 정보를 가져옵니다.
+        await fetchUserInfo(); // 사용자 정보 가져오기
+        await getUserInfo(); // 추가적인 사용자 정보 가져오기
+
+        router.push('/'); // 로그인 후 리다이렉트
+    } catch (error) {
         if (error.response?.status === 400) {
-            throw new Error ('이메일 또는 비밀번호가 올바르지 않습니다.')
+            throw new Error('이메일 또는 비밀번호가 올바르지 않습니다.');
         } else {
-            throw new Error ('로그인 중 오류가 발생했습니다.')
+            throw new Error('로그인 중 오류가 발생했습니다.');
         }
-    })
-  }
+    }
+}
 
   // 2-1. 사용자 정보 가져오기
   const fetchUserInfo = async () => {

@@ -129,7 +129,7 @@ const password1 = ref('')
 const password2 = ref('')
 const asset = ref('')
 const savingAmount = ref('')
-const savingPeriod = ref('12')
+const savingPeriod = ref('')
 const selectedGoals = ref([])
 
 // 이메일 계산
