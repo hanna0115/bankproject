@@ -11,6 +11,7 @@ import ProfileView from '@/views/ProfileView.vue'
 import ExchangeView from '@/views/ExchangeView.vue'
 import UpdatePostView from '@/views/UpdatePostView.vue'
 import UpdateUser from '@/components/UpdateUser.vue'
+import RecommendDetail from '@/views/RecommendDetailView.vue'
 
 
 const router = createRouter({
@@ -40,6 +41,11 @@ const router = createRouter({
       path: '/recommend',
       name: 'recommend',
       component: RecommendView
+    },
+    {
+      path: '/recommend/:category/:productId',
+      name: 'recommendDetail',
+      component: RecommendDetail
     },
     {
       path: '/createPost',

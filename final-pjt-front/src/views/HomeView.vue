@@ -1,12 +1,12 @@
 <template>
     <div>
         
-        <RecommendDetail/>
+        <!-- <RecommendDetail/> -->
     </div>
 </template>
 
 <script setup>
-import RecommendDetail from '@/components/RecommendDetail.vue';
+// import RecommendDetail from '@/components/RecommendDetail.vue';
 
 
 </script>

@@ -1,45 +1,55 @@
 <template>
     <div class="container">
         <div class="product-container">
-
             <div class="product-info"> <!-- 상품 정보-->
-                <h2 class="product-title">The 든든 예금</h2>
-                <p class="bank-name">경남은행</p>
-                <div class="product-event">
-                    <span>특판</span> <span>특판</span> <span>특판</span>
+                <h2 class="product-title">{{ product.title }}</h2>
+                <p class="bank-name">{{ product.bankName }}</p>
+                <div class="product-event" v-if="product.events">
+                    <span v-for="event in product.events" :key="event">{{ event }}</span>
                 </div>
                 <div class="product-interest">
                     <div class="interest-high">
-                        <p>최고</p> <span>연 3.50%</span>
+                        <p>최고</p> <span>{{ product.highInterest }}%</span>
                     </div>
                     <div>
-                        <p>기본</p> <span>연 2.35%</span>
+                        <p>기본</p> <span>{{ product.baseInterest }}%</span>
                     </div>
                 </div>
-                <button
-                class="info-btn">공식홈에서 더 알아보기</button>
+                <button class="info-btn">공식홈에서 더 알아보기</button>
             </div>
             
             <div class="product-detail"> <!--상품 안내-->
                 <h2>상품 안내</h2>
-                <p>기간:</p>
-                <p>총액:</p>
-                <p>가입방법:</p>
-                <p>대상:</p>
-                <p>우대조건:</p>
-                <p>이자지급:</p>
-                <p>유의:</p>
-                <p>예금자보호:</p>
-                
+                <p>기간: {{ product.period }}</p>
+                <p>총액: {{ product.totalAmount }}</p>
+                <p>가입방법: {{ product.joinMethod }}</p>
+                <p>대상: {{ product.target }}</p>
+                <p>우대조건: {{ product.preferentialConditions }}</p>
+                <p>이자지급: {{ product.interestPayment }}</p>
+                <p>유의: {{ product.notice }}</p>
+                <p>예금자보호: {{ product.depositProtection }}</p>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { useRecommendStore } from '@/stores/recommend';
+
+const route = useRoute();
+const recommendStore = useRecommendStore();
+const product = recommendStore.product
+
+const category = route.params.category;
+const productId = Number(route.params.productId);
 
 
-
+onMounted(() => {
+    recommendStore.getProduct()
+    recommendStore.getProductDetail(category, productId);
+});
 </script>
 
 <style scoped>
