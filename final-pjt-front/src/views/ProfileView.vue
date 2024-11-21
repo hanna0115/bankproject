@@ -4,7 +4,7 @@
         <div class="content">
             <div>
                 <p class="user-name"><span class="user-realname">오한나</span class="nim">님</p>
-                <button class="modify-btn">내 정보 수정</button>
+                <button class="modify-btn" @click="router.push('/update-user')">내 정보 수정</button>
             </div>
             <div class="product">
                 <span>내가 가입한 예적금 상품</span>
@@ -24,8 +24,14 @@
 <script setup>
 
 import ProductIItem from '@/components/ProductIItem.vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter()
+
 import ProfileChart from '@/components/ProfileChart.vue';
 </script>
+
+
 
 <style scoped>
 .container {
