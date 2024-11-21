@@ -63,22 +63,22 @@
             <div class="goal-group">
                 <button v-for="goal in goals" :key="goal" type="button" class="goal-btn"
                     :class="{ 'active': selectedGoals.includes(goal) }" @click="toggleGoal(goal)">
-                    {{ goal }}
+                    {{ goalsToKor[goal] }}
                 </button>
             </div>
 
             <p>저축 기간 (개월)</p>
             <div class="savings-slider-wrapper">
                 <div class="savings-amount-slider">
-                    <input type="radio" name="savings-amount" id="amount1" value="1" v-model="savingPeriod">
+                    <input type="radio" name="savings-amount" id="amount1" value="0" v-model="savingPeriod" disabled>
                     <label for="amount1" data-amount="0"></label>
-                    <input type="radio" name="savings-amount" id="amount2" value="2" v-model="savingPeriod">
+                    <input type="radio" name="savings-amount" id="amount2" value="6" v-model="savingPeriod">
                     <label for="amount2" data-amount="6"></label>
-                    <input type="radio" name="savings-amount" id="amount3" value="3" v-model="savingPeriod">
+                    <input type="radio" name="savings-amount" id="amount3" value="12" v-model="savingPeriod">
                     <label for="amount3" data-amount="12"></label>
-                    <input type="radio" name="savings-amount" id="amount4" value="4" v-model="savingPeriod">
+                    <input type="radio" name="savings-amount" id="amount4" value="24" v-model="savingPeriod">
                     <label for="amount4" data-amount="24"></label>
-                    <input type="radio" name="savings-amount" id="amount5" value="5" v-model="savingPeriod">
+                    <input type="radio" name="savings-amount" id="amount5" value="36" v-model="savingPeriod">
                     <label for="amount5" data-amount="36"></label>
                 </div>
             </div>
@@ -141,17 +141,26 @@ const fullEmail = computed(() => {
 })
 
 const goals = [
-    '내집마련',
-    '교육비',
-    '의료비',
-    '결혼자금',
-    '노후자금',
-    '시드머니',
-    '여행자금',
-    '위시리스트'
+    'home',
+    'education',
+    'medication',
+    'wedding',
+    'future',
+    'seedmoney',
+    'travel',
+    'wishlist'
 ]
 
-
+const goalsToKor = {
+        'home': '내집마련',
+        'education': '교육비',
+        'medication': '의료비',
+        'wedding': '결혼자금',
+        'future': '노후자금',
+        'seedmoney': '시드머니',
+        'travel': '여행자금',
+        'wishlist': '위시리스트'
+    }
 
 // 생년월일 관련 코드
 const currentYear = new Date().getFullYear()
@@ -196,6 +205,8 @@ watch([selectedYear, selectedMonth], () => {
 
 // 목표 토글 함수
 const toggleGoal = (goal) => {
+
+    console.log(goal)
     if (selectedGoals.value.includes(goal)) {
         // 이미 선택된 목표라면 제거
         selectedGoals.value = selectedGoals.value.filter(g => g !== goal)
