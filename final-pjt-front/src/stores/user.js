@@ -86,20 +86,47 @@ export const useUserStore = defineStore("user", () => {
 
   // 4. 마이페이지
   const getUserInfo = function () {
-    axios({
-      method: 'get',
-      url: `${url}/accounts/profile/${userPK.value}/`,
-      headers: {
-        Authorization: `Token ${token.value}`
-      }
-    })
-    .then(res => {
-      user.value = res.data
-      
-    })
-    .catch(err => console.log('유저 정보 가져오기 실패', err))
-  }
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'get',
+            url: `${url}/accounts/profile/${userPK.value}/`,
+            headers: {
+                Authorization: `Token ${token.value}`
+            }
+        })
+        .then(res => {
+            user.value = res.data;
+            resolve(res.data);
+        })
+        .catch(err => {
+            console.log('유저 정보 가져오기 실패', err);
+            reject(err);
+        });
+    });
+};
 
+
+const updateUserInfo = (payload) => {
+  return new Promise((resolve, reject) => {
+      axios({
+          method: 'put',
+          url: `${url}/accounts/profile/update/`,
+          data: payload,
+          headers: {
+              Authorization: `Token ${token.value}`
+          }
+      })
+      .then(response => {
+          user.value = response.data;
+          router.push(`/profile/${userPK.value}`);
+          resolve(response.data);
+      })
+      .catch(error => {
+          console.log('사용자 정보 업데이트 실패:', error);
+          reject(error);
+      });
+  });
+};
   
-  return { url, signUp, logIn, token, logOut, isLoggedIn, user, userPK, getUserInfo }
+  return { url, signUp, logIn, token, logOut, isLoggedIn, user, userPK, getUserInfo, updateUserInfo }
 }, { persist: true });
