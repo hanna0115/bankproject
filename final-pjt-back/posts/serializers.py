@@ -52,6 +52,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 # 댓글 생성
 class CommentSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source='user.name', read_only=True)
 
     class Meta:
         model = Comment
