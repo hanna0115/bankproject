@@ -1,12 +1,12 @@
 <template>
     <div class="comments">
         <p>댓글</p>
-        <form @submit.prevent="userStore.isLoggedIn ? createComment : router.push({ name: 'login' })">
+        <form @submit.prevent="userStore.isLoggedIn ? createComment() : router.push({ name: 'login' })">
             <input type="text" placeholder="댓글을 입력하세요" v-model="content">
             <button>작성하기</button>
         </form>
         <div class="comment-ilst">
-            <div class="comment-item" v-for="comment in comments">
+            <div class="comment-item" v-for="comment in comments" :key="comment.id">
                 <div class="comment-info">
                     <p>{{ comment.name }}</p>
                     <span>|</span> 
@@ -14,7 +14,7 @@
                 </div>
                 
                 <p @click="deleteComment(comment.id)" class="comment-delete"
-                v-if="userStore.isLoggedIn && userStore.user.pk === comment.user">댓글삭제</p>
+                v-if="userStore.isLoggedIn && userStore.user.pk == comment.user">댓글삭제</p>
             </div>
             <p class="no-comment" v-if="!comments.length">작성된 댓글이 없습니다.</p>
         </div>
@@ -25,35 +25,41 @@
 import { useCommunityStore } from '@/stores/community';
 import { useUserStore } from '@/stores/user';
 import axios from 'axios';
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, onMounted, watch } from 'vue';
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
 const router = useRouter()
 const communityStore = useCommunityStore()
 const userStore = useUserStore()
 
+const props = defineProps({
+    post: Object
+})
+
+console.log(props.post.comment_set)
 const content = ref(null)
 const comments = ref([])
 
 // 댓글 목록 불러오기
-const fetchComments = function () {
-    axios({
-        method: 'get',
-        url: `${communityStore.API_URL}/posts/detail/${route.params.postId || 1}/`
-    })
-        .then(res => {
-            comments.value = res.data.comment_set
-            console.log(comments.value)
-        })
-        .catch(err => console.log('댓글 불러오기 실패', err))
-}
+// const fetchComments = function () {
+//     axios({
+//         method: 'get',
+//         url: `${communityStore.API_URL}/posts/detail/${route.params.postId || 1}/`
+//     })
+//         .then(res => {
+//             console.log(res.data.comment_set)
+//             comments.value = res.data.comment_set
+//             console.log(comments.value)
+//         })
+//         .catch(err => console.log('댓글 불러오기 실패', err))
+// }
 
-// 댓글 생성 및 목록 업데이트
+// 댓글 생성
 const createComment = function () {
     axios({
         method: 'post',
-        url: `${communityStore.API_URL}/posts/${route.params.id || 1}/comments/`,
+        url: `${communityStore.API_URL}/posts/${route.params.postId || 1}/comments/`,
         data: {
             content: content.value
         },
@@ -62,10 +68,8 @@ const createComment = function () {
         }
     })
         .then(res => {
-            comments.value.push({
-                userName: 'user-name', // 사용자 이름은 실제 데이터로 대체해야 함
-                content: res.data.content // 서버에서 반환된 댓글 내용
-            })
+            console.log('댓글 생성 완료')
+            comments.value.push(res.data)
             content.value = ''
         })
         .catch(err => console.log('댓글 생성 실패', err))
@@ -86,8 +90,23 @@ const deleteComment = function (commentId) {
         .catch(err => console.log('댓글 삭제 실패', err))
 }
 
+// 댓글 목록 업데이트 함수
+const updateComments = () => {
+    if (communityStore.post && communityStore.post.comment_set) {
+        comments.value = communityStore.post.comment_set;
+    }
+}
+
+// route.params.postId가 변경될 때마다 댓글 목록 업데이트
+watch(() => route.params.postId, async (newPostId) => {
+    if (newPostId) {
+        await communityStore.getPostDetail(newPostId);
+        updateComments();
+    }
+});
+
 onMounted(() => {
-    fetchComments()
+    updateComments();
 })
 </script>
 

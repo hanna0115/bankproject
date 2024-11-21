@@ -55,6 +55,20 @@ export const useCommunityStore = defineStore("community", () => {
 
   // 2. 게시글 생성
   const createPost = function (title, content, selectedTag) {
+    // 입력값 검증
+    if (title?.trim() === '') {
+      alert('제목을 입력해주세요.');
+      return;
+    }
+    if (content?.trim() === '') {
+      alert('내용을 입력해주세요.');
+      return;
+    }
+    if (!selectedTag || selectedTag === 'all') {
+      alert('카테고리를 선택해주세요.');
+      return;
+    }
+
     axios({
         method: 'post',
         url: `${API_URL}/posts/`,
@@ -72,19 +86,6 @@ export const useCommunityStore = defineStore("community", () => {
           })
           .catch(err => console.log('게시글 생성 오류', err))
   }
-  
-  // 2. 전체 게시글 조회
-  const getPosts = function () {
-    axios({
-      method: 'get',
-      url: `${API_URL}/posts/`
-    })
-      .then(res => {
-        posts.value = res.data;
-        filteredPosts.value = res.data
-      })
-      .catch(err => console.log('게시글을 가져오는 중 오류 발생:', err))
-  };
 
   
   // 3. 단일 게시글 - 조회

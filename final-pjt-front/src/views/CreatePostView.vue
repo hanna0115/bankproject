@@ -49,8 +49,8 @@ const selectTag = (tag) => {
     selectedTag.value = tag;
 };
 
-const title = ref(null)
-const content = ref(null)
+const title = ref('')
+const content = ref('')
 </script>
 
 <style scoped>
