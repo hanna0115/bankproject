@@ -42,8 +42,8 @@ onMounted(() => {
 <style scoped>
 .container {
     display: flex;
-    width: 30%;
     flex-direction: column;
+    width: 70%;
     margin: 0 auto;
     margin-top: 100px;
 }
@@ -55,7 +55,6 @@ onMounted(() => {
 .title {
     margin: 0 auto;
     margin-bottom: 20px;
-    font-weight: 700;
     color: #FFA46B;
 }
 
