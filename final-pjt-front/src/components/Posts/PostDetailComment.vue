@@ -8,13 +8,13 @@
         <div class="comment-ilst" v-if="comments">
             <div class="comment-item" v-for="comment in comments" :key="comment.id">
                 <div class="comment-info">
-                    <p>{{ comment.name }}</p>
+                    <p>{{ comment.user.name }}</p>
                     <span>|</span> 
                     <p class="comment-content">{{ comment.content }}</p>
                 </div>
                 
                 <p @click="deleteComment(comment.id)" class="comment-delete"
-                v-if="userStore.isLoggedIn && userStore.user.pk == comment.user">댓글삭제</p>
+                v-if="userStore.isLoggedIn && userStore.user.pk == comment.user.id">댓글삭제</p>
             </div>
             <p class="no-comment" v-if="!comments.length">작성된 댓글이 없습니다.</p>
         </div>

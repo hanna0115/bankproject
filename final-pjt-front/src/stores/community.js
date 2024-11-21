@@ -82,42 +82,44 @@ export const useCommunityStore = defineStore("community", () => {
           }
     })
         .then(res => {
+            selectedCategory.value = 'all'
             router.push({ name: 'community'})
           })
           .catch(err => console.log('게시글 생성 오류', err))
-  }
-
+        }
+        
   
-  // 3. 단일 게시글 - 조회
-  const post = ref(null)
-
-  const getPostDetail = function (postId) {
-    return axios({
+        // 3. 단일 게시글 - 조회
+        const post = ref(null)
+        
+        const getPostDetail = function (postId) {
+          return axios({
         method: 'get',
         url: `${API_URL}/posts/detail/${postId}/`
-    })
-    .then(res => {
+      })
+      .then(res => {
         post.value = res.data
         return res.data
-    })
+      })
     .catch(err => console.log('단일 게시글 조회 실패', err))
   };
 
   // 4. 단일 게시글 - 수정
-const updatePost = function (postId, title, content, selectedTag) {
-  axios({
+  const updatePost = function (postId, title, content, selectedTag) {
+    axios({
       method: 'put',
       url: `${API_URL}/posts/detail/${postId}/`,
       data: {
-          title,
-          content,
-          category: selectedTag
+        title,
+        content,
+        category: selectedTag
       },
       headers: {
         Authorization: `Token ${userStore.token}`
       }
-  })
-      .then(res => {
+    })
+    .then(res => {
+          selectedCategory.value = 'all'
           console.log(res)
           router.push({ name: 'community'})
       })

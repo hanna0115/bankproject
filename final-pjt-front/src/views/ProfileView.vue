@@ -9,10 +9,16 @@
             </div>
             <div class="product">
                 <span>내가 가입한 예적금 상품</span>
-                <button class="product-btn">연동 하기</button>
+    
+                <button class="product-btn" @click="connectMyProduct">연동 하기</button>
             </div>
         </div>
-        <ProductIItem />
+        <ProductIItem 
+        v-for="(myProduct, index) in myProducts"
+        :key="myProduct.pk"
+        :my-product="myProduct"
+        :index="index"
+        />
 
         <br>
         <div class="chart">
@@ -28,23 +34,70 @@ import ProductIItem from '@/components/ProductIItem.vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import ProfileChart from '@/components/ProfileChart.vue';
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter()
 const store = useUserStore()
 
+
+const url = store.url
+// const { userPK, token } = storeToRefs(useUserStore)
+const userPK = ref(store.userPK)
+const token = ref(store.token)
+
+const myProducts = ref(null)
+
 onMounted(() => {
     store.getUserInfo()
+    getMyProduct()
 })
-</script>
 
+// 1. 연동된 경우, 바로 조회
+const getMyProduct = () => {
+    axios({
+        method:'get',
+        url:`${url}/bank_products/products_joined/${userPK.value}/`,
+        headers:{
+            Authorization:`Token ${token.value}`
+        }
+    })
+    .then((res) => {
+        myProducts.value = res.data
+        console.log('조회요청함')
+        console.log(res.data)
+    })
+    .catch((err) => console.log(err, userPK.value, token.value))
+}
+
+
+// 2. 연동하기
+const connectMyProduct = () => {
+
+    axios({
+        method:'post',
+        url:`${url}/bank_products/products_joined/${userPK.value}/`,
+        headers:{
+            Authorization:`Token ${token.value}`
+        }
+    })
+    .then((res) => {
+        myProducts.value = res.data.data
+    })
+    .catch((err) => console.log(err, userPK.value, token.value))
+}
+
+
+
+</script>
 
 
 <style scoped>
 .container {
     display: flex;
     flex-direction: column;
-    width: 70%;
+    width: 60%;
     margin: 0 auto;
     margin-top: 100px;
 }
