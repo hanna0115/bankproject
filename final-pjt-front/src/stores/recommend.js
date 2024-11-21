@@ -10,12 +10,12 @@ export const useRecommendStore = defineStore("recommend", () => {
   const savingsProducts = ref([])
 
   const getProduct = function () {
-    console.log(userStore.user.saving_purpose)
+    const params = userStore.isLoggedIn ? userStore.user.saving_purpose : []
     axios({
       method: 'get',
       url: `${API_URL}/bank_products/products_recommend/`,
       params: {
-        saving_purpose: userStore.isLoggedIn? userStore.user.saving_purpose : null
+        saving_purpose: JSON.stringify(params)
       }
     })
       .then(res => {

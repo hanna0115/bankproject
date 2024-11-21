@@ -12,29 +12,35 @@ export const useUserStore = defineStore("user", () => {
   const userPK = ref(null)
 
   // 1. 회원가입
-  const signUp = function (payload) {
-    const {name, email, birth_date, asset, saving_purpose, saving_amount, saving_period, password1, password2} = payload
+  const signUp = async function (payload) {
+    const { name, email, birth_date, asset, saving_purpose, saving_amount, saving_period, password1, password2 } = payload;
 
-    axios({
-        method:'post',
-        url: `${url}/accounts/signup/`,
-        data: {
-            name, email, birth_date, asset, saving_purpose, saving_amount, saving_period, password1, password2
-        }
-    })
-    .then((response) => {
-    //   token.value = response.data.token
-    //   localStorage.setItem('token', response.data.token)
-    //   isAuthenticated.value = true
-      console.log('회원가입이 완료되었습니다.')
-      const password = password1
-      logIn({ email, password })
-      router.push('/')  // 회원가입 성공 시 홈으로 이동
-    })
-    .catch((error) => {
-        console.error('회원가입 실패:', error)
-    })
-  }
+    try {
+        // 회원가입 요청
+        await axios({
+            method: 'post',
+            url: `${url}/accounts/signup/`,
+            data: {
+              name, email, birth_date, asset, saving_purpose, saving_amount, saving_period, password1, password2
+            }
+        });
+
+        console.log('회원가입이 완료되었습니다.');
+        
+        // 로그인 요청
+        const password = password1;
+        await logIn({ email, password }); // 로그인 함수가 Promise를 반환한다고 가정
+        
+        // 사용자 정보 가져오기
+        await fetchUserInfo(); // 사용자 정보를 가져옵니다.
+        
+        // 홈으로 이동
+        router.push({ name: 'home' });
+    } catch (error) {
+        console.error('회원가입 실패:', error);
+    }
+};
+
 
   // 2. 로그인
   const logIn = async (payload) => {
