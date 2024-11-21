@@ -64,16 +64,15 @@
                     type="button" 
                     class="goal-btn"
                     :class="{ 'active': selectedGoals.includes(goal) }" 
-                    @click="toggleGoal(goal)"
-                >
-                    {{ goal }}
+                    @click="toggleGoal(goal)">
+                    {{ goalsToKor[goal] }}
                 </button>
             </div>
 
             <p>저축 기간 (개월)</p>
             <div class="savings-slider-wrapper">
                 <div class="savings-amount-slider">
-                    <input type="radio" name="savings-period" id="amount1" value="0" v-model="formData.saving_period">
+                    <input type="radio" name="savings-period" id="amount1" value="0" v-model="formData.saving_period" disabled>
                     <label for="amount1" data-amount="0"></label>
                     <input type="radio" name="savings-period" id="amount2" value="6" v-model="formData.saving_period">
                     <label for="amount2" data-amount="6"></label>
@@ -137,15 +136,27 @@ const toggleGoal = (goal) => {
 };
 
 const goals = [
-    '내집마련',
-    '교육비',
-    '의료비',
-    '결혼자금',
-    '노후자금',
-    '시드머니',
-    '여행자금',
-    '위시리스트'
-];
+    'home',
+    'education',
+    'medication',
+    'wedding',
+    'future',
+    'seedmoney',
+    'travel',
+    'wishlist'
+]
+
+const goalsToKor = {
+        'home': '내집마련',
+        'education': '교육비',
+        'medication': '의료비',
+        'wedding': '결혼자금',
+        'future': '노후자금',
+        'seedmoney': '시드머니',
+        'travel': '여행자금',
+        'wishlist': '위시리스트'
+    }
+
 
 const handleSubmit = () => {
     const updateData = {};

@@ -14,7 +14,7 @@
                 </div>
                 <div class="input-box">
                     <label for="">금액</label>
-                    <input type="text" placeholder="계산할 금액을 입력하세요" v-model="price">
+                    <input type="number" placeholder="계산할 금액을 입력하세요" v-model="price">
                 </div>
             </div>
 
@@ -25,7 +25,8 @@
         </div>
 
         <br>
-        환율 그래프 넣기
+
+        <p>환율 그래프</p>
         <div class="chart">
             <ExchangeChart 
             v-for="info in exchangeInfo"
@@ -50,10 +51,17 @@ const selectedCurrency = ref('')
 const calculatedAmount = ref('')
 let cachedExchangeInfo = null
 // const exchangeInfo = ref([])
-const exchangeInfo = ref([{
-    cur_unit:'USD',cur_nm:'미국달러',},
-{cur_unit:'JPY',cur_nm:'일본엔',}
-])
+const exchangeInfo = ref([])
+
+
+// price 값이 변경될 때마다 실행되는 watch 함수
+watch(price, (newPrice) => {
+  if (newPrice && !selectedCurrency.value) {
+    alert('통화명을 먼저 선택해주세요.')
+    price.value = '' // 입력된 금액을 초기화합니다
+
+  }
+})
 
 // price나 selectedCurrency가 변경될 때마다 계산
 watch([price, selectedCurrency], ([newPrice, newCurrency]) => {
@@ -96,7 +104,7 @@ const getInfo = function () {
         .then((res) => {
             exchangeInfo.value = res.data
             cachedExchangeInfo = res.data
-            print(exchangeInfo.value)
+            console.log(exchangeInfo.value)
         })
         .catch((err) => {
             console.error("Error fetching data:", err.message)
@@ -199,5 +207,7 @@ onMounted(() => {
     width: 90%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
 }
 </style>

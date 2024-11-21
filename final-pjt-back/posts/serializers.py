@@ -28,15 +28,18 @@ class PostSerializer(serializers.ModelSerializer):
 class PostDetailSerializer(serializers.ModelSerializer):
 
     class CommentListSerializer(serializers.ModelSerializer):
+        class UserSerializer(serializers.ModelSerializer):
+            class Meta:
+                model = get_user_model()
+                fields = ('name', 'id',)
+        
+        user = UserSerializer(read_only=True)
+        
         class Meta:
             model = Comment
-            fields = ('id', 'content', 'user')
+            fields = ('id', 'content', 'user',)
             read_only = ('user',)
     
-    # class UserSerializer(serializers.ModelSerializer):
-    #     class Meta:
-    #         model = get_user_model()
-    #         fields = ('name')
     
     like_count = serializers.IntegerField(source='like_users.count', read_only=True)
     save_count = serializers.IntegerField(source='save_users.count', read_only=True)

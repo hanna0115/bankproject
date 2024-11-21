@@ -9,7 +9,7 @@
                     :key="category.value"
                     class="category-item">
                     <input type="radio" :id="category.id" :value="category.value"
-                        v-model="communityStore.selectedCategory"
+                        v-model="communityStore.getCurrentCategory"
                         @change="updateCategory(category.value)"
                         class="hidden-radio">
                     <label :for="category.id" class="category-label">{{ category.label }}</label>
