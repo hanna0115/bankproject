@@ -206,7 +206,6 @@ onMounted(() => {
     margin: 20px 0;
     width: 90%;
     display: flex;
-    justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 }

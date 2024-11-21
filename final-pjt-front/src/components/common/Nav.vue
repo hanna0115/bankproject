@@ -88,7 +88,7 @@ onMounted(() => {
   padding: 12px;
   color: #B9B9B9;
   font-size: 18px;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .user-icon {

@@ -1,24 +1,32 @@
 <template>
     <div class="recommendation-container">
-        <span class="recommendation-badge">금융상품 추천</span>
-        <p class="recommendation-intro"><span class="user-name">김선명</span>님의 목표 달성에 도움이 되는</p>
+        <h2 class="recommendation-badge">예적금 상품 추천</h2>
+        <div class="account-btn">
+            <button>예금</button>
+            <button>적금</button>
+        </div>
+
+        <p class="recommendation-intro" v-if="userStore.isLoggedIn"><span>{{ userStore.user.name }}</span>님의 목표 달성에 도움이 되는</p>
+        <p class="recommendation-intro" v-else><span>가장 많은 사람들</span>이 가입한</p>
         <p class="recommendation-title">금융상품 Best 5!</p>
-        <div class="product-list">
-            <div v-for="n in 5" :key="n" class="product-item">
+
+
+        <div class="product-list" >
+            <div v-for="(product, index) in category ? recommendStore.savingsProducts: recommendStore.depositProducts" :key="product.id" class="product-item">
                 <div class="product-card">
                     <div class="product-card-inner">
                         <div class="product-card-front">
                             <div class="product-content">
-                                <span class="product-number">{{ n }}</span>
-                                <img class="product-icon" :src="n === 2 ? '/path-to-globe-icon.png' : '/path-to-card-icon.png'" alt="Product Icon">
+                                <span class="product-number">{{ index+1 }}</span>
+                                <img class="product-icon" :src="getBankLogo(product.company_name)" alt="Product Icon">
                                 <div class="product-info">
-                                    <p class="product-name">웰컴저축은행</p>
-                                    <p class="product-detail">웰뱅 위킹 적금</p>
+                                    <p class="product-name">{{ product.company_name }}</p>
+                                    <p class="product-detail">{{ product.product_name }}</p>
                                 </div>
                                 <div class="product-rate">
                                     <p class="rate-label">최고</p>
-                                    <p class="rate-value">10%</p>
-                                    <p class="rate-condition">기본 1%</p>
+                                    <p class="rate-value">{{ product.prime_interest_rate }}%</p>
+                                    <p class="rate-condition">기본 {{ product.interest_rate }}%</p>
                                 </div>
                             </div>
                         </div>
@@ -31,10 +39,30 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref } from 'vue';
 import { gsap } from 'gsap';
+import { useUserStore } from '@/stores/user';
+import { useRecommendStore } from '@/stores/recommend';
+
+const userStore = useUserStore()
+const recommendStore = useRecommendStore()
+const category = ref(0)
+
+const getBankLogo = (categoryName) => {
+    const bankName = categoryName.split(' > ').pop();
+    const bankLogos = {
+      'KB국민은행': 'src/assets/images/kb.png',
+      '신한은행': 'src/assets/images/shinhan.png',
+      '우리은행': 'src/assets/images/woori.png',
+      'NH농협은행': 'src/assets/images/nh.png',
+      '하나은행': 'src/assets/images/hana.png',
+      'SC제일은행': 'src/assets/images/sc.png',
+    };
+    return bankLogos[bankName] || '/images/default.png';
+  };
 
 onMounted(() => {
+  recommendStore.getProduct()
   const productItems = document.querySelectorAll('.product-item');
   
   // 상품 목록 애니메이션
@@ -86,31 +114,27 @@ onMounted(() => {
 }
 
 .recommendation-badge {
-    display: inline-block;
-    background-color: rgba(255, 103, 8, 0.6);
-    color: white;
-    padding: 5px 12px;
-    border-radius: 30px;
-    font-size: 13px;
     margin-bottom: 20px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #FF6708;
 }
 
-.recommendation-intro {
+.recommendation-intro,
+.recommendation-title {
     margin-top: 8px;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 500;
     color: #ABABAB;
 }
 
-.user-name {
-    color: rgba(255, 103, 8, 0.6);
+.recommendation-intro > span {
+    color: #FF6708;
+    font-weight: 700;
 }
 
 .recommendation-title {
     margin-top: 8px;
-    font-size: 20px;
-    font-weight: 700;
-    color: #FFAE17;
 }
 
 .product-list {
