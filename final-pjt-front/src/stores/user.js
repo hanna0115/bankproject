@@ -9,6 +9,7 @@ export const useUserStore = defineStore("user", () => {
   const token = ref(null)
   const isLoggedIn = computed(() => !!token.value)
   const user = ref(null)
+  const userPK = ref(null)
 
   // 1. 회원가입
   const signUp = function (payload) {
@@ -70,7 +71,7 @@ export const useUserStore = defineStore("user", () => {
           Authorization: `Token ${token.value}`
         }
       })
-      user.value = response.data
+      userPK.value = response.data.pk
     } catch (error) {
       console.error('사용자 정보를 가져오는 데 실패했습니다:', error)
       throw new Error('사용자 정보를 가져오는 데 실패했습니다.')
@@ -83,6 +84,22 @@ export const useUserStore = defineStore("user", () => {
     router.push('/login')
   }
 
+  // 4. 마이페이지
+  const getUserInfo = function () {
+    axios({
+      method: 'get',
+      url: `${url}/accounts/profile/${userPK.value}/`,
+      headers: {
+        Authorization: `Token ${token.value}`
+      }
+    })
+    .then(res => {
+      user.value = res.data
+      
+    })
+    .catch(err => console.log('유저 정보 가져오기 실패', err))
+  }
+
   
-  return { url, signUp, logIn, token, logOut, isLoggedIn, user }
+  return { url, signUp, logIn, token, logOut, isLoggedIn, user, userPK, getUserInfo }
 }, { persist: true });

@@ -8,7 +8,7 @@
       <RouterLink :to="{name:'exchange'}">환율 계산기</RouterLink>
     </div>
    
-    <i class="pi pi-user user-icon" v-if="store.isLoggedIn" @click="router.push('/profile')"></i>
+    <i class="pi pi-user user-icon" v-if="store.isLoggedIn" @click="router.push({ name: 'profile', params: { userId: store.userPK }})"></i>
     <button v-if="store.isLoggedIn"
     @click="store.logOut"
     class="login-btn">

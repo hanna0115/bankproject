@@ -67,7 +67,7 @@ const router = createRouter({
       component: ExchangeView,
     },
     {
-      path:'/profile',
+      path:'/profile/:userId',
       name:'profile',
       component:ProfileView,
     },

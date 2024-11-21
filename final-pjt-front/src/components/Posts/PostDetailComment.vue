@@ -26,7 +26,7 @@ import { useCommunityStore } from '@/stores/community';
 import { useUserStore } from '@/stores/user';
 import axios from 'axios';
 import { ref, onMounted, watch } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute()
 const router = useRouter()
@@ -40,20 +40,6 @@ const props = defineProps({
 console.log(props.post.comment_set)
 const content = ref(null)
 const comments = ref([])
-
-// 댓글 목록 불러오기
-// const fetchComments = function () {
-//     axios({
-//         method: 'get',
-//         url: `${communityStore.API_URL}/posts/detail/${route.params.postId || 1}/`
-//     })
-//         .then(res => {
-//             console.log(res.data.comment_set)
-//             comments.value = res.data.comment_set
-//             console.log(comments.value)
-//         })
-//         .catch(err => console.log('댓글 불러오기 실패', err))
-// }
 
 // 댓글 생성
 const createComment = function () {
