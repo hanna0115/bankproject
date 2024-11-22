@@ -1,8 +1,5 @@
 <template>
     <div class="recommendation-container">
-        <span class="recommendation-badge">금융상품 추천</span>
-        <Switch/>
-        <p class="recommendation-intro"><span class="user-name">김선명</span>님의 목표 달성에 도움이 되는</p>
         <h2 class="recommendation-badge">예적금 상품 추천</h2>
         <div class="account-btn">
             <button>예금</button>
