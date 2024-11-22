@@ -27,7 +27,7 @@
         <br>
 
         <p>환율 그래프</p>
-        <div class="chart">
+        <div class="chart" v-if="exchangeInfo.length > 0">
             <ExchangeChart 
             v-for="info in exchangeInfo"
             :key="info.cur_unit"
