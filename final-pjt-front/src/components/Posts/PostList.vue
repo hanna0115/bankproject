@@ -8,7 +8,7 @@
                     <div class="post-body">
                         <p class="post-number">{{ startIndex + index + 1 }}/</p>
                         <div class="post-content">
-                            <span class="user-id">{{ post.userId }}</span>
+                            <span class="user-id">{{ post.user.name }}</span>
                             <h3 class="post-title">{{ post.title }}</h3>
                         </div>
                     </div>
