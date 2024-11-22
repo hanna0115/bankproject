@@ -50,7 +50,7 @@
                     :key="goal" 
                     type="button" 
                     class="goal-btn"
-                    :class="{ 'active': selectedGoals.includes(goal) }" 
+                    :class="{'active': formData.saving_purpose.includes(goal) }" 
                     @click="toggleGoal(goal)">
                     {{ goalsToKor[goal] }}
                 </button>
@@ -118,6 +118,7 @@ const toggleGoal = (goal) => {
         selectedGoals.value.splice(index, 1);
     } else {
         if (selectedGoals.value.length >= 3) {
+            console.log(selectedGoals.value)
             alert('목표 설정은 최대 3개까지만 가능합니다.');
             return;
         }
@@ -195,6 +196,8 @@ onMounted(() => {
                     // 최대 3개까지만 설정
                     selectedGoals.value = purposeArray.slice(0, 3);
                     formData.value.saving_purpose = [...selectedGoals.value];
+                    console.log(selectedGoals.value)
+                    console.log(formData.value.saving_purpose)
                 }
             }
         })
