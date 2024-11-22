@@ -12,24 +12,33 @@
     
                 <button class="product-btn" @click="connectMyProduct">연동 하기</button>
             </div>
+            
+            <div class ="product-items">
+                <template v-if="myProducts">
+                    <ProductIItem 
+                    v-for="(myProduct, index) in myProducts"
+                    :key="myProduct.pk"
+                    :my-product="myProduct"
+                    :index="index"
+                    />
+
+                    <div class="chart">
+                        <p class="chart-title">내가 가입한 예적금 상품 금리</p>
+                        <!-- {{ myProducts }} -->
+                        <ProfileChart/>
+                    </div>
+                </template>
+        
+                <p class="no-product" v-else>아직 연동된 상품이 없습니다.</p>
+            </div>
+        
+        
         </div>
-        <ProductIItem 
-        v-for="(myProduct, index) in myProducts"
-        :key="myProduct.pk"
-        :my-product="myProduct"
-        :index="index"
-        />
+
+        
 
         <br>
 
-        <div class="chart">
-            <span>내가 가입한 예적금 상품 금리</span>
-            <!-- {{ myProducts }} -->
-            <ProfileChart
-            :my-product="myProducts"
-            
-            />
-        </div>
     </div>
 </template>
 
@@ -202,7 +211,21 @@ const connectMyProduct = () => {
     justify-content: flex-end;
 }
 
-.chart > span {
+
+.product-items > .no-product {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: #808080;
+}
+
+.chart {
+    margin-top: 40px;
+}
+
+.chart > .chart-title {
+    margin: 20px 0;
     font-size: 18px;
     font-weight: 700;
     color: #808080;

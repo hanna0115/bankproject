@@ -31,7 +31,7 @@
                     </div>
                     <div class="product-detail-item">
                         <dt>가입방법</dt>
-                        <dd>{{ product.join_way }}</dd>
+                        <dd v-html="product.join_way"></dd>
                     </div>
                     <div class="product-detail-item">
                         <dt>대상</dt>
@@ -39,11 +39,11 @@
                     </div>
                     <div class="product-detail-item">
                         <dt>우대조건</dt>
-                        <dd>{{ product.prime_conditions }}</dd>
+                        <dd v-html="product.prime_conditions"></dd>
                     </div>
                     <div class="product-detail-item">
                         <dt>이자지급</dt>
-                        <dd>{{ product.interest_payment }}</dd>
+                        <dd v-html="product.interest_payment"></dd>
                     </div>
                     <div class="product-detail-item">
                         <dt>유의사항</dt>
@@ -167,6 +167,7 @@ onBeforeRouteUpdate(async (to) => {
 
 .product-detail-list {
     display: table;
+    
 }
 
 .product-detail-item {
@@ -180,6 +181,7 @@ onBeforeRouteUpdate(async (to) => {
     display: table-cell;
     unicode-bidi: isolate;
     padding: 5px 0;
+
 }
 
 .product-detail-item dt {

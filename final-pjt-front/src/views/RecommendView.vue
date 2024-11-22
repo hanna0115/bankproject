@@ -290,13 +290,13 @@
 }
 
 .product-name {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 16px;
+  color: #666;
 }
 
 .product-detail {
-  font-size: 16px;
-  color: #666;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .product-rate {
