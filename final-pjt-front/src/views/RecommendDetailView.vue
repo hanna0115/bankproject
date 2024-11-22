@@ -9,25 +9,47 @@
                 </div>
                 <div class="product-interest">
                     <div class="interest-high">
-                        <p>최고</p> <span>{{ product.highInterest }}%</span>
+                        <p>최고</p> <span>{{ product.prime_interest_rate }}%</span>
                     </div>
                     <div>
-                        <p>기본</p> <span>{{ product.baseInterest }}%</span>
+                        <p>기본</p> <span>{{ product.interest_rate }}%</span>
                     </div>
                 </div>
-                <a :href="{{ product.product_link }}" class="info-btn">공식홈에서 더 알아보기</a>
+                <!-- <a :href="{{ product.product_link }}" class="info-btn">공식홈에서 더 알아보기</a> -->
             </div>
 
             <div class="product-detail"> <!--상품 안내-->
                 <h2>상품 안내</h2>
-                <p>기간: {{ product.period }}</p>
-                <p>총액: {{ product.totalAmount }}</p>
-                <p>가입방법: {{ product.joinMethod }}</p>
-                <p>대상: {{ product.target }}</p>
-                <p>우대조건: {{ product.preferentialConditions }}</p>
-                <p>이자지급: {{ product.interestPayment }}</p>
-                <p>유의: {{ product.notice }}</p>
-                <p>예금자보호: {{ product.depositProtection }}</p>
+                <div class="product-detail-list">
+                    <div class="product-detail-item">
+                        <dt>금액</dt>
+                        <dd>{{ product.join_amount_text }}</dd>
+                    </div>
+                    <div class="product-detail-item">
+                        <dt>기간</dt>
+                        <dd v-html="product.join_period_text"></dd>
+                    </div>
+                    <div class="product-detail-item">
+                        <dt>가입방법</dt>
+                        <dd>{{ product.join_way }}</dd>
+                    </div>
+                    <div class="product-detail-item">
+                        <dt>대상</dt>
+                        <dd>{{ product.join_member }}</dd>
+                    </div>
+                    <div class="product-detail-item">
+                        <dt>우대조건</dt>
+                        <dd>{{ product.prime_conditions }}</dd>
+                    </div>
+                    <div class="product-detail-item">
+                        <dt>이자지급</dt>
+                        <dd>{{ product.interest_payment }}</dd>
+                    </div>
+                    <div class="product-detail-item">
+                        <dt>유의사항</dt>
+                        <dd v-html="product.note"></dd>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -64,6 +86,9 @@ onMounted(() => {
 
 .product-title {
     color: #8d8d8d;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dfdcdc;
 }
 
 .product-container {
@@ -126,7 +151,6 @@ onMounted(() => {
 .product-detail {
     width: 800px;
     height: auto;
-    display: flex;
     flex-direction: column;
     margin-right: auto;
     margin-left: auto;
@@ -134,6 +158,36 @@ onMounted(() => {
     background-color: white;
     padding: 30px;
     border-radius: 30px;
+}
+
+.product-detail-list {
+    display: table;
+}
+
+.product-detail-item {
+    display: table-row;
+    unicode-bidi: isolate;
+    padding: 10px 0;
+}
+
+.product-detail-item dt,
+.product-detail-item dd {
+    display: table-cell;
+    unicode-bidi: isolate;
+    padding: 5px 0;
+}
+
+.product-detail-item dt {
+    padding-right: 10px;
+    white-space: nowrap;
+    white-space-collapse: collapse;
+    text-wrap-mode: nowrap;
+    font-weight: 700;
+    color: #FF6708;
+}
+
+.product-detail-item dd {
+    margin-inline-start: 40px;
 }
 
 .info-btn {
