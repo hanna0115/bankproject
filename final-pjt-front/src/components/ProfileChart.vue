@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import VueApexCharts from 'vue3-apexcharts';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
@@ -39,6 +39,16 @@ onMounted(() => {
   store.getUserInfo();
   getMyProduct();
 });
+
+const props = defineProps({
+  clickCount: Number
+})
+
+watch (() => props.clickCount,
+() => {
+  getMyProduct();
+},
+{deep: true})
 
 // API 호출 함수
 const getMyProduct = async () => {
