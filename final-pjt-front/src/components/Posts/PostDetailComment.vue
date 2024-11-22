@@ -96,17 +96,24 @@ const updateComments = () => {
     }
 }
 
-// route.params.postId가 변경될 때마다 댓글 목록 업데이트
-watch(() => route.params.postId, async (newPostId) => {
-    // newPostId가 존재하지 않을 때 기본 게시글 ID인 1번 게시글의 댓글 목록을 가져오기
-    const postIdToFetch = newPostId || 1; // newPostId가 없으면 1로 설정
+// // route.params.postId가 변경될 때마다 댓글 목록 업데이트
+// watch(() => route.params.postId, async (newPostId) => {
+//     // newPostId가 존재하지 않을 때 기본 게시글 ID인 1번 게시글의 댓글 목록을 가져오기
+//     const postIdToFetch = newPostId || 1; // newPostId가 없으면 1로 설정
 
-    // 해당 게시글의 상세 정보를 가져옵니다.
-    await communityStore.getPostDetail(postIdToFetch);
+//     // 해당 게시글의 상세 정보를 가져옵니다.
+//     await communityStore.getPostDetail(postIdToFetch);
     
+//     // 댓글 목록 업데이트
+//     updateComments()
+// });
+
+
+watch(() => communityStore.post, async (newPost) => {
     // 댓글 목록 업데이트
     updateComments()
-});
+}, {deep:true});
+
 
 onMounted(() => {
     updateComments();

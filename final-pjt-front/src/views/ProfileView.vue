@@ -15,6 +15,7 @@
             
             <div class ="product-items">
                 <template v-if="myProducts">
+                    {{ myProducts.length }}
                     <ProductIItem 
                     v-for="(myProduct, index) in myProducts"
                     :key="myProduct.pk"
@@ -25,7 +26,9 @@
                     <div class="chart">
                         <p class="chart-title">내가 가입한 예적금 상품 금리</p>
                         <!-- {{ myProducts }} -->
-                        <ProfileChart/>
+                        <ProfileChart
+                        :click-count="clickCount"
+                        />
                     </div>
                 </template>
         
@@ -60,6 +63,7 @@ const url = store.url
 // const { userPK, token } = storeToRefs(useUserStore)
 const userPK = ref(store.userPK)
 const token = ref(store.token)
+let clickCount = 0
 
 const myProducts = ref(null)
 
@@ -99,6 +103,8 @@ const connectMyProduct = () => {
     .then((res) => {
         myProducts.value = res.data.data
         // console.log(res.data)
+        clickCount += 1
+        console.log(clickCount)
         alert(res.data.detail)
     })
     .catch((err) => console.log(err, userPK.value, token.value))
