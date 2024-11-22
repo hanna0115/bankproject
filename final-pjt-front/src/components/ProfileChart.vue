@@ -1,6 +1,8 @@
 <template>
   <div>
+    <p> {{ myProducts }} </p>
     <Bar :data="chartData" :options="chartOptions" />
+
   </div>
 </template>
 
@@ -9,12 +11,17 @@ import { ref, onMounted } from 'vue';
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 
+
+const props = defineProps({
+  myProducts:Object
+})
+
 // Chart.js 모듈 등록
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
 // 차트 데이터 및 옵션 정의
 const chartData = ref({
-  labels: ['January', 'February', 'March'],
+  labels: ['적용금리', '기준금리', '우대금리'],
   datasets: [
     {
       label: 'Sales',
@@ -37,6 +44,7 @@ const chartOptions = ref({
 // 컴포넌트가 마운트될 때 실행되는 로직
 onMounted(() => {
   console.log('Bar chart loaded');
+  console.log('차트 컴포넌트',props.myProducts)
 });
 </script>
 

@@ -56,20 +56,25 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeMount, onMounted, ref, computed } from 'vue';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { useRecommendStore } from '@/stores/recommend';
 
 const route = useRoute();
 const recommendStore = useRecommendStore();
-const product = recommendStore.product
+const product = computed(() => recommendStore.product)
 
 
-onMounted(() => {
+onMounted(async () => {
     const category = route.params.category;
     const productId = Number(route.params.productId);
-    recommendStore.getProductDetail(category, productId);
-    console.log(product)
+    await recommendStore.getProductDetail(category, productId);
+});
+
+onBeforeRouteUpdate(async (to) => {
+    const category = to.params.category;
+    const productId = Number(to.params.productId);
+    await recommendStore.getProductDetail(category, productId);
 });
 </script>
 
