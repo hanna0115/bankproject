@@ -80,3 +80,4 @@ class CustomUserDetailsSerializer(serializers.ModelSerializer):
     # followings 필드에 대해서도 동일하게 적용
     def get_followings(self, obj):
         return [following.name for following in obj.followings.all()]
+    
