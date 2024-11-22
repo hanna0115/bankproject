@@ -116,6 +116,7 @@ const signUp = function () {
         alert('비밀번호가 달라요!')
         return
     }
+
     const payload = {
         name: username.value,
         email: fullEmail.value,
