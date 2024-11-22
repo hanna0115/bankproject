@@ -87,7 +87,8 @@ const connectMyProduct = () => {
     })
     .then((res) => {
         myProducts.value = res.data.data
-        console.log(myProducts.value)
+        console.log(res.data)
+            alert(res.data.detail)
     })
     .catch((err) => console.log(err, userPK.value, token.value))
 }

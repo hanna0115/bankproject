@@ -20,6 +20,7 @@ export const useRecommendStore = defineStore("recommend", () => {
       }
     })
       .then(res => {
+        console.log(res.data)
         depositProducts.value = res.data.deposit_products
         savingsProducts.value = res.data.savings_products
       })
@@ -38,6 +39,7 @@ export const useRecommendStore = defineStore("recommend", () => {
       if (foundProduct) {
         product.value = foundProduct; // 상품이 발견되면 설정
       } else {
+        alert(`상품 ID ${productId}를 찾을 수 없습니다.`)
         console.error(`상품 ID ${productId}를 찾을 수 없습니다.`);
       }
     } else {
@@ -45,6 +47,7 @@ export const useRecommendStore = defineStore("recommend", () => {
       if (foundProduct) {
         product.value = foundProduct; // 상품이 발견되면 설정
       } else {
+        alert(`상품 ID ${productId}를 찾을 수 없습니다.`)
         console.error(`상품 ID ${productId}를 찾을 수 없습니다.`);
       }
     }
