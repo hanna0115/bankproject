@@ -19,17 +19,23 @@
 
             <!-- 비밀번호 변경 필드 -->
             <div v-show="showPasswordFields">
-                <p>비밀번호</p>
+                <p>기존 비밀번호</p>
                 <div class="input-group">
-                    <input type="password" class="input-field" placeholder="새로운 비밀번호를 입력하세요"
-                        v-model="formData.password1">
-                    <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
-                </div>
-
-                <p>비밀번호 확인</p>
-                <div class="input-group">
-                    <input type="password" class="input-field" placeholder="새로운 비밀번호를 한번 더 입력해주세요"
-                        v-model="formData.password2">
+                    <input type="password" class="input-field" placeholder="기존 비밀번호를 입력하세요"
+                        v-model="pwFormData.old_password">
+                    </div>
+                    
+                    <p>새로운 비밀번호</p>
+                    <div class="input-group-newpw">
+                        <input type="password" class="input-field" placeholder="새로운 비밀번호를 입력하세요"
+                        v-model="pwFormData.new_password1">
+                        <p class="password-require">* 비밀번호는 대소 문자, 특수문자를 포함한 8자리 이상으로 설정해주세요</p>
+                    </div>
+                    
+                    <p>새로운 비밀번호 확인</p>
+                    <div class="input-group">
+                        <input type="password" class="input-field" placeholder="새로운 비밀번호를 한번 더 입력해주세요"
+                        v-model="pwFormData.new_password2">
                 </div>
             </div>
 
@@ -95,9 +101,15 @@ const store = useUserStore();
 const selectedGoals = ref([]);
 const showPasswordFields = ref(false);
 
+const pw = ref('')
+
+const pwFormData = ref({
+    old_password: '',
+    new_password1: '',
+    new_password2: '',
+})
+
 const formData = ref({
-    password1: '',
-    password2: '',
     asset: '',
     saving_purpose: [],
     saving_amount: '',
@@ -107,8 +119,8 @@ const formData = ref({
 const togglePasswordChange = () => {
     showPasswordFields.value = !showPasswordFields.value;
     if (!showPasswordFields.value) {
-        formData.value.password1 = '';
-        formData.value.password2 = '';
+        formData.value.new_password1 = '';
+        formData.value.new_password2 = '';
     }
 };
 
@@ -150,38 +162,89 @@ const goalsToKor = {
     }
 
 
+// 비밀번호 유효성 검사 함수
+const validatePassword = (password) => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+};
+
+
 const handleSubmit = () => {
     const updateData = {};
+    const updatePwData = {};
 
-    // 비밀번호 필드가 보이고 있고, 비밀번호가 입력된 경우에만 검증
-
-
-    
-    if (showPasswordFields.value && (formData.value.password1 || formData.value.password2)) {
-        // 1. 유효성 검사 : 비밀번호와 비밀번호 확인이 다른 경우
-        if (formData.value.password1 != formData.value.password2) {
-            alert('비밀번호가 다릅니다.')
+    // **비밀번호 필드 유효성 검사**
+    // 비밀번호 필드가 보이고 있고, 비밀번호가 입력된 경우에만, 비밀번호 변경 로직 시작.
+    if (showPasswordFields.value && (pwFormData.value.new_password1 || pwFormData.value.new_password2)) {
+        // 1. 비밀번호와 비밀번호 확인이 다른 경우
+        if (pwFormData.value.new_password1 !== pwFormData.value.new_password2) {
+            alert('새 비밀번호가 확인용 비밀번호와 서로 다릅니다.');
+            return; // 함수 실행 중단
         }
-        // 2. 유효성 검사 : 비밀번호 자리수 확인
-        if (formData.value.password1.length < 8 || formData.value.password2.length < 8) {
-            alert('비밀번호는 8자리 이상으로 설정해주세요.');
+        
+        // 2. 비밀번호 형식 확인: 8자 이상, 영문 대소문자, 숫자, 특수문자 포함
+        if (!validatePassword(pwFormData.value.new_password1)) {
+            alert('비밀번호는 8자 이상이며, 영문 대소문자, 숫자, 특수문자를 포함해야 합니다.');
             return; // 함수 실행 중단
         }
 
-        
-        updateData.password1 = formData.value.password1;
-        updateData.password2 = formData.value.password2;
+            updatePwData.old_password = pwFormData.value.old_password;
+            updatePwData.new_password1 = pwFormData.value.new_password1;
+            updatePwData.new_password2 = pwFormData.value.new_password1;
+            
+            store.passwordChange(updatePwData)
+                .then(() => {
+                    alert('비밀번호 업데이트 성공')
+                    console.log('비밀번호 업데이트 성공');
+                })
+                .catch(error => {
+                    if (error.response && error.response.data.error) {
+                        alert(error.response.data.error); // 서버에서 반환된 에러 메시지 표시
+                } else {
+                    alert("비밀번호 변경 중 오류가 발생했습니다. 다시 시도해주세요.");
+                }
+
+            });
     }
 
+
+    // **나머지 필드 유효성 검사**
+    if (!formData.value.asset || isNaN(formData.value.asset)) {
+        alert('자산 정보를 올바르게 입력해주세요.');
+        return;
+    }
+    updateData.asset = formData.value.asset;
+
+    if (selectedGoals.value.length === 0) {
+        alert('저축 목적을 선택해주세요.');
+        return;
+    }
+    updateData.saving_purpose = selectedGoals.value;
+
+    if (!formData.value.saving_amount || isNaN(formData.value.saving_amount)) {
+        alert('저축 금액을 올바르게 입력해주세요.');
+        return;
+    }
+    updateData.saving_amount = formData.value.saving_amount;
+
+    if (!formData.value.saving_period || isNaN(formData.value.saving_period)) {
+        alert('저축 기간을 올바르게 입력해주세요.');
+        return;
+    }
+    updateData.saving_period = formData.value.saving_period;
+
+    console.log(updateData)
+
     // 나머지 데이터 업데이트
-    if (formData.value.asset) updateData.asset = formData.value.asset;
-    if (selectedGoals.value.length > 0) updateData.saving_purpose = selectedGoals.value;
-    if (formData.value.saving_amount) updateData.saving_amount = formData.value.saving_amount;
-    if (formData.value.saving_period) updateData.saving_period = formData.value.saving_period;
+    // if (formData.value.asset) updateData.asset = formData.value.asset;
+    // if (selectedGoals.value.length > 0) updateData.saving_purpose = selectedGoals.value;
+    // if (formData.value.saving_amount) updateData.saving_amount = formData.value.saving_amount;
+    // if (formData.value.saving_period) updateData.saving_period = formData.value.saving_period;
 
     // 유효성 검사를 통과한 경우에만 API 호출
     store.updateUserInfo(updateData)
         .then(() => {
+            alert('정보가 성공적으로 수정되었습니다.')
             console.log('정보 업데이트 성공');
         })
         .catch(error => {
@@ -270,6 +333,7 @@ p {
 }
 
 .password-require {
+    margin-bottom: 30px;
     font-size: 12px;
     color: #fc8a44;
     padding-left: 10px;

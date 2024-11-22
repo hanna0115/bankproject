@@ -31,8 +31,8 @@ export const useUserStore = defineStore("user", () => {
         
         router.push({ name: 'home' });
     } catch (error) {
-        console.error('회원가입 실패:', error);
-        throw error;
+      console.error('회원가입 실패:', error);
+      throw error;
     }
   };
 
@@ -57,9 +57,11 @@ export const useUserStore = defineStore("user", () => {
     } catch (error) {
         console.error('로그인 실패:', error);
         if (error.response?.status === 400) {
+            alert('아이디와 비밀번호를 확인해주세요.')
             throw new Error('이메일 또는 비밀번호가 올바르지 않습니다.');
-        }
-        throw new Error('로그인 중 오류가 발생했습니다.');
+          }
+          alert('로그인 중 오류가 발생했습니다.')
+          throw new Error('로그인 중 오류가 발생했습니다.');
     }
   }
 
@@ -117,25 +119,49 @@ export const useUserStore = defineStore("user", () => {
     }
   };
 
+  // 5. 정보 수정
   const updateUserInfo = async (payload) => {
     try {
+      const { asset, saving_purpose, saving_amount, saving_period } = payload;
       const response = await axios({
         method: 'put',
         url: `${url}/accounts/profile/update/`,
-        data: payload,
+        data: { asset, saving_purpose, saving_amount, saving_period },
         headers: {
           Authorization: `Token ${token.value}`
         }
       });
       user.value = response.data;
       router.push(`/profile/${userPK.value}`);
+      console.log(response.data.message)
       return response.data;
     } catch (error) {
       console.error('사용자 정보 업데이트 실패:', error);
       throw error;
     }
   };
-
+  
+  // 6. 비밀번호 변경
+  const passwordChange = async (payload) => {
+    try {
+      const { old_password, new_password1, new_password2 } = payload;
+      const response = await axios({
+        method: 'post',
+        url: `${url}/accounts/password/change/`,
+        data: { old_password, new_password1, new_password2 },
+        headers: {
+          Authorization: `Token ${token.value}`
+        }
+      });
+      console.log('비밀번호 변경 완료')
+      console.log(response.data.message)
+      return response.data;
+    } catch (error) {
+      console.error('사용자 정보 업데이트 실패:', error);
+      throw error;
+    }
+  };
+  
   const getAllUserInfo = () => {
     axios({
       method:'get',
@@ -165,6 +191,6 @@ export const useUserStore = defineStore("user", () => {
     getUserInfo, 
     updateUserInfo,
     getAllUserInfo,
-
+    passwordChange,
   }
 }, { persist: true });

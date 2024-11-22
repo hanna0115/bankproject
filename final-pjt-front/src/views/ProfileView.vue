@@ -88,7 +88,6 @@ const getMyProduct = () => {
 
 // 2. 연동하기
 const connectMyProduct = () => {
-
     axios({
         method:'post',
         url:`${url}/bank_products/products_joined/${userPK.value}/`,
