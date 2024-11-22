@@ -14,8 +14,11 @@
             </div>
             
             <div class ="product-items">
-                <template v-if="myProducts">
-                    {{ myProducts.length }}
+
+                <p class="no-product" v-if="myProducts.length==0">아직 연동된 상품이 없습니다.</p>
+
+                <template v-else>
+
                     <ProductIItem 
                     v-for="(myProduct, index) in myProducts"
                     :key="myProduct.pk"
@@ -25,14 +28,13 @@
 
                     <div class="chart">
                         <p class="chart-title">내가 가입한 예적금 상품 금리</p>
-                        <!-- {{ myProducts }} -->
                         <ProfileChart
                         :click-count="clickCount"
                         />
                     </div>
                 </template>
         
-                <p class="no-product" v-else>아직 연동된 상품이 없습니다.</p>
+                
             </div>
         
         
@@ -65,11 +67,12 @@ const userPK = ref(store.userPK)
 const token = ref(store.token)
 let clickCount = 0
 
-const myProducts = ref(null)
+const myProducts = ref([])
 
 onMounted(() => {
     store.getUserInfo()
     getMyProduct()
+    console.log(myProducts.value)
 })
 
 // 1. 연동된 경우, 바로 조회
@@ -92,7 +95,6 @@ const getMyProduct = () => {
 
 // 2. 연동하기
 const connectMyProduct = () => {
-
     axios({
         method:'post',
         url:`${url}/bank_products/products_joined/${userPK.value}/`,
