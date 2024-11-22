@@ -8,6 +8,8 @@ urlpatterns = [
     path('profile/<int:user_pk>/', views.user_profile),
     # 프로필 수정 URL
     path('profile/update/', views.update_profile),
+    # 전체 회원 정보 조회
+    path('users/', views.get_users),
     # 회원탈퇴 URL
     path('profile/delete/', views.delete_account),
     path('follow/<int:following_user_pk>/', views.follow),
