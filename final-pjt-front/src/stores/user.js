@@ -32,7 +32,6 @@ export const useUserStore = defineStore("user", () => {
         router.push({ name: 'home' });
     } catch (error) {
         console.error('회원가입 실패:', error);
-        alert('입력 되지 않은 정보가 있습니다.');
         throw error;
     }
   };
@@ -133,10 +132,42 @@ export const useUserStore = defineStore("user", () => {
       return response.data;
     } catch (error) {
       console.error('사용자 정보 업데이트 실패:', error);
-      alert('입력 되지 않은 정보가 있습니다.');
       throw error;
     }
   };
+
+  const getAllUserInfo = () => {
+    axios({
+      method:'get',
+      url:`${url}/accounts/user/`,
+      headers: {
+        Authorization: `Token ${token.value}`
+      }
+    })
+    .then((response) => {
+      console.log(response.data)
+    })
+    .catch((error) => {
+      console.log('가져오기 실패!:', error)
+    })
+  }
+
+  const checkEmailDuplicate = async (email) => {
+    try {
+      const response = await axios({
+        method: 'post',
+        url: `${url}/accounts/user/`,  // 이메일 중복 체크를 위한 별도 엔드포인트
+        data: {
+          email: email
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.log('이메일 중복 체크 실패:', error)
+      alert(error)
+      return false
+    }
+  }
 
   return { 
     url, 
@@ -148,6 +179,8 @@ export const useUserStore = defineStore("user", () => {
     user, 
     userPK, 
     getUserInfo, 
-    updateUserInfo 
+    updateUserInfo,
+    getAllUserInfo,
+    checkEmailDuplicate, 
   }
 }, { persist: true });

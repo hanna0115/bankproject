@@ -104,7 +104,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
@@ -114,6 +114,14 @@ const store = useUserStore()
 const signUp = function () {
     if (password1.value !== password2.value) {
         alert('비밀번호가 달라요!')
+        return
+    }
+
+    // 이메일 중복 체크를 위한 간단한 비교
+    const userEmail = store.user?.email  // store의 user 객체에서 email 가져오기
+    
+    if (userEmail === fullEmail.value) {
+        alert('이미 가입된 이메일이 존재합니다.')
         return
     }
 
@@ -230,6 +238,11 @@ const toggleGoal = (goal) => {
         selectedGoals.value.push(goal)
     }
 }
+
+onMounted(() => {
+    store.getAllUserInfo()
+})
+
 </script>
 
 <style scoped>
