@@ -83,6 +83,7 @@ export const useCommunityStore = defineStore("community", () => {
     })
         .then(res => {
             selectedCategory.value = 'all'
+            currentPage.value = 1
             router.push({ name: 'community'})
           })
           .catch(err => console.log('게시글 생성 오류', err))
@@ -120,6 +121,7 @@ export const useCommunityStore = defineStore("community", () => {
     })
     .then(res => {
           selectedCategory.value = 'all'
+          currentPage.value = 1
           console.log(res)
           router.push({ name: 'community'})
       })

@@ -40,7 +40,7 @@ const getCurrencyCode = computed(() => {
     text-align: center;
     width: 350px;
     transition: 400ms;
-    margin: 0 10px;
+    margin: 10px;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);

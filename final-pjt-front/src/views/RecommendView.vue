@@ -9,33 +9,38 @@
             <button>적금</button>
         </div>
 
-        <p class="recommendation-intro" v-if="userStore.isLoggedIn && userStore.user"><span>{{ userStore.user.name }}</span>님의 목표 달성에 도움이 되는</p>
+        <p class="recommendation-intro" v-if="userStore.isLoggedIn && userStore.user"><span>{{ userStore.user.name
+                }}</span>님의 목표 달성에 도움이 되는</p>
         <p class="recommendation-intro" v-else><span>가장 많은 사람들</span>이 가입한</p>
         <p class="recommendation-title">금융상품 Best 5!</p>
 
 
-        <div class="product-list" >
-            <div v-for="(product, index) in category ? recommendStore.savingsProducts: recommendStore.depositProducts" :key="product.id" class="product-item">
-                <div class="product-card">
-                    <div class="product-card-inner">
-                        <div class="product-card-front">
-                            <div class="product-content">
-                                <span class="product-number">{{ index+1 }}</span>
-                                <img class="product-icon" :src="getBankLogo(product.company_name)" alt="Product Icon">
-                                <div class="product-info">
-                                    <p class="product-name">{{ product.company_name }}</p>
-                                    <p class="product-detail">{{ product.product_name }}</p>
-                                </div>
-                                <div class="product-rate">
-                                    <p class="rate-label">최고</p>
-                                    <p class="rate-value">{{ product.prime_interest_rate }}%</p>
-                                    <p class="rate-condition">기본 {{ product.interest_rate }}%</p>
+        <div class="product-list">
+            <div v-for="(product, index) in category ? recommendStore.savingsProducts : recommendStore.depositProducts"
+                :key="product.id" class="product-item">
+                <RouterLink :to="{ name: 'recommendDetail', params: { category: category ? 'savings':'deposit', productId: product.id } }">
+                    <div class="product-card">
+                        <div class="product-card-inner">
+                            <div class="product-card-front">
+                                <div class="product-content">
+                                    <span class="product-number">{{ index + 1 }}</span>
+                                    <img class="product-icon" :src="getBankLogo(product.company_name)"
+                                        alt="Product Icon">
+                                    <div class="product-info">
+                                        <p class="product-name">{{ product.company_name }}</p>
+                                        <p class="product-detail">{{ product.product_name }}</p>
+                                    </div>
+                                    <div class="product-rate">
+                                        <p class="rate-label">최고</p>
+                                        <p class="rate-value">{{ product.prime_interest_rate }}%</p>
+                                        <p class="rate-condition">기본 {{ product.interest_rate }}%</p>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="product-card-back"></div>
                         </div>
-                        <div class="product-card-back"></div>
                     </div>
-                </div>
+                </RouterLink>
             </div>
         </div>
     </div>
@@ -74,52 +79,52 @@ const getBankLogo = (categoryName) => {
         '제주은행': 'src/assets/images/shinhan.png',
     };
     return bankLogos[bankName] || '/images/default.png';
-  };
+};
 
 
 onMounted(() => {
-  recommendStore.getProduct()
-  const productItems = document.querySelectorAll('.product-item');
-  
-  // 상품 목록 애니메이션
-  gsap.fromTo(".recommendation-container",
-    { opacity: 0, y: -50 },
-    { 
-      opacity: 1, 
-      y: 0, 
-      duration: 1,
-      delay: 0.8, // Delay after navbar animation
-      ease: "power2.out",
-      onComplete: () => {
-        // Start product card animations after container appears
-        productItems.forEach((item, index) => {
-          const card = item.querySelector('.product-card-inner');
-          let isAnimating = true;
+    recommendStore.getProduct()
+    const productItems = document.querySelectorAll('.product-item');
 
-          const animationDelay = index * 0.6;
-          const animationDuration = 3;
-          const totalAnimationTime = (animationDelay + animationDuration) * 1000;
+    // 상품 목록 애니메이션
+    gsap.fromTo(".recommendation-container",
+        { opacity: 0, y: -50 },
+        {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            delay: 0.8, // Delay after navbar animation
+            ease: "power2.out",
+            onComplete: () => {
+                // Start product card animations after container appears
+                productItems.forEach((item, index) => {
+                    const card = item.querySelector('.product-card-inner');
+                    let isAnimating = true;
 
-          setTimeout(() => {
-            isAnimating = false;
-          }, totalAnimationTime);
+                    const animationDelay = index * 0.6;
+                    const animationDuration = 3;
+                    const totalAnimationTime = (animationDelay + animationDuration) * 1000;
 
-          item.addEventListener('mouseenter', () => {
-            if (!isAnimating) {
-                card.style.animation = 'none';
-                item.classList.add('hover-effect');
+                    setTimeout(() => {
+                        isAnimating = false;
+                    }, totalAnimationTime);
+
+                    item.addEventListener('mouseenter', () => {
+                        if (!isAnimating) {
+                            card.style.animation = 'none';
+                            item.classList.add('hover-effect');
+                        }
+                    });
+
+                    item.addEventListener('mouseleave', () => {
+                        if (!isAnimating) {
+                            item.classList.remove('hover-effect');
+                        }
+                    });
+                });
             }
-          });
-
-          item.addEventListener('mouseleave', () => {
-            if (!isAnimating) {
-                item.classList.remove('hover-effect');
-            }
-          });
-        });
-      }
-    }
-  );
+        }
+    );
 });
 </script>
 
@@ -144,7 +149,7 @@ onMounted(() => {
     color: #ABABAB;
 }
 
-.recommendation-intro > span {
+.recommendation-intro>span {
     color: #FF6708;
     font-weight: 700;
 }
@@ -181,7 +186,8 @@ onMounted(() => {
     transform-style: preserve-3d;
 }
 
-.product-card-front, .product-card-back {
+.product-card-front,
+.product-card-back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -260,8 +266,13 @@ onMounted(() => {
 }
 
 @keyframes flipCard {
-    0% { transform: rotateX(0deg); }
-    100% { transform: rotateX(-360deg); }
+    0% {
+        transform: rotateX(0deg);
+    }
+
+    100% {
+        transform: rotateX(-360deg);
+    }
 }
 
 .product-item:nth-child(1) .product-card-inner {
