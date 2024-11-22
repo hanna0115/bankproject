@@ -45,16 +45,21 @@
 
             <p>저축 목표</p>
             <div class="goal-group">
-                <button v-for="goal in goals" :key="goal" type="button" class="goal-btn"
-                    :class="{ 'active': selectedGoals.includes(goal) }" @click="toggleGoal(goal)">
-                    {{ goal }}
+                <button 
+                    v-for="goal in goals" 
+                    :key="goal" 
+                    type="button" 
+                    class="goal-btn"
+                    :class="{ 'active': selectedGoals.includes(goal) }" 
+                    @click="toggleGoal(goal)">
+                    {{ goalsToKor[goal] }}
                 </button>
             </div>
 
             <p>저축 기간 (개월)</p>
             <div class="savings-slider-wrapper">
                 <div class="savings-amount-slider">
-                    <input type="radio" name="savings-period" id="amount1" value="0" v-model="formData.saving_period">
+                    <input type="radio" name="savings-period" id="amount1" value="0" v-model="formData.saving_period" disabled>
                     <label for="amount1" data-amount="0"></label>
                     <input type="radio" name="savings-period" id="amount2" value="6" v-model="formData.saving_period">
                     <label for="amount2" data-amount="6"></label>
@@ -111,24 +116,38 @@ const toggleGoal = (goal) => {
     const index = selectedGoals.value.indexOf(goal);
     if (index > -1) {
         selectedGoals.value.splice(index, 1);
-    } else if (selectedGoals.value.length > 2) {
-        alert('목표 설정은 최대 3개까지만 가능합니다.')
     } else {
+        if (selectedGoals.value.length >= 3) {
+            alert('목표 설정은 최대 3개까지만 가능합니다.');
+            return;
+        }
         selectedGoals.value.push(goal);
     }
     formData.value.saving_purpose = [...selectedGoals.value];
 };
 
 const goals = [
-    '내집마련',
-    '교육비',
-    '의료비',
-    '결혼자금',
-    '노후자금',
-    '시드머니',
-    '여행자금',
-    '위시리스트'
-];
+    'home',
+    'education',
+    'medication',
+    'wedding',
+    'future',
+    'seedmoney',
+    'travel',
+    'wishlist'
+]
+
+const goalsToKor = {
+        'home': '내집마련',
+        'education': '교육비',
+        'medication': '의료비',
+        'wedding': '결혼자금',
+        'future': '노후자금',
+        'seedmoney': '시드머니',
+        'travel': '여행자금',
+        'wishlist': '위시리스트'
+    }
+
 
 const handleSubmit = () => {
     const updateData = {};
@@ -166,10 +185,15 @@ onMounted(() => {
                 formData.value.asset = store.user.asset || '';
                 formData.value.saving_amount = store.user.saving_amount || '';
                 formData.value.saving_period = store.user.saving_period || '';
+                // 저축 목표 초기화 로직 수정
                 if (store.user.saving_purpose) {
-                    selectedGoals.value = Array.isArray(store.user.saving_purpose)
-                        ? [...store.user.saving_purpose]
+                    // 배열이 아닌 경우 배열로 변환
+                    const purposeArray = Array.isArray(store.user.saving_purpose) 
+                        ? store.user.saving_purpose 
                         : [store.user.saving_purpose];
+                    
+                    // 최대 3개까지만 설정
+                    selectedGoals.value = purposeArray.slice(0, 3);
                     formData.value.saving_purpose = [...selectedGoals.value];
                 }
             }
