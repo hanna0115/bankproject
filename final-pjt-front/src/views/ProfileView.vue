@@ -21,8 +21,10 @@
         />
 
         <br>
+
         <div class="chart">
-            차트 한 번 그려 봄
+            <span>내가 가입한 예적금 상품 금리</span>
+            <!-- {{ myProducts }} -->
             <ProfileChart
             :my-product="myProducts"
             
@@ -69,7 +71,7 @@ const getMyProduct = () => {
     .then((res) => {
         myProducts.value = res.data
         console.log('조회요청함')
-        console.log(res.data)
+        // console.log(res.data)
     })
     .catch((err) => console.log(err, userPK.value, token.value))
 }
@@ -87,8 +89,8 @@ const connectMyProduct = () => {
     })
     .then((res) => {
         myProducts.value = res.data.data
-        console.log(res.data)
-            alert(res.data.detail)
+        // console.log(res.data)
+        alert(res.data.detail)
     })
     .catch((err) => console.log(err, userPK.value, token.value))
 }
@@ -200,7 +202,13 @@ const connectMyProduct = () => {
     justify-content: flex-end;
 }
 
-.chart {
+.chart > span {
+    font-size: 18px;
+    font-weight: 700;
+    color: #808080;
+}
+
+.chart > div {
     text-align: center;
 }
 
