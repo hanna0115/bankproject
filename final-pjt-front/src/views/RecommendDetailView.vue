@@ -15,7 +15,7 @@
                         <p>기본</p> <span>{{ product.interest_rate }}%</span>
                     </div>
                 </div>
-                <!-- <a :href="{{ product.product_link }}" class="info-btn">공식홈에서 더 알아보기</a> -->
+                <a :href="product.product_link" class="info-btn">공식홈에서 더 알아보기</a>
             </div>
 
             <div class="product-detail"> <!--상품 안내-->
