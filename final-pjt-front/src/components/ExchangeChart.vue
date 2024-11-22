@@ -25,6 +25,7 @@ const props = defineProps({
     currency: String
 });
 
+
 const getCurrencyCode = computed(() => {
     const mapping = {
         'CNH': 'CNY',
