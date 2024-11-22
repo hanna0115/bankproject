@@ -123,9 +123,9 @@ export const useCommunityStore = defineStore("community", () => {
           selectedCategory.value = 'all'
           currentPage.value = 1
           console.log(res)
-          router.push({ name: 'community'})
+          return router.push({ name: 'postdetail', params: {'postId': 1}})
       })
-      .catch(err => console.log('게시글 수정 오류', err))
+    .catch(err => console.log('게시글 수정 오류', err))
 }
 
   return { 

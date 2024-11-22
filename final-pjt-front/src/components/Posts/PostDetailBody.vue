@@ -2,8 +2,13 @@
     <div class="post-body" v-if="post">
         <div class="post-info">
             <p>{{ communityStore.formatDate(post.created_at) }}  |  조회수 {{ post.num_seen }}</p>
-            <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })"
-            v-if="userStore.isLoggedIn && userStore.user.pk === post.user">수정하기</button>
+            <div>
+                <button @click="router.push({ name: 'updatePost', params: { postId: post.id } })"
+                v-if="userStore.isLoggedIn && userStore.user.pk === post.user">수정</button>
+                <button @click="deletePost" class="delete-btn"
+                v-if="userStore.isLoggedIn && userStore.user.pk === post.user">삭제</button>
+            </div>
+            
         </div>
         <div class="content">{{ post.content }}</div>
         <div class="like">
@@ -93,6 +98,23 @@ onMounted(() => {
         getLikedStatus();
     }
 });
+
+
+const deletePost = () => {
+    axios({
+      method: 'delete',
+      url: `${communityStore.API_URL}/posts/detail/${props.post.id}/`,
+      headers: {
+        Authorization: `Token ${userStore.token}`
+      }
+    })
+    .then(res => {
+          console.log(res)
+          router.push({ name: 'community'})
+          router.go(0)
+      })
+      .catch(err => console.log('게시글 삭제 오류', err))
+}
 </script>
 
 <style scoped>
@@ -138,6 +160,10 @@ onMounted(() => {
 .like-btn.liked i {
     color: crimson;
     animation: pulse 500ms ease;
+}
+
+.delete-btn {
+    margin-left: 10px;
 }
 
 /* 좋아요 버튼 눌렀을 때 크기 변하는 애니메이션 */
