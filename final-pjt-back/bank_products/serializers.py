@@ -34,7 +34,7 @@ class UserProductSerializer(serializers.ModelSerializer):
     def get_remain_month(self, obj):
         # expiration_date가 None이 아닌 경우 d-day 계산
         if obj.join_date:
-            return int((now().date() - obj.join_date.date()).days/30)
+            return int((now().date() - obj.join_date.date()).days/30)+1
         return None  # 만료일이 없으면 None 반환
 
     class Meta:
