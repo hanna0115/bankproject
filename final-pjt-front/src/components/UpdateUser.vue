@@ -154,16 +154,21 @@ const handleSubmit = () => {
     const updateData = {};
 
     // 비밀번호 필드가 보이고 있고, 비밀번호가 입력된 경우에만 검증
-    if (formData.value.password1 != formData.value.password2) {
-        alert('비밀번호가 다릅니다.')
-    }
+
+
     
     if (showPasswordFields.value && (formData.value.password1 || formData.value.password2)) {
-        // 1. 유효성 검사 : 비밀번호 자리수 
+        // 1. 유효성 검사 : 비밀번호와 비밀번호 확인이 다른 경우
+        if (formData.value.password1 != formData.value.password2) {
+            alert('비밀번호가 다릅니다.')
+        }
+        // 2. 유효성 검사 : 비밀번호 자리수 확인
         if (formData.value.password1.length < 8 || formData.value.password2.length < 8) {
             alert('비밀번호는 8자리 이상으로 설정해주세요.');
             return; // 함수 실행 중단
         }
+
+        
         updateData.password1 = formData.value.password1;
         updateData.password2 = formData.value.password2;
     }
