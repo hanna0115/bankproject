@@ -7,6 +7,13 @@ from django.contrib.auth import get_user_model
 # 전체 게시글 조회
 class PostListSerializer(serializers.ModelSerializer):
 
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = get_user_model()
+            fields = ('name', 'id',)
+    
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Post
         fields = ('id', 'title', 'user', 'created_at', 'num_seen', 'category')
