@@ -127,194 +127,228 @@
   
   <style scoped>
   .recommendation-container {
-    margin: 100px auto;
-    text-align: center;
+  margin: 100px auto;
+  text-align: center;
+}
+
+.recommendation-badge {
+  margin-bottom: 20px;
+  font-size: 30px;
+  font-weight: 700;
+  color: #FF6708;
+}
+
+.account-toggle {
+  display: inline-flex;
+  background-color: #f0f0f0;
+  border-radius: 30px;
+  padding: 4px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background-color: #fff;
+  border-radius: 25px;
+  transition: transform 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.toggle-button {
+  border: none;
+  background-color: transparent;
+  padding: 3px 10px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  position: relative;
+  z-index: 1;
+}
+
+.toggle-button.active {
+  color: #333;
+}
+
+.toggle-button:focus {
+  outline: none;
+}
+
+.toggle-button:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.recommendation-intro, .recommendation-title {
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #ABABAB;
+}
+
+.recommendation-intro > span {
+  color: #FF6708;
+  font-weight: 700;
+}
+
+.recommendation-title {
+  margin-top: 8px;
+}
+
+.product-list {
+  margin-top: 50px;
+}
+
+.product-item {
+  width: 650px;
+  height: 100px;
+  margin: 10px auto;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.product-card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 0.3s ease;
+}
+
+.product-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.product-card-front, .product-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
+}
+
+.product-card-front {
+  background-color: white;
+  transition: all 0.3s ease;
+}
+
+.product-card-back {
+  background-color: #fffdfd;
+  transform: rotateX(180deg);
+}
+
+/* 호버 효과 */
+.product-item:hover .product-card {
+  transform: scale(1.05);
+}
+
+/* 클릭 효과 */
+.product-item:active .product-card {
+  transform: scale(0.95);
+}
+
+.hover-effect .product-card-front {
+  background-color: #FFB07E;
+}
+
+.product-content {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  width: 100%;
+}
+
+.product-number {
+  font-size: 24px;
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.product-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.product-info {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.product-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.product-detail {
+  font-size: 16px;
+  color: #666;
+}
+
+.product-rate {
+  text-align: right;
+}
+
+.rate-label {
+  font-size: 14px;
+}
+
+.rate-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #FF6708;
+}
+
+.rate-condition {
+  font-size: 12px;
+  color: #999;
+}
+
+@keyframes flipCard {
+  0% {
+    transform: rotateX(0deg);
   }
-  
-  .recommendation-badge {
-    margin-bottom: 20px;
-    font-size: 30px;
-    font-weight: 700;
-    color: #FF6708;
+  100% {
+    transform: rotateX(-360deg);
   }
-  
-  .account-toggle {
-    display: inline-flex;
-    background-color: #f0f0f0;
-    border-radius: 30px;
-    padding: 4px;
-    margin-bottom: 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .toggle-slider {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    width: calc(50% - 4px);
-    height: calc(100% - 8px);
-    background-color: #fff;
-    border-radius: 25px;
-    transition: transform 0.3s ease;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .toggle-button {
-    border: none;
-    background-color: transparent;
-    padding: 3px 10px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 14px;
-    font-weight: 500;
-    position: relative;
-    z-index: 1;
-  }
-  
-  .toggle-button.active {
-    color: #333;
-  }
-  
-  .toggle-button:focus {
-    outline: none;
-  }
-  
-  .toggle-button:hover:not(.active) {
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-  
-  .recommendation-intro, .recommendation-title {
-    margin-top: 8px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #ABABAB;
-  }
-  
-  .recommendation-intro > span {
-    color: #FF6708;
-    font-weight: 700;
-  }
-  
-  .recommendation-title {
-    margin-top: 8px;
-  }
-  
-  .product-list {
-    margin-top: 50px;
-  }
-  
-  .product-item {
-    width: 650px;
-    height: 100px;
-    margin: 10px auto;
-    perspective: 1000px;
-    cursor: pointer;
-  }
-  
-  .product-card {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
-  }
-  
-  .product-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.3s;
-    transform-style: preserve-3d;
-  }
-  
-  .product-card-front, .product-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 15px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .product-card-front {
-    background-color: white;
-    transition: background-color 0.3s ease;
-  }
-  
-  .product-card-back {
-    background-color: #fffdfd;
-    transform: rotateX(180deg);
-  }
-  
-  .hover-effect .product-card-front {
-    background-color: #FFB07E;
-  }
-  
-  .product-content {
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    width: 100%;
-  }
-  
-  .product-number {
-    font-size: 24px;
-    font-weight: bold;
-    margin-right: 20px;
-  }
-  
-  .product-icon {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .product-info {
-    flex-grow: 1;
-    text-align: center;
-  }
-  
-  .product-name {
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .product-detail {
-    font-size: 16px;
-    color: #666;
-  }
-  
-  .product-rate {
-    text-align: right;
-  }
-  
-  .rate-label {
-    font-size: 14px;
-  }
-  
-  .rate-value {
-    font-size: 24px;
-    font-weight: bold;
-    color: #FF6708;
-  }
-  
-  .rate-condition {
-    font-size: 12px;
-    color: #999;
-  }
-  
-  @keyframes flipCard {
-    0% { transform: rotateX(0deg); }
-    100% { transform: rotateX(-360deg); }
-  }
-  
-  .product-item:nth-child(1) .product-card-inner { animation: flipCard 3s 1; animation-delay: 0s; }
-  .product-item:nth-child(2) .product-card-inner { animation: flipCard 3s 1; animation-delay: 0.6s; }
-  .product-item:nth-child(3) .product-card-inner { animation: flipCard 3s 1; animation-delay: 1.2s; }
-  .product-item:nth-child(4) .product-card-inner { animation: flipCard 3s 1; animation-delay: 1.8s; }
-  .product-item:nth-child(5) .product-card-inner { animation: flipCard 3s 1; animation-delay: 2.4s; }
+}
+
+.product-item:nth-child(1) .product-card-inner {
+  animation: flipCard 3s 1;
+  animation-delay: 0s;
+}
+
+.product-item:nth-child(2) .product-card-inner {
+  animation: flipCard 3s 1;
+  animation-delay: 0.6s;
+}
+
+.product-item:nth-child(3) .product-card-inner {
+  animation: flipCard 3s 1;
+  animation-delay: 1.2s;
+}
+
+.product-item:nth-child(4) .product-card-inner {
+  animation: flipCard 3s 1;
+  animation-delay: 1.8s;
+}
+
+.product-item:nth-child(5) .product-card-inner {
+  animation: flipCard 3s 1;
+  animation-delay: 2.4s;
+}
   </style>
