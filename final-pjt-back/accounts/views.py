@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import User
 from .adapters import CustomAccountAdapter
 from .serializers import CustomRegisterSerializer, CustomUserDetailsSerializer
+from django.contrib.auth import get_user_model
 
 
 # 회원가입
@@ -92,6 +93,12 @@ def delete_account(request):
         {'error': '탈퇴 처리 중 오류가 발생했습니다.'}, 
         status=status.HTTP_400_BAD_REQUEST
     )
+
+@api_view(['GET'])
+def get_users(request):
+    users = get_user_model().objects.all()
+    serializer = CustomUserDetailsSerializer(users, many=True)
+    return Response(serializer.data,status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])

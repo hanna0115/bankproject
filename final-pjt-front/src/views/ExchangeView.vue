@@ -203,7 +203,7 @@ onMounted(() => {
 }
 
 .chart {
-    margin: 20px 0;
+    margin: 20px;
     width: 90%;
     display: flex;
     justify-content: center;
