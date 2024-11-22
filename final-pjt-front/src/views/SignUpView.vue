@@ -55,8 +55,12 @@
 
             <p>자산</p>
             <div class="input-group">
-                <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model.number="asset">
-                <p class="asset-min">* 만 단위 이상 기입</p>
+                <div class="man">
+                    <input type="text" class="input-field" placeholder="자산을 입력하세요" v-model.number="asset"
+                        style="text-align: end; padding-right: 50px; padding-top: 10px;">
+                    <span class="man-won">만원</span>
+                    <!-- <p class="asset-min">* 만 단위</p> -->
+                </div>
             </div>
 
             <p>저축 목표</p>
@@ -84,10 +88,15 @@
             </div>
 
             <div class="input-group">
-                <p class="deb-amount">저축 금액</p>
-                <input type="text" class="input-field" placeholder="금액을 입력하세요"
-                v-model.number="savingAmount">
-                <p class="asset-min">* 만 단위 이상 기입</p>
+                <div class="man">
+                    <p class="deb-amount">저축 금액</p>
+                    <div class="input-end-start">
+                        <input type="text" class="input-field" placeholder="금액을 입력하세요" v-model.number="savingAmount"
+                            style="text-align: end; padding-right: 50px; padding-top: 10px;">
+                    </div>
+                    <span class="man-won2">만원</span>
+                    <!-- <p class="asset-min">* 만 단위 이상 기입</p> -->
+                </div>
             </div>
             <button type="submit" class="submit-btn">완료</button>
         </form>
@@ -118,6 +127,7 @@ const signUp = function () {
         password1: password1.value,
         password2: password2.value,
     }
+
     store.signUp(payload)
 }
 
@@ -134,7 +144,7 @@ const selectedGoals = ref([])
 
 // 이메일 계산
 
-const fullEmail = computed(() => { 
+const fullEmail = computed(() => {
     if (email.value && emailDomain.value) {
         return `${email.value}@${emailDomain.value}`
     }
@@ -210,7 +220,11 @@ const toggleGoal = (goal) => {
     if (selectedGoals.value.includes(goal)) {
         // 이미 선택된 목표라면 제거
         selectedGoals.value = selectedGoals.value.filter(g => g !== goal)
-    } else {
+    } else if (selectedGoals.value.length > 2) {
+        alert('목표 설정은 최대 3개까지만 가능합니다.')
+    } 
+
+    else {
         // 선택되지 않은 목표라면 추가
         selectedGoals.value.push(goal)
     }
@@ -245,6 +259,28 @@ p {
     margin-bottom: 30px;
 }
 
+
+
+.man {
+    position: relative;
+}
+
+.man-won {
+    position: absolute;
+    width: 30px;
+    right: 10px;
+    top: 10px;
+    color: #808080;
+}
+
+.man-won2 {
+    position: absolute;
+    width: 30px;
+    right: 10px;
+    top: 40px;
+    color: #808080;
+}
+
 .password-require {
     font-size: 12px;
     color: #fc8a44;
@@ -257,6 +293,7 @@ p {
     color: #fc8a44;
     padding-left: 10px;
     font-weight: 350;
+    justify-content: end;
 }
 
 .input-field {
@@ -435,6 +472,4 @@ p {
     margin-top: 90px;
     margin-bottom: 10px;
 }
-
-
 </style>
