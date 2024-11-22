@@ -117,14 +117,6 @@ const signUp = function () {
         return
     }
 
-    // 이메일 중복 체크를 위한 간단한 비교
-    const userEmail = store.user?.email  // store의 user 객체에서 email 가져오기
-    
-    if (userEmail === fullEmail.value) {
-        alert('이미 가입된 이메일이 존재합니다.')
-        return
-    }
-
     const payload = {
         name: username.value,
         email: fullEmail.value,
@@ -138,7 +130,15 @@ const signUp = function () {
     }
 
     store.signUp(payload)
+        .catch(error => {
+            if (error.response?.data?.email) {
+                alert('이미 가입된 이메일이 존재합니다.')
+            } else {
+                alert('이미 가입된 이메일이 존재합니다.')
+            }
+        })
 }
+
 
 //폼 데이터
 const username = ref('')
@@ -239,9 +239,7 @@ const toggleGoal = (goal) => {
     }
 }
 
-onMounted(() => {
-    store.getAllUserInfo()
-})
+
 
 </script>
 

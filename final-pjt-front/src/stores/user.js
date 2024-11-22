@@ -152,22 +152,6 @@ export const useUserStore = defineStore("user", () => {
     })
   }
 
-  const checkEmailDuplicate = async (email) => {
-    try {
-      const response = await axios({
-        method: 'post',
-        url: `${url}/accounts/user/`,  // 이메일 중복 체크를 위한 별도 엔드포인트
-        data: {
-          email: email
-        }
-      })
-      return response.data
-    } catch (error) {
-      console.log('이메일 중복 체크 실패:', error)
-      alert(error)
-      return false
-    }
-  }
 
   return { 
     url, 
@@ -181,6 +165,6 @@ export const useUserStore = defineStore("user", () => {
     getUserInfo, 
     updateUserInfo,
     getAllUserInfo,
-    checkEmailDuplicate, 
+
   }
 }, { persist: true });
