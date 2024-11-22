@@ -23,7 +23,10 @@
         <br>
         <div class="chart">
             차트 한 번 그려 봄
-            <ProfileChart />
+            <ProfileChart
+            :my-product="myProducts"
+            
+            />
         </div>
     </div>
 </template>
@@ -84,6 +87,7 @@ const connectMyProduct = () => {
     })
     .then((res) => {
         myProducts.value = res.data.data
+        console.log(myProducts.value)
     })
     .catch((err) => console.log(err, userPK.value, token.value))
 }

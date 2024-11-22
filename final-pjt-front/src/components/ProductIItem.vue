@@ -1,7 +1,7 @@
 <template>
     <div class="main-content">
         <div class="product-content">
-            <p>{{ index+1 }} /</p>
+            <p class = indexnum>{{ index+1 }} /</p>
             <img :src="getBankLogo(myProduct.product.company_name)" :alt="myProduct.product.company_name" class="bank-logo">
         </div>
         <div class="product">
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="monthly-amount">
-                <span>기본 이율: {{ myProduct.product.interest_rate }}%</span>
+                <span>적용 금리: {{ myProduct.interest_rate }}%</span>
                 <p class="monthly">월 납입액: {{ (myProduct.monthly_amount*10000).toLocaleString(en-US)}}원</p>
                 <p class="amount">{{ (myProduct.remain_month*myProduct.monthly_amount*10000).toLocaleString(en-US) }}원</p>
             </div>
@@ -108,7 +108,7 @@ const getBankLogo = (categoryName) => {
 
 .main-content {
     display: flex;
-    /* margin: 20px 0; */
+    margin: 10px 0;
     border-bottom: 1px solid #BCBCBC;
     padding-bottom: 25px;
 }
@@ -117,9 +117,13 @@ const getBankLogo = (categoryName) => {
     display: flex;
 }
 
+.indexnum {
+    font-size: larger;
+}
+
 .bank-logo {
-    width: 25px;
-    height: 25px;
+    width: 35px;
+    height: 35px;
     margin-left: 15px;
     margin-top: 5px;
 }
