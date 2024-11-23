@@ -65,10 +65,13 @@ def update_exchange():
 # 환율정보 API로 받아오기
 @api_view(['GET'])
 def get_exchange(request):
-   # 오늘 날짜의 데이터가 없으면 업데이트 시도
+    # 오늘 날짜의 데이터가 없으면 업데이트 시도
     update_exchange()
 
-    # 오늘날짜 환율 리스트 보내주기.
-    exchange = Exchange.objects.filter(date=date.today())
+    # 가장 최근 날짜 환율 리스트 보내주기
+    latest_date = Exchange.objects.all().order_by('-date').first()
+    print('latest_date', latest_date.date)
+    exchange = Exchange.objects.filter(date=latest_date.date)
+    
     serializer = ExchangeSerializer(exchange, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
