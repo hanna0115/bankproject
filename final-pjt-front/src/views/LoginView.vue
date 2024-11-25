@@ -1,7 +1,9 @@
 <template>
     <div class="login">
+        <div class="intro">
         <h2 class="title">Welcome to</h2>
-
+        <img src="/public/favicon.ico" alt="" class="logo-img">
+        </div>    
         <form class="login-form" @submit.prevent="logIn">
             <div>
                 <label for="id">아이디</label>
@@ -61,6 +63,20 @@ const logIn = () => {
   color: #FF6709;
   font-weight: bold;
   font-size: 30px;
+}
+
+.intro {
+    display: flex;
+    position: relative;;
+}
+
+.logo-img {
+    width: 125px;
+    height: 90px;
+    position: absolute;
+    left: 195px;
+    bottom: -25px;
+
 }
 
 .login-form {

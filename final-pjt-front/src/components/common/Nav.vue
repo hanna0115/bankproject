@@ -1,6 +1,6 @@
 <template>
   <nav class="nav">
-    <RouterLink :to="{name:'home'}" class="logo">BANKPROJECT</RouterLink>
+    <RouterLink :to="{name:'home'}" class="logo">ORANGE SALADA</RouterLink>
     <div class="real-nav">
       <RouterLink :to="{name:'recommend'}">금융상품추천</RouterLink>
       <RouterLink :to="{name:'map'}">지도</RouterLink>
@@ -75,6 +75,7 @@ onMounted(() => {
   font-size: 30px;
   color: #FF6709;
   font-weight: bold;
+  font-style: italic;
 }
 
 .real-nav {
@@ -85,7 +86,7 @@ onMounted(() => {
 }
 
 .real-nav a {
-  padding: 12px;
+  padding: 12px 20px;
   color: #B9B9B9;
   font-size: 18px;
   font-weight: 500;
