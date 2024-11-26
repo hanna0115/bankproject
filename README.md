@@ -50,7 +50,6 @@
 [**🔗 Figma Link**](https://www.figma.com/design/OXOygfoSCSRhi6z9zKahw0/Untitled?node-id=0-1&t=PuoAi7xxlDJCYQou-1)
 
 <img src="./README_IMG/figma.PNG" alt='figma'/>
-![figma](README_IMG/figma.PNG) 
 
 - 예, 적금 금리 비교, 환율 계산, 집 주변 은행 검색, 금융 상품 연동하기, 게시판 등의 필수 기능, 셀렉트 박스를 통해 은행 검색 시 해당 은행의 로고 및 전화번호, 위치, 영업시간 정보 제공. 네이버 환율 그래프 카드 및 redirect, 회원가입 & 로그인 유효성 검사, 프로필 페이지 내 금융 상품 이자율 시각화 기능을 구현함.
 
@@ -58,11 +57,11 @@
 
 [**🔗 ERD drawio Link**]
 
-<img src="./README_IMG/ERD.png" alt='ERD'/>
+<img src="./README_IMG/ERD.PNG" alt='ERD'/>
 
 ### 🗂️ API 명세서
 
-<img src='./README_IMG/API.png' alt='API' />
+<img src='./README_IMG/API.PNG' alt='API' />
 
 ## 금융 상품 추천 알고리즘에 대한 기술적 설명
 
@@ -80,15 +79,15 @@
 
 ### 1️ 메인 페이지
 
-<img src='./README_IMG/mainpage.png' alt='mainpage'/>
+<img src='./README_IMG/mainpage.PNG' alt='mainpage'/>
 
 - 금융 상품을 카드로 만들어 메인 페이지를 꾸몄습니다. 또한 페이지 전체에 Slider 애니메이션을 추가하였습니다. Slider가 되는 속도에 맞춰 금융 상품 정보를 담은 카드 또한
   회전 되며 보여지도록 했습니다.
 
 ### 2️ 로그인, 회원가입 페이지
 
-<img src='./README_IMG/login.png' alt='login'/>
-<img src='./README_IMG/signup.png' alt='signup'/>
+<img src='./README_IMG/login.PNG' alt='login'/>
+<img src='./README_IMG/signup.PNG' alt='signup'/>
 
 - 로그인 실패 시 에러메세지를 띄워 사용자로 하여금 아이디와 비밀번호를 다시 확인할 수 있오록 하였습니다.
 - 회원가입 시 ID는 이메일 형식, 생년월일은 체크박스를 선택할 수 있도록 구현하였습니다. 또한 윤달, 홀수와 짝수 달의 최대 일 수를 다르게 하였습니다.
@@ -96,9 +95,9 @@
 
 ### 3️ 마이페이지
 
-<img src='./README_IMG/mypage.png' alt='mypage'/>
-<img src='./README_IMG/recommend1.png' alt='recommend1'/>
-<img src='./README_IMG/recommend2.png' alt='recommend2'/>
+<img src='./README_IMG/mypage.PNG' alt='mypage'/>
+<img src='./README_IMG/recommend1.PNG' alt='recommend1'/>
+<img src='./README_IMG/recommend2.PNG' alt='recommend2'/>
 
 - 마이페이지에서 내가 현재 가입한 금융 상품, 그리고 나의 저축 목표와 맞는 금융 상품을 추가적으로 추천 받을 수 있습니다.
 - 내 정보 수정하기에서는 회원가입 시 등록했던 정보를 수정하여, 다양한 금융 상품을 추천 받을 수 있는 기회를 넓혔습니다. 예를 들어 저축 목표를 수정하였을 때,
@@ -108,27 +107,22 @@
 
 ### 4️ 금융 상품 상세 페이지
 
-<img src='./README_IMG/bankproduct.png' alt='bankproduct'/>
+<img src='./README_IMG/bankproduct.PNG' alt='bankproduct'/>
 
 - 추천된 금융 상품을 클릭함으로써 상품에 대한 상세 정보를 확인할 수 있습니다.
 - 공식홈에서 더 알아보기 기능을 통해 해당 금융 상품 페이지로 이동할 수 있도록 했습니다.
 
 ### 5 환율 계산 페이지
 
-<img src='./README_IMG/exchange.png' alt='exchange'/>
-![exchange](README_IMG/exchange.png)
+<img src='./README_IMG/exchange.PNG' alt='exchange'/>
 
 - 환율 계산 페이지에서는 바인딩을 통해 국가를 선택하고, 금액을 입력하면 원화로 변경된 값을 실시간으로 확인할 수 있도록 구현했습니다.
 - 각 국가별 환율 변동 차트를 시각화 하여 제공하여 유저의 편의성을 높였습니다.
 
 ### 6 주변 은행 검색 페이지
 
-| 주변은행 검색                   | 튜토리얼             |
-| --------------------------------- | ------------------------------ |
-| ![스타트](README_IMG/banksearch.png) | ![스타트](README_IMG/bankdetail.png) |
-
-<img src='./README_IMG/banksearch.png' alt='banksearch'/>
-<img src='./README_IMG/bankdetail.png' alt='bankdetail'/>
+<img src='./README_IMG/banksearch.PNG' alt='banksearch'/>
+<img src='./README_IMG/bankdetail.PNG' alt='bankdetail'/>
 
 - 주변 은행 검색 페이지에서는 직접 광역시/도, 시/군/구를 선택하여 장소를 지정할 수도 있습니다. 이 후 범위내 위치한 은행의
   상세정보(지점명, 전화번호, 영업시간)를 함께 확인할 수 있습니다.
@@ -136,8 +130,8 @@
 
 ### 7 금융 상품 자유 게시판
 
-<img src='./README_IMG/community.png' alt='community'/>
-<img src='./README_IMG/createpost.png' alt='createpost'/>
+<img src='./README_IMG/community.PNG' alt='community'/>
+<img src='./README_IMG/createpost.PNG' alt='createpost'/>
 
 - 인증된 사용자들(로그인 된) 사용자들끼리 커뮤니티를 형성할 수 있도록 금융 상품 자유 게시판을 제공합니다. (비로그인 회원은 조회만 가능합니다.)
 - 기본적인 게시물 CRUD와 댓글 CRUD를 제공합니다.
