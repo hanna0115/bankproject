@@ -116,7 +116,7 @@
 ### 5 환율 계산 페이지
 
 <img src='./README_IMG/exchange.png' alt='exchange'/>
-!(README_IMG/exchange.png)
+![exchange](README_IMG/exchange.png)
 
 - 환율 계산 페이지에서는 바인딩을 통해 국가를 선택하고, 금액을 입력하면 원화로 변경된 값을 실시간으로 확인할 수 있도록 구현했습니다.
 - 각 국가별 환율 변동 차트를 시각화 하여 제공하여 유저의 편의성을 높였습니다.
