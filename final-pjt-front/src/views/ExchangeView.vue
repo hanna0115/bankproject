@@ -20,7 +20,7 @@
 
             <div class="exchange-krw">
                 <p>KRW</p>
-                <p>{{ calculatedAmount }}원</p>
+                <p class="exchange_result">{{ calculatedAmount }}</p>
             </div>
         </div>
 
@@ -173,6 +173,8 @@ onMounted(() => {
     background-color: #fff;
 }
 
+
+
 .input-box select,
 .input-box input {
     width: 100%;
@@ -200,6 +202,10 @@ onMounted(() => {
     padding: 8px 10px;
     border: 1px solid #BCBCBC;
     border-radius: 5px;
+}
+
+.exchange_result {
+    height: 45px;
 }
 
 .chart {

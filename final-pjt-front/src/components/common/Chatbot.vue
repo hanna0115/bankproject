@@ -17,17 +17,25 @@
         </div>
         <div class="chat-messages" ref="messagesContainer">
           <TransitionGroup name="message">
-            <div v-for="(message, index) in messages" :key="index" class="message" :class="message.type">
-              {{ message.text }}
-            </div>
+            <!-- v-html을 사용하여 줄바꿈이 포함된 HTML 메시지 렌더링 -->
+            <div
+              v-for="(message, index) in messages"
+              :key="index"
+              class="message"
+              :class="message.type"
+              v-html="message.text"
+            ></div>
           </TransitionGroup>
         </div>
         <div class="chat-input">
-          <input 
-            v-model="userInput" 
-            @keyup.enter="sendMessage" 
-            placeholder="Type a message..."
-          />
+          <textarea
+            v-model="userInput"
+            @keyup.enter.exact.prevent="sendMessage"
+            @input="adjustTextareaHeight"
+            placeholder="질문을 입력해주세요"
+            rows="1"
+            ref="messageInput"
+          ></textarea>
           <button @click="sendMessage" class="send-button" :disabled="!userInput.trim()">
             <SendIcon />
           </button>
@@ -40,11 +48,12 @@
 <script setup>
 import { ref, onMounted, watch, nextTick } from 'vue'
 import { SmileIcon, XIcon, SendIcon } from 'lucide-vue-next'
+import axios from 'axios'
 
 const isChatOpen = ref(false)
 const userInput = ref('')
 const messages = ref([
-  { type: 'bot', text: 'Hi there! How can I help you today? 😊' }
+  { type: 'bot', text: '안녕하라다🍊 알고 싶은 금융 지식이 있거나 금융 상품 추천이 필요하면 물어보라다🍊' }
 ])
 const messagesContainer = ref(null)
 
@@ -52,17 +61,30 @@ const toggleChat = () => {
   isChatOpen.value = !isChatOpen.value
 }
 
-const sendMessage = () => {
-  if (userInput.value.trim() === '') return
-
+// 메시지를 Django 서버로 전송하고 응답 받기
+const sendMessage = async () => {
+  if (userInput.value.trim() === '') return; // 입력 값이 비어있으면 동작하지 않음
+  
+  // 사용자가 입력한 메시지를 추가
   messages.value.push({ type: 'user', text: userInput.value })
-  userInput.value = ''
 
-  setTimeout(() => {
-    messages.value.push({ type: 'bot', text: "That's interesting! I'm a cute chatbot, but I'm still learning. Can you tell me more? 🌟" })
-  }, 1000)
+  const inputText = userInput.value // 현재 입력 값을 저장
+  userInput.value = '' // 입력창 초기화
+
+  axios({
+    method: 'post',
+    url: 'http://127.0.0.1:8000/chatbot/',
+    data: { user_input: inputText }
+  })
+    .then((res) => {
+      const botReply = res.data.reply // Django에서 이미 <br> 변환된 데이터를 사용
+      messages.value.push({ type: 'bot', text: botReply })
+    })
+    .catch((err) => {
+      console.error('Error communicating with chatbot:', err)
+      messages.value.push({ type: 'bot', text: '오류가 발생했어요. 다시 시도하라다🍊' })
+    })
 }
-
 const scrollToBottom = () => {
   nextTick(() => {
     if (messagesContainer.value) {
@@ -89,6 +111,12 @@ const randomMovement = () => {
     button.style.transform = 'translate(0, 0) rotate(0) scale(1)';
   }, 800);
 };
+
+const adjustTextareaHeight = () => {
+  const textarea = messageInput.value
+  textarea.style.height = 'auto'
+  textarea.style.height = textarea.scrollHeight + 'px'
+}
 
 watch(messages, scrollToBottom)
 
@@ -177,8 +205,8 @@ onMounted(() => {
   position: absolute;
   bottom: 100px;
   right: 0;
-  width: 300px;
-  height: 400px;
+  width: 400px;
+  height: 500px;
   background-color: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -248,7 +276,7 @@ onMounted(() => {
   border-top: 1px solid #eee;
 }
 
-.chat-input input {
+.chat-input textarea {
   flex-grow: 1;
   border: none;
   padding: 10px;
@@ -256,9 +284,12 @@ onMounted(() => {
   margin-right: 10px;
   background-color: #f0f0f0;
   transition: all 0.3s ease;
+  resize: none;
+  max-height: 100px;
+  overflow-y: auto;
 }
 
-.chat-input input:focus {
+.chat-input textarea:focus {
   outline: none;
   box-shadow: 0 0 0 2px #ff6709;
 }

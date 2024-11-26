@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'piggy_banks',
     'accounts',
     'exchange',
+    'chatbot',
     # DRF
     'rest_framework',
     'rest_framework.authtoken',
@@ -156,6 +157,7 @@ environ.Env.read_env(
 )
 
 EXCHANGE_API_KEY = env('EXCHANGE_API_KEY')
+OPENAI_API_KEY = env('OPENAI_API_KEY')
 
 # loaddata 한글 설정
 

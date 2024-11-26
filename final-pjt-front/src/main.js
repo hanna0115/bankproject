@@ -10,7 +10,9 @@ import App from './App.vue'
 import router from './router'
 import { useKakao } from 'vue3-kakao-maps';
 
-useKakao('b58d7d3c1cb707eebc5096f6365a6285', ['clusterer', 'services', 'drawing'])
+const apiKey = import.meta.env.VITE_APP_API_KEY
+
+useKakao(apiKey, ['clusterer', 'services', 'drawing'])
 
 const app = createApp(App)
 

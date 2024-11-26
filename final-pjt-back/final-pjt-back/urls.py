@@ -29,4 +29,5 @@ urlpatterns = [
     # 2. 회원가입
     path('accounts/signup/', include('dj_rest_auth.registration.urls')),
     path('posts/', include('posts.urls')),
+    path('chatbot/', include('chatbot.urls')),
 ]

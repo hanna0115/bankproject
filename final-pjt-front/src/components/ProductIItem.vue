@@ -13,10 +13,14 @@
                     <p>만기일: {{ myProduct.expiration_date.slice(0,10) }} <span>(D-{{myProduct.d_day}})</span></p> 
                 </div>
             </div>
-            <div class="monthly-amount">
+            <div class="monthly-amount" v-if="myProduct.product.category">
                 <span>적용 금리: {{ myProduct.interest_rate }}%</span>
                 <p class="monthly">월 납입액: {{ (myProduct.monthly_amount*10000).toLocaleString(en-US)}}원</p>
                 <p class="amount">{{ (myProduct.remain_month*myProduct.monthly_amount*10000).toLocaleString(en-US) }}원</p>
+            </div>
+            <div class="monthly-amount" v-else>
+                <span>적용 금리: {{ myProduct.interest_rate }}%</span>
+                <p class="amount">{{ (myProduct.monthly_amount*10000).toLocaleString(en-US) }}원</p>
             </div>
         </div>
     </div>
