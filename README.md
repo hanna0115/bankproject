@@ -123,6 +123,10 @@
 
 ### 6 주변 은행 검색 페이지
 
+| 주변은행 검색                   | 튜토리얼             |
+| --------------------------------- | ------------------------------ |
+| ![스타트](README_IMG/banksearch.png) | ![스타트](README_IMG/bankdetail.png) |
+
 <img src='./README_IMG/banksearch.png' alt='banksearch'/>
 <img src='./README_IMG/bankdetail.png' alt='bankdetail'/>
 
