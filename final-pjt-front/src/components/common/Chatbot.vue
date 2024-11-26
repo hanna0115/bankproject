@@ -5,16 +5,15 @@
       class="chat-button"
       :class="{ 'active': isChatOpen }"
     >
-      <SmileIcon v-if="!isChatOpen" />
+      <img src="@/assets/images/salada.png" v-if="!isChatOpen" />
       <XIcon v-else />
     </button>
     
     <Transition name="bounce">
       <div v-if="isChatOpen" class="chat-window">
         <div class="chat-header">
-          <SmileIcon class="header-icon" />
-
-          <h3>Cute Chatbot</h3>
+          <img src="@/assets/images/salada.png" alt="" class="salada-icon">
+          <h3>Salada</h3>
         </div>
         <div class="chat-messages" ref="messagesContainer">
           <TransitionGroup name="message">
@@ -59,7 +58,6 @@ const sendMessage = () => {
   messages.value.push({ type: 'user', text: userInput.value })
   userInput.value = ''
 
-  // Simulate bot response (replace with actual chatbot logic)
   setTimeout(() => {
     messages.value.push({ type: 'bot', text: "That's interesting! I'm a cute chatbot, but I'm still learning. Can you tell me more? 🌟" })
   }, 1000)
@@ -73,9 +71,31 @@ const scrollToBottom = () => {
   })
 }
 
+const randomMovement = () => {
+  const button = document.querySelector('.chat-button');
+  if (!button || isChatOpen.value) return;
+  
+  const maxX = window.innerWidth - 100;
+  const maxY = window.innerHeight - 100;
+  
+  const randomX = Math.random() * maxX;
+  const randomY = Math.max(window.innerHeight - 200, Math.random() * maxY);
+  const randomRotate = Math.random() * 720 - 360; // -360도에서 360도 사이
+  
+  button.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+  button.style.transform = `translate(${-randomX}px, ${-randomY}px) rotate(${randomRotate}deg) scale(1.2)`;
+  
+  setTimeout(() => {
+    button.style.transform = 'translate(0, 0) rotate(0) scale(1)';
+  }, 800);
+};
+
 watch(messages, scrollToBottom)
 
-onMounted(scrollToBottom)
+onMounted(() => {
+  scrollToBottom();
+  setInterval(randomMovement, 5000); // 5초마다 실행
+})
 </script>
 
 <style scoped>
@@ -85,35 +105,77 @@ onMounted(scrollToBottom)
   right: 20px;
   z-index: 1000;
   font-family: 'Arial', sans-serif;
+  transition: all 0.3s ease;
+  perspective: 1000px;
 }
 
 .chat-button {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background-color: #ff6709;
   color: white;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 15px rgba(255, 103, 9, 0.4);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: crazy-bounce 2s cubic-bezier(0.36, 0, 0.66, -0.56) infinite;
+  transform-origin: center;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  margin-right: 70px;
+  margin-bottom: 30px;
+}
+
+.chat-button img {
+  width: 70px;
+  height: 40px;
 }
 
 .chat-button:hover {
-  transform: scale(1.1) rotate(5deg);
+  animation: shake-crazy 0.5s cubic-bezier(0.36, 0, 0.66, -0.56) infinite;
 }
 
 .chat-button.active {
+  animation: none;
+  transform: scale(1) rotate(0);
   background-color: #e55a00;
-  transform: scale(1.1) rotate(-5deg);
+}
+
+@keyframes crazy-bounce {
+  0%, 100% {
+    transform: translateY(0) rotate(0) scale(1);
+  }
+  25% {
+    transform: translateY(-20px) rotate(15deg) scale(1.1);
+  }
+  50% {
+    transform: translateY(10px) rotate(-15deg) scale(0.95);
+  }
+  75% {
+    transform: translateY(-15px) rotate(5deg) scale(1.05);
+  }
+}
+
+@keyframes shake-crazy {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0) scale(1);
+  }
+  25% {
+    transform: translate(10px, -10px) rotate(45deg) scale(1.2);
+  }
+  50% {
+    transform: translate(-15px, 15px) rotate(-30deg) scale(0.8);
+  }
+  75% {
+    transform: translate(15px, 5px) rotate(15deg) scale(1.1);
+  }
 }
 
 .chat-window {
   position: absolute;
-  bottom: 80px;
+  bottom: 100px;
   right: 0;
   width: 300px;
   height: 400px;
@@ -134,11 +196,14 @@ onMounted(scrollToBottom)
   border-bottom: 2px solid #e55a00;
 }
 
-
 .chat-header h3 {
   margin: 0;
   font-size: 1.2em;
   margin-left: 10px;
+}
+
+.salada-icon {
+  width: 30px;
 }
 
 .header-icon {
@@ -262,4 +327,3 @@ onMounted(scrollToBottom)
   }
 }
 </style>
-
