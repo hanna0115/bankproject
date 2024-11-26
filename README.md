@@ -49,13 +49,13 @@
 
 [**🔗 Figma Link**](https://www.figma.com/design/OXOygfoSCSRhi6z9zKahw0/Untitled?node-id=0-1&t=PuoAi7xxlDJCYQou-1)
 
-<img src="./README_IMG/Figma.png" alt='Figma'/>
+<img src="./README_IMG/Figma.PNG" alt='Figma'/>
 
 - 예, 적금 금리 비교, 환율 계산, 집 주변 은행 검색, 금융 상품 연동하기, 게시판 등의 필수 기능, 셀렉트 박스를 통해 은행 검색 시 해당 은행의 로고 및 전화번호, 위치, 영업시간 정보 제공. 네이버 환율 그래프 카드 및 redirect, 회원가입 & 로그인 유효성 검사, 프로필 페이지 내 금융 상품 이자율 시각화 기능을 구현함.
 
 ## 데이터베이스 모델링(ERD)
 
-[**🔗 ERD drawio Link**] (https://www.erdcloud.com/d/8sJNJCYCQqfZjF2sG) // 이거는 추가적으로 수정 필요함
+[**🔗 ERD drawio Link**]
 
 <img src="./README_IMG/ERD.png" alt='Figma'/>
 
