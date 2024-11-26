@@ -128,7 +128,7 @@
   상세정보(지점명, 전화번호, 영업시간)를 함께 확인할 수 있습니다.
 - 우측 리스트에 나열된 은행을 클릭하면 지도의 출력 범위가 자동으로 확대되어 정확한 위치를 보다 쉽게 확인할 수 있도록 하였습니다.
 
-### 7 금융 상품 자유 게시판
+### 7 금융 정보 게시판
 
 <img src='./README_IMG/community.PNG' alt='community'/>
 <img src='./README_IMG/createpost.PNG' alt='createpost'/>
